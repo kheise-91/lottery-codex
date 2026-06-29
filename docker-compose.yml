@@ -1,0 +1,13 @@
+services:
+  lottery-codex:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: lottery-codex
+    restart: unless-stopped
+    ports:
+      - 5959:80
+    volumes:
+      - /home/admin/Projects/lottery-codex/backend:/var/www/html/backend:rw
+    environment:
+      - TZ=America/Chicago

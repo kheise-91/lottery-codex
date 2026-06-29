@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Agent(Explore)"
+    ]
+  },
+  "$version": 4
+}
