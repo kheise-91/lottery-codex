@@ -3,5 +3,9 @@ vendor/
 .env
 dist/
 tests/
+memory/
 mockups/
+OLD/
+plans/
 .playwright-mcp/
+TODO.md
