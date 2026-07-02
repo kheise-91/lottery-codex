@@ -23,7 +23,9 @@ Extract the following labeled fields from {{args}}. Fields follow the format `La
 | `Other` | No | Auth providers, external APIs, third-party services |
 | `Features` | Yes | List of MVP features |
 
-If `Description` or `Features` are missing, ask for them before proceeding. For any missing fields, provide suggestions to the user and ask the user what they want to use (e.g. if `Frontend` is empty, suggest a frontend framework based on the description and ask the user what they want). If the field is not required, allow the user to skip making a selection for the field.
+If `Description` or `Features` are missing, ask for them before proceeding. For any other missing fields, provide suggestions to the user and ask the user what they want to use (e.g. if `Frontend` is empty, suggest a frontend framework based on the description and ask the user what they want). 
+
+If the field is not required, allow the user to skip making a selection for the field. If the user's input specifically says "SKIP", then do not ask the user what they want and skip that section completely.
 
 ---
 
