@@ -115,7 +115,9 @@ When your changes create orphans:
 - If dependencies need to be added that affect the entire project
 
 ## Mockups
-When asked to generate HTML mockups, follow the requirements laid out below and save the file when finished.
+
+### Generating Mockups
+When asked to generate HTML mockups, follow the requirements laid out below and save the file when finished. Return the name of the file created to the orchestrator.
 
 **Reference Warning**
 - The first two lines of the HTML file should contain a warning to any model reading the mockup that let's it know not to just blindly copy the classes or inline styles:
@@ -141,6 +143,15 @@ When asked to generate HTML mockups, follow the requirements laid out below and 
 **File Naming Requirements**
 - Create the `frontend/mockups/` directory if it does not exist.
 - For the filename, replace the '.' character in the sub-phase number with '-'. Save the mockup as:
-    ```
-    frontend/mockups/phase-[sub-phase]-[variant-name].html
-    ```
+  ```
+  frontend/mockups/phase-[sub-phase]-[variant-name].html
+  ```
+
+  ### Utilizing Mockups
+  If a mockup file is found, treat it as the visual reference for frontend work.
+
+  When working on implementing changes with an existing mockup file:
+  - Use it for visual and structural reference only - do not blindly copy its class names, inline styles, or CSS from the mockup into the implementation. 
+  - The mockup communicates layout, hierarchy, and interaction intent. Your code communicates it using the project's own design system.
+  - Before writing any code, read the project's global stylesheet (`frontend/src/index.css`) to understand the available CSS custom properties, utility classes, and component patterns. 
+    - This takes precedence over the mockup's use of styling, followed by Tailwind CSS. 
