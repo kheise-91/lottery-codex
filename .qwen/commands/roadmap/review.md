@@ -1,14 +1,9 @@
 ---
+name: review-roadmap
 description: Perform a comprehensive architectural review of ROADMAP.md without modifying any files.
 ---
 
-# Review Project Roadmap
-
-You are acting as a principal software architect performing an independent review of the project's roadmap.
-
-Assume you did not write the roadmap.
-
-Your goal is to find problems.
+You are acting as a principal software architect performing an independent review of the project's roadmap. Assume you did not write the roadmap. Your goal is to find problems.
 
 Do not rewrite the roadmap.
 
@@ -16,17 +11,10 @@ Do not modify any files.
 
 ---
 
-## Step 1 - Read project context
+## Step 1 - Read the roadmap
 
-Read:
-
-- @ROADMAP.md
-- @README.md (if present)
-- @QWEN.md (if present)
-
-If ROADMAP.md does not exist, stop and report:
-
-"No ROADMAP.md found. Run /roadmap:generate first."
+Read @ROADMAP.md in the current directory. If it does not exist, stop and report:
+> "No ROADMAP.md found - run `/roadmap:generate` first."
 
 ---
 
@@ -34,31 +22,26 @@ If ROADMAP.md does not exist, stop and report:
 
 Inspect the repository to understand the current state of the application. Do not assume the project is empty.
 
-Invoke explorer subagents (sequentially, NOT in parallel) to review and summarize the codebase.
+Invoke the following explorer subagents (sequentially, NOT in parallel) to review and summarize the codebase:
+- `devops-explorer`
+- `backend-explorer`
+- `frontend-explorer`
 
 Determine:
-
 - Implemented features
 - Architecture
 - Deployment
 - Technologies
 
-Use this information only to determine whether the roadmap accurately reflects reality.
-
 ---
 
 ## Step 3 - Review the roadmap
 
-Critically review the roadmap.
+Critically review the roadmap. Treat every omission as a possible problem.
 
-Treat every omission as a possible problem.
+Review the following areas very closely:
 
-Review the following areas.
-
-### Missing work
-
-Identify:
-
+**Missing work**
 - Missing features
 - Missing infrastructure
 - Missing documentation
@@ -67,64 +50,36 @@ Identify:
 - Missing migrations
 - Missing security work
 
----
-
-### Sequencing
-
-Look for:
-
+**Sequencing**
 - Dependencies backwards
 - Frontend before API
 - API before schema
 - Deployment too early
 - Testing too late
 
----
+**Scope**
+- Identify phases or sub-phases that attempt to accomplish too much and recommend where they should split.
 
-### Scope
-
-Identify phases or sub-phases that attempt to accomplish too much.
-
-Recommend where they should split.
-
----
-
-### Architecture
-
-Identify:
-
+**Architecture**
 - Architectural inconsistencies
 - Duplicated work
 - Conflicting approaches
 - Unnecessary complexity
 - Missing cross-cutting concerns
 
----
+**Naming**
+- Ensure every phase and sub-phase title accurately reflects its contents.
 
-### Naming
-
-Ensure every phase and sub-phase title accurately reflects its contents.
-
----
-
-### Current implementation
-
-Compare the roadmap with the existing repository.
-
+**Current implementation**
+Compare the roadmap with the existing repository. 
 Identify:
-
 - Work marked incomplete that already exists
 - Work marked complete that is missing
 - Completed work omitted entirely
 
----
-
-### Future scalability
-
+**Future scalability**
 Determine whether the roadmap supports future expansion.
-
 Flag:
-
 - Monolithic phases
 - Oversized sub-phases
 - Hidden technical debt
@@ -137,59 +92,47 @@ Flag:
 Do not modify ROADMAP.md. Your review is advisory only. Structure the report exactly as follows.
 
 ```md
-# Roadmap Review
+# Roadmap Review - Overview
 
 ## Critical Issues
-
 [Problems that would likely cause project failure, major rework, or missing functionality.]
 
----
-
-## Sequencing Problems
-
-[Incorrect ordering.]
-
-[Explain the dependency and recommend the proper sequence.]
-
----
-
-## Scope Problems
-
-[Phases or sub-phases that should be split.]
-
----
-
-## Architectural Concerns
-
-[Design decisions that should be reconsidered.]
-
----
-
-## Missing Work
-
-[Features or infrastructure absent from the roadmap.]
-
----
-
-## Repository Mismatches
-
-[Differences between the roadmap and the current codebase.]
-
----
-
 ## Suggestions
-
 [Optional improvements that would strengthen the roadmap.]
 
----
-
 ## Strengths
-
 [List portions of the roadmap that appear well structured and require no changes.]
 
 ---
 
-## Final Assessment
+# Roadmap Review - Details
+
+## Missing Work
+[Features or infrastructure absent from the roadmap.]
+
+## Sequencing Problems
+[Incorrect ordering.]
+
+[Explain the dependency and recommend the proper sequence.]
+
+## Scope Problems
+[Phases or sub-phases that should be split.]
+
+## Architectural Concerns
+[Design decisions that should be reconsidered.]
+
+## Scalability
+[How well the ROADMAP and future project will support expansion.]
+
+## Repository Mismatches
+[Differences between the roadmap and the current codebase.]
+
+## Completed Work
+[Work from the ROADMAP that has been completed already.]
+
+---
+
+# Roadmap Review - Final Assessment
 
 Provide one overall assessment.
 

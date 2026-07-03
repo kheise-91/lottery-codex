@@ -1,8 +1,7 @@
 ---
+name: generate-roaddmap
 description: Analyze the existing project and generate a complete ROADMAP.md that reflects both the current implementation and the requested application goals.
 ---
-
-# Generate Project Roadmap
 
 You are a senior software architect responsible for creating the project's master development roadmap.
 
@@ -46,7 +45,6 @@ Invoke explorer subagents (sequentially, NOT in parallel) to review and summariz
 Analyze the user's description.
 
 Extract:
-
 - Application goals
 - Intended users
 - Major features
@@ -66,7 +64,6 @@ Do not invent unrelated functionality. Ask the user any questiosn if clarificati
 ## Step 4 - Compare desired state with current implementation
 
 Determine:
-
 - Work already completed
 - Work currently in progress
 - Work still missing
@@ -91,21 +88,13 @@ Use:
 
 ---
 
-## Step 5 - Design the roadmap
+## Step 5 - Create the roadmap
 
-Create a complete roadmap.
+Create a complete roadmap. 
 
-There is NO fixed number of phases.
+There is NO fixed number of phases. Create as many phases as necessary. Each phase should represent a meaningful milestone that leaves the application in a usable state. Sequence phases so every phase builds upon previous work.
 
-Create as many phases as necessary.
-
-Each phase should represent a meaningful milestone that leaves the application in a usable state.
-
-Sequence phases so every phase builds upon previous work.
-
-Avoid large "miscellaneous" phases.
-
-Avoid phases organized purely by technology (Frontend, Backend, Database) unless that genuinely represents the work.
+Avoid large "miscellaneous" phases. Avoid phases organized purely by technology (Frontend, Backend, Database) unless that genuinely represents the work.
 
 Prefer feature-oriented phases whenever practical.
 
@@ -115,11 +104,7 @@ Prefer feature-oriented phases whenever practical.
 
 Each phase should contain as many sub-phases as necessary.
 
-Sub-phases should be independently completable pieces of work.
-
-Each sub-phase should represent work that could later become one milestone and be broken into multiple implementation tasks.
-
-Do not artificially limit the number of sub-phases.
+Sub-phases should be independently completable pieces of work. Each sub-phase should represent work that could later become one milestone and be broken into multiple implementation tasks. Do not artificially limit the number of sub-phases.
 
 Keep granularity consistent.
 
@@ -128,20 +113,17 @@ Keep granularity consistent.
 ## Step 7 - Write descriptions
 
 Every phase must contain:
-
 - Title
 - Description
 - Done when definition
 
 Every sub-phase must contain:
-
 - Title
 - 2-5 sentence minimum description
 - Expected files, components, APIs, database tables, services, or infrastructure affected (when reasonably predictable)
 - Done when definition
 
 Descriptions should explain:
-
 - What is being built
 - Why it exists
 - How it fits into the project
@@ -159,7 +141,6 @@ Stay at roadmap level.
 Critically review the roadmap.
 
 Look for:
-
 - Missing phases
 - Missing features
 - Poor sequencing
@@ -172,9 +153,7 @@ Look for:
 - Authentication after authorization
 - Deployment after production features
 
-Automatically fix minor issues.
-
-If significant problems remain, report them and ask before continuing.
+Automatically fix minor issues. If significant problems remain, report them and ask before continuing.
 
 ---
 
@@ -182,7 +161,7 @@ If significant problems remain, report them and ask before continuing.
 
 If @ROADMAP.md already exists, ask before overwriting.
 
-Write the roadmap using exactly this format:
+Write the roadmap using exactly the format below. The generated roadmap MUST follow this same format.
 
 ```md
 # Project Name - Roadmap
@@ -219,25 +198,42 @@ Write the roadmap using exactly this format:
 
 ## Phase X - Phase Name
 
-```
+[Phase description]
 
-Repeat until the roadmap is complete.
+[Done when]
+
+- [ ] **X.1 - Sub-phase title**
+
+  [Sub-phase Description]
+
+  [Expected files]
+
+  [Done when]
+
+- [ ] **X.2 - Another sub-phase**
+
+  [Sub-phase Description]
+
+  [Expected files]
+
+  [Done when]
+
+```
 
 ---
 
 ## Step 10 - Final validation
 
 Before finishing, verify:
-
 - Every requested feature exists somewhere in the roadmap
 - Every completed feature found in the repository is represented
 - Every phase has a Done when definition
 - Every sub-phase has a Done when definition
 - Roadmap order is logical
 - No duplicated work exists
+- Roadmap format is correct
 
 Report:
-
 - Number of phases
 - Number of sub-phases
 - Completed
