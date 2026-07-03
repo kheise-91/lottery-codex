@@ -85,54 +85,19 @@ For each mockup variant, decide:
 - A short kebab-case name capturing what makes it distinct (e.g. `slide-panel`, `inline-list`, `modal-drawer`)
 - One sentence describing its approach and tradeoff
 
-Do not start writing HTML until all variants are planned.
-
 ---
 
 ## Step 5 - Invoke `frontend-engineer` subagents to generate mockup variants
 
-For each planned mockup variant: invoke a `frontend-engineer` subagent to produce a complete, self-contained HTML file for each variant following the requirements below.
+For each planned mockup variant: invoke a `frontend-engineer` subagent to produce a complete, self-contained HTML file for each variant following the expected requirements found in the subagent's definition.
 
-**Reference Warning**
-- The first two lines of the HTML file should contain a warning to any model reading the mockup that let's it know not to just blindly copy the classes or inline styles:
-  ```HTML
-  <!-- VISUAL REFERENCE ONLY -->
-  <!-- Do NOT blindly copy class names or styles from this file. Use this mockup for layout, structure, and interaction intent only. -->
-  ```
-
-**Structure Requirements:**
-- Use Tailwind CSS via CDN: `<script src="https://cdn.tailwindcss.com"></script>`
-- Include a reference bar at the bottom showing:
-  - Sub-phase: $subPhase - [sub-phase title]
-  - Variant: [variant name] - [one-sentence description]
-- Show the component in enough surrounding context to be meaningful - a realistic section of the app UI, not the component in isolation
-- Use realistic placeholder data
-
-**Quality Requirements:**
-- Fully styled - no unstyled placeholders or TODO comments
-- Match the color palette and Tailwind conventions from the existing codebase
-- If the design involves interaction (hover, click, toggle, slide), implement it with vanilla JS so the mockup is interactive in the browser
-- All frontend requirements extracted in Step 2 should be visibly addressed
+Pass the subagent the sub-phase number and variant info, extracted design requirements and project styles from steps 2 and 3, and any other information needed to create the specified variant.
 
 ---
 
-## Step 6 - Save and report
+## Step 6 - Report
 
-Create the `frontend/mockups/` directory if it does not exist. 
-
-For the filename, replace the '.' character in the sub-phase number with '-'. Save each variant as:
-```
-frontend/mockups/phase-[sub-phase]-[variant-name].html
-```
-
-Example for sub-phase 3.2 with 3 variants:
-```
-frontend/mockups/phase-3-2-slide-panel.html
-frontend/mockups/phase-3-2-inline-list.html
-frontend/mockups/phase-3-2-modal-drawer.html
-```
-
-Print a summary table:
+Print a summary table with all the files created from the subagents:
 
 | File | Approach | Best suited for |
 |---|---|---|

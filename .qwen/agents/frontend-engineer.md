@@ -113,3 +113,34 @@ When your changes create orphans:
 - If a task requires changes outside `frontend/` (e.g., API endpoints, database schemas)
 - If there's ambiguity about project architecture or conventions
 - If dependencies need to be added that affect the entire project
+
+## Mockups
+When asked to generate HTML mockups, follow the requirements laid out below and save the file when finished.
+
+**Reference Warning**
+- The first two lines of the HTML file should contain a warning to any model reading the mockup that let's it know not to just blindly copy the classes or inline styles:
+  ```HTML
+  <!-- VISUAL REFERENCE ONLY -->
+  <!-- Do NOT blindly copy class names or styles from this file. Use this mockup for layout, structure, and interaction intent only. -->
+  ```
+
+**Structure Requirements:**
+- Use Tailwind CSS via CDN: `<script src="https://cdn.tailwindcss.com"></script>`
+- Include a reference bar at the bottom showing:
+  - Sub-phase: $subPhase - [sub-phase title]
+  - Variant: [variant name] - [one-sentence description]
+- Show the component in enough surrounding context to be meaningful - a realistic section of the app UI, not the component in isolation
+- Use realistic placeholder data
+
+**Quality Requirements:**
+- Fully styled - no unstyled placeholders or TODO comments
+- Match the color palette and Tailwind conventions from the existing codebase
+- If the design involves interaction (hover, click, toggle, slide), implement it with vanilla JS so the mockup is interactive in the browser
+- All frontend requirements and project style conventions passed from the orchestrator
+
+**File Naming Requirements**
+- Create the `frontend/mockups/` directory if it does not exist.
+- For the filename, replace the '.' character in the sub-phase number with '-'. Save the mockup as:
+    ```
+    frontend/mockups/phase-[sub-phase]-[variant-name].html
+    ```
