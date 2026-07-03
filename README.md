@@ -1,6 +1,6 @@
 # Lottery Codex
 
-Web application that leverages historical lottery data to calculate optimized number combinations. Built with a PHP backend API and a React single-page frontend, it scrapes previous drawing results from the [Wisconsin Lottery](https://wilottery.com) and applies pattern-analysis techniques inspired by the [Lottery Codex](https://lotterycodex.com) methodology.
+Web application that leverages historical lottery data to calculate optimized number combinations. Built with a PHP backend API and a React single-page frontend, it scrapes previous drawing results from the [Wisconsin Lottery](https://wilottery.com) and analyzes historical drawing data to generate optimized number combinations using pattern-analysis techniques inspired by the [Lottery Codex](https://lotterycodex.com) methodology.
 
 ## Supported Games
 
