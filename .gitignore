@@ -1,11 +1,17 @@
-node_modules/
-vendor/
 .env
-dist/
-tests/
-memory/
-mockups/
-OLD/
-plans/
-.playwright-mcp/
 TODO.md
+
+dist/
+frontend/mockups/
+node_modules/
+OLD/
+.playwright-mcp/
+tests/
+vendor/
+
+# ======================
+# QWEN FILES
+# ======================
+.qwen/settings.json
+.qwen/plans/
+memory/
