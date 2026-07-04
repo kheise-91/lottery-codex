@@ -29,7 +29,7 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 
 Fix critical bugs and establish the backend foundation. Without this, nothing else works.
 
-- [x] **0.1 — Fix SuperCash fatal error**
+- [x] **[0.1 — Fix SuperCash fatal error](https://gitea.heise.home/kheise/lottery-codex/milestone/12)**
    - Remove the `$this->pd = new SuperCashPD()` constructor dependency (file doesn't exist)
    - Comment out or stub all methods that depend on `SuperCashPD`
    - Keep only the working `analyzePreviousDrawings()` method and number pool definitions
