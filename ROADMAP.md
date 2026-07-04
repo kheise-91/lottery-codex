@@ -16,7 +16,7 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 |------|---------|--------|
 | **Backend API** | `api.php` missing; Nginx routes to nothing | Slim Framework router with 4 REST endpoints |
 | **BadgerFive game class** | Fully functional (scraping + panel generation) but pre-PHP-7 style, no namespace/types | Namespaced, typed, Composer-loaded |
-| **SuperCash game class** | Fatal error (missing `SuperCashPD.php`), core methods commented out | Fixed constructor, analysis-only for now |
+| **SuperCash game class** | Fatal error (missing `SuperCashPD.php`), core methods commented out | Fixed constructor, no external dependencies, analysis-only for now |
 | **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard → Game Page with tabs → History browser |
 | **Routing** | No router installed | React Router DOM v6, 3 routes |
 | **State management** | Single `useState(0)` placeholder | Context API + useReducer for game data/history/panels |
@@ -29,12 +29,15 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 
 Fix critical bugs and establish the backend foundation. Without this, nothing else works.
 
-- [ ] **0.1 — Fix SuperCash fatal error**
+- [x] **0.1 — Fix SuperCash fatal error**
    - Remove the `$this->pd = new SuperCashPD()` constructor dependency (file doesn't exist)
    - Comment out or stub all methods that depend on `SuperCashPD`
    - Keep only the working `analyzePreviousDrawings()` method and number pool definitions
+   - Add runtime check for simplehtmldom dependency with warning if missing
+   - Fix logic error in generatePanel() exclusion loop (changed `<` to `<=`)
+   - Fix simple_html_dom.php path from `__DIR__."/../simple_html_dom.php"` to `__DIR__."/../simplehtmldom/simple_html_dom.php"`
 
-   **Done when:** `new SuperCash()` instantiates without error.
+   **Done when:** `new SuperCash()` instantiates without error. The class now has no external dependencies and can be instantiated directly.
 
 - [ ] **0.2 — Initialize Composer + Slim Framework in backend/**
    - Create `backend/composer.json` with PSR-4 autoloading (`LotteryCodex\Games → games/`)
@@ -270,6 +273,7 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
    - Uncomment and implement all core methods currently disabled
    - Define number pools for range 1–39 (Low-Odd, Low-Even, High-Odd, High-Even)
    - Implement scraping logic for `https://wilottery.com/winners/draw-history?game=super-cash`
+   - Note: SuperCash class is now instantiable without the SuperCashPD dependency. The constructor no longer requires external dependencies.
 
    **Done when:** SuperCash class instantiates and generates panels correctly.
 
@@ -367,7 +371,7 @@ backend/games/GameInterface.php    # Interface for all game classes
 ```
 backend/_functions.php             # Updated or replaced by Composer autoloader
 backend/games/BadgerFive.php       # Namespace, types, interface implementation
-backend/games/SuperCash.php        # Remove SuperCashPD dependency, stub broken methods
+backend/games/SuperCash.php        # Remove SuperCashPD dependency, add runtime checks, fix simplehtmldom path
 docker-compose.yml                 # Fix volume mount path to relative bind
 docker/Dockerfile                  # Display_errors off, consolidated RUN layers
 docker/nginx.conf                  # Add fastcgi_split_path_info directive
