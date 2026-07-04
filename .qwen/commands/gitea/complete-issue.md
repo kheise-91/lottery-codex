@@ -38,7 +38,7 @@ Branch: `branch-name`
 
 This is the pre-created issue branch for this issue. If no branch comment exists, stop and report the problem. Do not create a new branch.
 
-Checkout the pre-created issue branch AND rebase on the sub-phase branch. When finished, return the issue's full contents.
+Checkout the pre-created issue branch AND rebase on the sub-phase branch. When finished, return the issue's full contents, the sub-phase branch name and the issue branch name.
 
 ---
 
@@ -60,8 +60,8 @@ Based on what the issue/plan requires, invoke the appropriate subagents listed b
 
 Context/instructions to pass to the engineer subagents:
 - The full issue body
-- The specific devops-related acceptance criteria
-- The files expected to change
+- The specific devops/backend/frontend acceptance criteria
+- The files expected to change (if list exists)
 - The issue plan if one exists
 - The mockup file if one exists (`frontend-engineer` only) 
 - The requirement to signal completion only when all backend acceptance criteria pass and documentation has been updated
@@ -109,13 +109,21 @@ Non-blocking observations can be noted in the PR body.
 
 ---
 
-## Step 4 - Commit, push, and open PR
+## Step 4
 
-Wait for user to confirm implementation is correct.
+Invoke the `documenter` subagent. Instruct the subagent to update all necessary documentation from the changes implemented above.
+
+Make sure the subagent does not touch documentation for sections that were not affected in this issue.
+
+---
+
+## Step 5 - Commit, push, and open PR
+
+Wait for user to confirm implementation is correct and documentation has been updated.
 
 Once the user confirms, invoke the `git-manager` subagent, passing the code review summaries and instructions to follow the steps below.
 
-### Step 4.1 - Commit and push
+### Step 5.1 - Commit and push
 Stage ONLY the changes made for this issue and commit:
 ```
 Feature: [short description matching issue title]
@@ -127,7 +135,7 @@ Closes #[issue-number]
 
 Push the branch.
 
-### Step 4.2 - Open pull request
+### Step 5.2 - Open pull request
 Open a pull request via the Gitea MCP:
 - **From:** issue branch (`YYYY-MM-DD-task-summary`)
 - **Into:** sub-phase branch (`phase-X-Y`)
