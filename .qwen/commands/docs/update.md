@@ -16,7 +16,6 @@ Do not invent behavior that does not exist in the code.
 Delegate documentation extraction sequentially.
 
 Run:
-
 1. backend-engineer
 2. frontend-engineer
 3. devops-engineer
@@ -31,18 +30,17 @@ Do not proceed until all three have completed.
 
 ## Step 2 - Invoke Documenter
 
-Invoke the documenter subagent, passing all 3 summaries generated from step 1 and instructions to update all project documentation.
+Invoke the `documenter` subagent, passing all 3 summaries generated from step 1 and instructions to update all project documentation.
 
 ---
 
 ## Step 3 - Verify Consistency
 
 Check that:
-
 - Every documented API exists
-- Every documented database table exists
 - Every documented component exists
 - Deleted components are no longer documented
+- Infrasturcture is documented
 
 If inconsistencies remain, report them instead of guessing.
 
@@ -59,13 +57,17 @@ Updated
 
 ✓ docs/api/README.md
 
-✓ docs/database/README.md
-
 ✓ docs/components/README.md
 
 ✓ docs/components/App.md
 
 ✓ docs/components/...
+
+✓ docs/infrastructure/README.md
+
+✓ docs/infrastructure/docker.md
+
+✓ docs/infrastructure/nginx.md
 
 Documentation regenerated successfully.
 ```

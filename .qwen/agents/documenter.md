@@ -48,6 +48,8 @@ Remove documentation for deleted components.
 - SSL/TLS certificate handling
 - Load balancing or caching rules
 
+**Create/update** `docs/infrastructure/README.md` to list both of the files above, with links to both files, and a short description of what each file contains.
+
 ### Project README
 
 Update the root level `README.md` file.
