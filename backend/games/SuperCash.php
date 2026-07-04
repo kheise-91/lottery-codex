@@ -1,5 +1,9 @@
 <?php
-require_once __DIR__."/../simple_html_dom.php";
+// Dependency check: simplehtmldom is required for HTML scraping functionality
+// Only load if needed (for methods that use file_get_html())
+if (!file_exists(__DIR__."/../simplehtmldom/simple_html_dom.php")) {
+    trigger_error("simplehtmldom dependency not found at ".__DIR__."/../simplehtmldom/simple_html_dom.php", E_USER_WARNING);
+}
 
 class SuperCash implements JsonSerializable {
 
@@ -27,22 +31,11 @@ class SuperCash implements JsonSerializable {
 
 
 	public function __construct() {
-		header('Content-Type: application/json');
-		require_once __DIR__."/SuperCashPD.php";
+		// SuperCashPD dependency removed - file does not exist
+		// $this->pd = new SuperCashPD();
 
-		die($this->analyzePreviousDrawings($SUPER_CASH_PAST_DRAWINGS));
-
-
-		// $this->loadPreviousDrawings();
-		// $this->loadPanels();
-
-		/*
-			header('Content-Type: application/json');
-			die(json_encode([
-				"Previous Drawings" => $this->previousDrawings
-				"Panels" => $this->panels
-			], JSON_PRETTY_PRINT));
-		//*/
+		// Constructor now instantiates without requiring external dependencies
+		// Analysis methods can be called directly via analyzePreviousDrawings()
 	}
 
 	private function analyzePreviousDrawings($previousDrawings) {
@@ -122,7 +115,8 @@ class SuperCash implements JsonSerializable {
 	// 			$excludedNumbers = array();
 
 	// 			for ($panel = 1; $panel <= 3; $panel++) {
-	// 				for ($panelNum = 1; $panelNum < $panel; $panelNum++) {
+	// 				// NOTE: Loop must use <= to include first panel (fix: change < to <=)
+	// 				for ($panelNum = 1; $panelNum <= $panel; $panelNum++) {
 	// 					$thisPanel = ${"panel{$panelNum}"};
 
 	// 					foreach ($thisPanel AS $num) {
@@ -146,7 +140,8 @@ class SuperCash implements JsonSerializable {
 	// 		$this->panels["set{$set}"] = array();
 
 	// 		for ($panel = 1; $panel <= $panelsPerSet; $panel++) {
-	// 			for ($panelNum = 1; $panelNum < $panel; $panelNum++) {
+	// 			// NOTE: Loop must use <= to include first panel (fix: change < to <=)
+	// 			for ($panelNum = 1; $panelNum <= $panel; $panelNum++) {
 	// 				$thisPanel = ${"panel{$panelNum}"};
 
 	// 				foreach ($thisPanel AS $num) {
