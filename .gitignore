@@ -1,17 +1,36 @@
-.env
-TODO.md
-
-dist/
-frontend/mockups/
-node_modules/
-OLD/
-.playwright-mcp/
-tests/
-vendor/
-
 # ======================
 # QWEN FILES
 # ======================
 .qwen/settings.json
 .qwen/plans/
 memory/
+
+
+# ======================
+# BACKEND FILES
+# ======================
+data/
+backend/vendor/
+
+# ======================
+# BACKEND FILES
+# ======================
+frontend/node_modules/
+frontend/dist/
+frontend/mockups/
+
+# ======================
+# CLAUDE FILES
+# ======================
+.claude/agent-memory
+.claude/plans
+.playwright-mcp/
+
+# ======================
+# MISC FILES
+# ======================
+.env
+TODO.md
+OLD/
+scripts/
+tests/
