@@ -20,7 +20,7 @@ Web application that leverages historical lottery data to calculate optimized nu
 ```
 
 - **Frontend** — React 18 + Vite + Tailwind CSS. Served as a PWA with offline caching.
-- **Backend** — Modern PHP 8.1+ with PSR-4 autoloading, REST JSON endpoints, and `simplehtmldom` for HTML parsing.
+- **Backend** — PHP 8.2+ powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints, and `simplehtmldom` for HTML parsing.
 - **Data flow** — Backend scrapes Wisconsin Lottery draw history via CURL → analyzes odd/even and low/high patterns → generates prediction panels → serves results through a REST API → React renders the UI.
 
 ## How It Works
@@ -78,7 +78,8 @@ Each sub-pattern specifies which pool each of the 5 (or 6) positions draws from,
 ### Prerequisites
 
 - Docker and Docker Compose
-- PHP 8.1+ (for local development without Docker)
+- PHP 8.2+ (for local development without Docker)
+- Composer (for backend dependency management)
 - Node.js 18+ (for frontend development)
 
 ### With Docker
@@ -153,7 +154,7 @@ The frontend dev server proxies API requests to the backend.
 
 ## Technologies
 
-- **Backend**: PHP 8.1+, PSR-4 autoloading, CURL, simplehtmldom
+- **Backend**: PHP 8.2+, Slim Framework 4, Composer (PSR-4), nikic/fast-route, CURL, simplehtmldom
 - **Frontend**: React 18, Vite, Tailwind CSS v4, React Router v6, Headless UI, Heroicons
 - **Infrastructure**: Docker, Nginx
 
