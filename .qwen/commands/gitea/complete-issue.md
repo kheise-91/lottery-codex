@@ -45,7 +45,7 @@ Checkout the pre-created issue branch AND rebase on the sub-phase branch. When f
 ## Step 2 - Invoke Engineer Subagents
 
 Before invoking any subagents:
-- Check for a saved issue plan in `.qwen/plans/` based on the issue number from Gitea. The file name will be `issue-[issue-number].md` (examples: `.qwen/plans/issue-12.md` or `.qwen/plans/issue-23.md`). Side note: issue plans are not tracked in Git.
+- Check for a saved issue plan in @.qwen/plans/ based on the issue number from Gitea. The file name will be `issue-[issue-number].md` (examples: `.qwen/plans/issue-12.md` or `.qwen/plans/issue-23.md`). Side note: issue plans are not tracked in Git.
 - Derive the mockup pattern from the issue milestone: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check `frontend/mockups/` for a matching file.
 
 **Scope Boundary**
