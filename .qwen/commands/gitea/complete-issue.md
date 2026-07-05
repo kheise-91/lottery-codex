@@ -21,7 +21,7 @@ If no `issue-number` is specified, stop and ask the user to provide one.
 Invoke the `git-manager` subagent with the sub-phase number and instructions to follow the steps below.
 
 ### Step 1.1
-Using the Gitea MCP, detect the repo from the current git remote. 
+Using the Gitea MCP, detect the repo from the current git remote.
 
 Retrieve issue #[issue-number] and return its full content: title, body, acceptance criteria, notes, labels, and milestone.
 
@@ -70,7 +70,7 @@ Invoke only the subagents the issue actually requires. A frontend-only issue ski
 
 ---
 
-## Step 3 - Invoke Code Reviewer Subagents
+## Step 3 - Invoke Reviewer Subagents
 
 For each engineer subagent that worked on implementing the issue, spawn the corresponding reviewer agent. For example: the `frontend-reviewer` will review the work done by the `frontend-engineer` subagent.
 
@@ -79,7 +79,7 @@ Context/instructions to pass to the reviewer subagents:
 **Context:**
 - The list of all files changed during implementation
 - The issue title and acceptance criteria
-- App URL: https://dev-server.heise.home
+- App URL: https://dev-server.heise.home (`frontend-reviewer` only)
 
 **Instructions:** 
 You are doing a code review on the changed files.
@@ -109,7 +109,7 @@ Non-blocking observations can be noted in the PR body.
 
 ---
 
-## Step 4
+## Step 4 - Invoke Documenter Subagent
 
 Invoke the `documenter` subagent. Instruct the subagent to update all necessary documentation from the changes implemented above.
 

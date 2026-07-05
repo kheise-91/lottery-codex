@@ -35,9 +35,11 @@ If the sub-phase cannot be found, stop.
 
 Break the sub-phase into independently deliverable implementation tasks. Each task must be completable in a single focused session - roughly half a day to two days of work. 
 
-Derive the mockup pattern from the $subPhase number: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check `frontend/mockups/` for a matching file. 
-
-If a mockup file is found, treat it as the visual reference for frontend work. Find which parts of the mockup file are related to the sub-phase, and use them for visual and structural reference only - do not blindly copy its class names, inline styles, or CSS from the mockup into the tasks created. For styling: the project's existing stylesheets and components take precedence, followed by Tailwind CSS, and finally the mockup file. For structure: the sub-phase description in the project roadmap takes precedence over the mockup if they conflict.
+Derive the mockup pattern from the $subPhase number: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check `frontend/mockups/` for a matching file. If a mockup file is found:
+- Treat it as the visual reference for frontend work 
+- Find which parts of the mockup file are related to the sub-phase, and use them for visual and structural reference only - do not blindly copy its class names, inline styles, or CSS from the mockup into the tasks created
+- For styling: the project's existing stylesheets and components take precedence, followed by Tailwind CSS, and finally the mockup file
+- For structure: the sub-phase description in the project roadmap takes precedence over the mockup if they conflict
 
 For each task, determine:
 - **title:** Short imperative phrase
@@ -74,9 +76,9 @@ For each task, determine:
 Invoke the **gitea-git-ops** agent with instructions to follow the steps below.
 
 ### Step 3.1 - Create sub-phase branch
-Derive the branch name from the argument: replace the `.` with `-` and prepend `phase-`. Example: `3.9` → `phase-3-9`
-
-Create the branch off of `master` and push it.
+- Derive the new sub-phase branch name from the user provided sub-phase number: replace the `.` with `-` and prepend `phase-`. Example: `3.9` → `phase-3-9`
+- Create the new sub-phase branch off of `master`.
+- Push the new sub-phase branch to origin.
 
 ### Step 3.2 - Create milestone
 Using the Gitea MCP, detect the repo from the current git remote. Create a milestone with:
