@@ -72,9 +72,10 @@ For each task, determine:
 Spawn the `git-manager` agent with instructions to follow the steps below.
 
 ### Step 3.1 - Create sub-phase branch
+- Derive the phase branch name from the parent phase number: Example: `Phase 3` → `phase-3`
 - Derive the new sub-phase branch name from the user provided sub-phase number: replace the `.` with `-` and prepend `phase-`. Example: `3.9` → `phase-3-9`
-- Create the new sub-phase branch off of `master`.
-- Push the new sub-phase branch to origin.
+- Create the new sub-phase branch off of the parent phase branch
+- Push the new sub-phase branch to origin
 
 ### Step 3.2 - Create milestone
 Using the Gitea MCP, detect the repo from the current git remote. Create a milestone with:
