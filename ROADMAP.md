@@ -50,6 +50,7 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
    - Add `namespace LotteryCodex\Games;` to both `BadgerFive.php` and `SuperCash.php`
    - Add PHP 8.2 property types, return types, constructor promotion where appropriate
    - Remove side-effects from constructors (no scraping in `__construct`)
+   - Remove old `_functions.php` and `autoloader.php` files from the `backend/` directory
 
    **Done when:** Both classes load via Composer autoloader with zero PHP warnings.
 
