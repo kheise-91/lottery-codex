@@ -39,14 +39,14 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
    **Done when:** `new SuperCash()` instantiates without error. The class now has no external dependencies and can be instantiated directly.
 
-- [-] **[0.2 — Initialize Composer + Slim Framework in `backend/`](https://gitea.heise.home/kheise/lottery-codex/milestone/13)**
+- [x] **[0.2 — Initialize Composer + Slim Framework in `backend/`](https://gitea.heise.home/kheise/lottery-codex/milestone/13)**
    - Create `backend/composer.json` with PSR-4 autoloading (`LotteryCodex\Games → games/`)
    - Add `slim/slim ^4.x`, `slim/psr7`, and `nikic/fast-route` as dependencies
    - Run `composer install` in `backend/`
 
    **Done when:** `vendor/autoload.php` exists and loads game classes by namespace.
 
-- [ ] **0.3 — Namespace + type-hint existing game classes**
+- [x] **[0.3 — Namespace + type-hint existing game classes](https://gitea.heise.home/kheise/lottery-codex/milestone/14)**
    - Add `namespace LotteryCodex\Games;` to both `BadgerFive.php` and `SuperCash.php`
    - Add PHP 8.2 property types, return types, constructor promotion where appropriate
    - Remove side-effects from constructors (no scraping in `__construct`)
