@@ -14,27 +14,35 @@ The issue number is: $issueNumber.
 
 ## Step 1 - Fetch the Gitea Issue
 
-Spawn the `git-manager` agent, passing the the issue number ($issueNumber) and instructions to follow the steps below:
-1. Using the Gitea MCP, detect the repo from the current git remote. Retrieve issue #$issueNumber it's full content: title, body, acceptance criteria, notes, labels, branch and milestone
-2. Determine the sub-phase branch
-    - Derive the sub-phase branch from the issue's milestone:
-    - Milestone `Phase 3.9` → sub-phase branch `phase-3-9`
-    - Replace `.` with `-`, prepend `phase-`
-3. Find the branch name
-    - Read the branch name from the issue. If none was found, read the issue's comments and find the branch comment in the format:
-      ```
-      Branch: `branch-name`
-      ```
-    - This is the pre-created issue branch for this issue 
-    - If no branch name is found for this issue, stop and report the problem - do not create a new branch
-4. Checkout the pre-created issue branch AND rebase on the sub-phase branch
-5. Return the issue's full contents, the sub-phase branch name and the issue branch name
+Spawn the `git-manager` agent, passing the the issue number ($issueNumber) and instructions to follow the steps below.
+
+### Step 1.1 - Fetch the Gitea issue 
+Using the Gitea MCP, detect the repo from the current git remote. Retrieve issue #$issueNumber it's full content: title, body, acceptance criteria, notes, labels, branch and milestone.
+
+### Step 1.2 - Determine the sub-phase branch name
+Derive the sub-phase branch from the issue's milestone:
+- Milestone `Phase 3.9` → sub-phase branch `phase-3-9`
+- Replace `.` with `-`, prepend `phase-`
+
+### Step 1.3 - Determine the issue branch name
+Read the branch name from the issue. If none was found, read the issue's comments and find the branch comment in the format:
+```
+Branch: `branch-name`
+```
+
+This is the pre-created issue branch for this issue. If no branch name is found for this issue, stop and report the problem - do not create a new branch.
+
+### Step 1.4 - Checkout and rebase
+Checkout the pre-created issue branch AND rebase on the sub-phase branch.
+
+### Step 1.5 - Return details
+Return the issue's full contents, the sub-phase branch name and the issue branch name
 
 ---
 
 ## Step 2 - Spawn Engineer agents
 
-Before invoking any agents:
+Before spawning any agents:
 - Check for a saved issue plan in @.claude/plans/ based on the issue number from Gitea. The file name will be `issue-$issueNumber.md` (examples: `.claude/plans/issue-12.md` or `.claude/plans/issue-23.md`). Side note: issue plans are not tracked in Git.
 - Derive the mockup pattern from the issue milestone: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check `frontend/mockups/` for a matching file.
 
@@ -116,28 +124,34 @@ Make sure the agent does not touch documentation for sections that were not affe
 
 Wait for user to confirm implementation is correct and documentation has been updated.
 
-Once the user confirms, spawn the `git-manager` agent, passing the code review summaries and instructions to follow the steps below:
-1. Commit and push the changes - stage ONLY the changes made for this issue and commit:
-    ```
-    Feature: [short description matching issue title]
+Once the user confirms, spawn the `git-manager` agent, passing the code review summaries and instructions to follow the steps below.
 
+### Step 5.1 - Commit and push 
+Commit and push the changes. Stage ONLY the changes made for this issue and commit:
+```
+Feature: [short description matching issue title]
+
+Closes #[issue-number]
+
+- [File or change, one line each]
+```
+
+### Step 5.2. Open pull request 
+Open a pull request via the Gitea MCP:
+- **From:** issue branch (`YYYY-MM-DD-task-summary`)
+- **Into:** sub-phase branch (`phase-X-Y`)
+- **Title:** the issue title
+- **Milestone:** Phase X.Y
+- **Body:**
+    ```
     Closes #[issue-number]
 
-    - [File or change, one line each]
+    ## Code review summary
+    [combined reports generated from code reviewer agents]
+
+    ## Files changed
+    - [list]
     ```
-2. Open a pull request via the Gitea MCP:
-    - **From:** issue branch (`YYYY-MM-DD-task-summary`)
-    - **Into:** sub-phase branch (`phase-X-Y`)
-    - **Title:** the issue title
-    - **Milestone:** Phase X.Y
-    - **Body:**
-      ```
-      Closes #[issue-number]
 
-      ## Code review summary
-      [combined reports generated from code reviewer agents]
-
-      ## Files changed
-      - [list]
-      ```
-3. Report the PR URL when done.
+### Step 5.3 - Return PR URL
+Return the PR URL when done.

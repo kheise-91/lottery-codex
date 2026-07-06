@@ -1,6 +1,6 @@
 ---
 name: frontend-engineer
-description: Use this agent when working on React/JavaScript frontend code, including component creation, state management, styling, API integration, and UI logic. This agent is strictly confined to the `frontend/` directory and should be invoked for all frontend-related development tasks, bug fixes, and feature implementations.
+description: Use this agent when working on React/JavaScript frontend code, including component creation, state management, styling, API integration, and UI logic. This agent is strictly confined to the `frontend/` directory and should be spawned for all frontend-related development tasks, bug fixes, and feature implementations.
 color: Blue
 model: inherit
 ---

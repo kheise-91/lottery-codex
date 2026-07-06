@@ -69,7 +69,7 @@ For each task, determine:
 
 ## Step 3 - Create branches, milestone, and issues
 
-Invoke the `git-manager` agent with instructions to follow the steps below.
+Spawn the `git-manager` agent with instructions to follow the steps below.
 
 ### Step 3.1 - Create sub-phase branch
 - Derive the new sub-phase branch name from the user provided sub-phase number: replace the `.` with `-` and prepend `phase-`. Example: `3.9` → `phase-3-9`
@@ -84,36 +84,36 @@ Using the Gitea MCP, detect the repo from the current git remote. Create a miles
 If the milestone already exists, skip creation and use the existing one.
 
 ### Step 3.3 - Create issues
-For each task in sequence, perform the steps below (3.3.1 - 3.3.7) **one task at a time** - complete all steps for one task before moving to the next:
+For each task in sequence, perform the steps below **one task at a time** - complete all steps for one task before moving to the next:
 
-#### 3.3.1 - Generate the issue branch name
+#### Step 3.3.1 - Generate the issue branch name
 Format: `YYYY-MM-DD-short-task-summary`
 - Use today's date
 - Derive the summary from the task title: lowercase, hyphens, max 5 words, no special characters, no articles (a/an/the)
 - Example: `2026-05-25-add-followed-up-column`
 
-#### 3.3.2 - Create the issue branch
+#### Step 3.3.2 - Create the issue branch
 Using the generated issue branch name, create a new branch off of the sub-phase branch (not master) and push it.
 
-#### 3.3.3 - Create labels 
+#### Step 3.3.3 - Create labels 
 Create any missing labels via the Gitea MCP if the label doesn't already exist.
 
-#### 3.3.4 - Create the issue
+#### Step 3.3.4 - Create the issue
 Create the issues via the Gitea MCP with: title, project board name, milestone, branch, label(s), and body as planned in Step 2.
 
-#### 3.3.5 - Add branch name comment to the issue
+#### Step 3.3.5 - Add branch name comment to the issue
 Add a comment to the issue immediately after creation:
 ```
 Branch: `YYYY-MM-DD-short-task-summary`
 ```
 
-#### 3.3.6 - Add mockup file comment to the issue (if one exists)
+#### Step 3.3.6 - Add mockup file comment to the issue (if one exists)
 If a mockup file was found in step 2, add a second comment to the issue:
 ```
 Mockup: `[mockup-file-path/mockup-file-name.html]`
 ```
 
-#### 3.3.7 - Confirm
+#### Step 3.3.7 - Confirm
 Confirm the issue number, title, and branch name before proceeding to the next task.
 
 ### Step 3.4 - Return created issues
