@@ -71,44 +71,56 @@ Spawn only the agents the issue actually requires. A frontend-only issue skips t
 
 ## Step 3 - Spawn Reviewer agents
 
+Before spawning reviewers, capture the actual changes made by the engineer agents (work is uncommitted at this point):
+
+```bash
+git add -A
+git diff --cached
+```
+
+Split the diff output by top-level path (`frontend/`, `backend/`, `docker-compose.yml`/`docker/`) and match it to the section(s) that had an engineer spawned in Step 2.
+
 For each engineer agent that worked on implementing the issue, spawn the corresponding reviewer agent. For example: the `frontend-reviewer` will review the work done by the `frontend-engineer` agent.
 
 Context/instructions to pass to the reviewer agents:
- 
+
 **Context:**
-- The list of all files changed during implementation
+- The diff content scoped to this agent's section only (not just filenames)
 - The issue title and acceptance criteria
 - App URL: https://dev-server.heise.home (`frontend-reviewer` only)
 
-**Instructions:** 
-You are doing a code review on the changed files.
-- Read only the changed files
-- Perform code checks
+**Instructions:**
+You are reviewing the code changes made for this issue. You are in **scoped mode** - review ONLY the diff content provided - do not review the full file or flag pre-existing issues outside these changes, unless a pre-existing issue is directly broken by this change.
+- Perform code checks on the diff
 - Perform visual and interaction review using the Playwright MCP (`frontend-reviewer` only)
-- Return a short report, maximum 8 bullet points.
+- Return a short report, maximum 8 bullet points
 - Be direct and specific
+- Tag each finding as Critical / Warning / Suggestion
 
 **Report format:**
-```markdown
+```md
 ## Code review
- 
-### Code issues
-- [ISSUE] filename - specific problem
-- [PASS] filename - no code issues found
+
+### Findings
+- [CRITICAL] filename - specific problem
+- [WARNING] filename - specific problem
+- [SUGGESTION] filename - specific problem
+- [PASS] filename - no issues found
 
 ### Verdict
-PASS / NEEDS FIXES
-``` 
+PASS / FAIL
+```
+Verdict is FAIL only if one or more Critical findings exist. Warnings and suggestions never block - collect them for the PR body instead.
 
-If verdict is **NEEDS FIXES** and/or one of the code-reviewers flags blocking issues, address them before proceeding to the next step. 
+If verdict is **FAIL**, address the Critical issues before proceeding to the next step.
 
-Follow the steps below for each blocking issue until the final verdict is **PASS**:
-1. Identify which upstream agent is responsible for the blocking issue
-2. Re-spawn that upstream agent to fix the issue
-3. Once this fix is done, re-spawn the corresponding reviewer agent again
-4. Repeat this loop for each engineer and reviewer pair until all blocking issues have been fixed
+Follow the steps below for each Critical issue until the final verdict is **PASS**:
+1. Identify which upstream agent is responsible for the critical issue
+2. Re-spawn that upstream agent to fix ONLY the Critical issue(s) - do not ask it to act on Warnings/Suggestions
+3. Once the fix is done, re-spawn the corresponding reviewer agent again, scoped to the new diff only (repeat the `git add -A && git diff --cached` capture)
+4. Repeat this loop for each engineer/reviewer pair until all Critical issues are resolved
 
-Non-blocking observations can be noted in the PR body.
+Non-Critical observations (Warnings, Suggestions) are carried into the PR body in Step 5, not acted on here.
 
 ---
 
