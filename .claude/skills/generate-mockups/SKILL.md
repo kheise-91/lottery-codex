@@ -6,11 +6,9 @@ effort: xhigh
 arguments: [subPhase, numberOfMockups]
 ---
 
-The subPhase number is: $subPhase. If no $subPhase number is passed, stop and 
-ask the user for a sub-phase number before proceeding.
+The subPhase number is: $subPhase. If no $subPhase number is passed, stop and ask the user for a sub-phase number before proceeding.
 
-The number of mockups to create is: $numberOfMockups. If no $numberOfMockups is 
-passed, default to creating 3 mockups.
+The number of mockups to create is: $numberOfMockups. If no $numberOfMockups is passed, default to creating 3 mockups.
 
 ---
 
