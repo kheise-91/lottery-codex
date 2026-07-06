@@ -1,12 +1,12 @@
 ---
 name: complete-issue
-description: Fully autonomous mode. Works on a Gitea issue from start to finish without pausing for user confirmation. All work is isolated to a pre-created branch so it is safe to proceed without verification since nothing merges to master automatically.
+description: Fully autonomous mode for implementation, review, and documentation. Works on a Gitea issue from start to finish without pausing for user confirmation, EXCEPT for the final commit/push/PR step, which always requires explicit user go-ahead. All work is isolated to a pre-created branch so it is safe to proceed without verification since nothing merges to master automatically, and nothing is pushed without confirmation.
 disable-model-invocation: true
 effort: xhigh
 arguments: [issueNumber]
 ---
 
-You are in `accept edits` mode. Do not request permission for any of the steps below. All work is isolated to a pre-created branch so it is safe to proceed without verification since nothing merges to master automatically.
+You are in `accept edits` mode for Steps 1 through 4 below: do not request permission for fetching the issue, implementing, reviewing, or updating documentation. **This does not apply to Step 5** - committing, pushing, and opening a PR always requires explicit user confirmation, with no exceptions, regardless of how confident the implementation and review are.
 
 The issue number is: $issueNumber.
 
@@ -92,6 +92,9 @@ Context/instructions to pass to the reviewer agents:
 **Instructions:**
 You are reviewing the code changes made for this issue. You are in **scoped mode** - review ONLY the diff content provided - do not review the full file or flag pre-existing issues outside these changes, unless a pre-existing issue is directly broken by this change.
 - Perform code checks on the diff
+    - A line appearing in the diff because an unrelated part of it changed (e.g. a type annotation was added) does NOT make the rest of that line's content fair game. 
+    - If a value, literal, or piece of logic on that line was not itself modified by this change, treat it as pre-existing and out of scope - note it as a Suggestion for separate verification at most, never Critical.
+    - Reserve Critical for problems actually introduced by this diff, or things the acceptance criteria explicitly require and are missing.
 - Perform visual and interaction review using the Playwright MCP (`frontend-reviewer` only)
 - Return a short report, maximum 8 bullet points
 - Be direct and specific
@@ -115,10 +118,12 @@ Verdict is FAIL only if one or more Critical findings exist. Warnings and sugges
 If verdict is **FAIL**, address the Critical issues before proceeding to the next step.
 
 Follow the steps below for each Critical issue until the final verdict is **PASS**:
-1. Identify which upstream agent is responsible for the critical issue
-2. Re-spawn that upstream agent to fix ONLY the Critical issue(s) - do not ask it to act on Warnings/Suggestions
-3. Once the fix is done, re-spawn the corresponding reviewer agent again, scoped to the new diff only (repeat the `git add -A && git diff --cached` capture)
-4. Repeat this loop for each engineer/reviewer pair until all Critical issues are resolved
+1. The orchestrator NEVER edits code files directly, under any circumstances. If a Critical finding needs fixing, re-spawn the upstream engineer agent to fix it - do not use an edit tool yourself, even for a "quick" or "obvious" fix.
+2. Identify which upstream agent is responsible for the critical issue.
+3. Re-spawn that upstream agent to fix ONLY the Critical issue(s) - do not ask it to act on Warnings/Suggestions.
+4. Once the fix is done, re-spawn the corresponding reviewer agent again, scoped to the new diff only (repeat the `git add -A && git diff --cached` capture).
+5. Repeat this loop for each engineer/reviewer pair until all Critical issues are resolved.
+6. Cap the fix loop (step 5) at **3 rounds per section**. If Critical issues remain after 3 rounds, stop - do not keep looping. Proceed to Step 4 with documentation only for what's confirmed correct, and surface the unresolved Critical issue(s) prominently in Step 5 for the user to decide on manually.
 
 Non-Critical observations (Warnings, Suggestions) are carried into the PR body in Step 5, not acted on here.
 
@@ -134,7 +139,7 @@ Make sure the agent does not touch documentation for sections that were not affe
 
 ## Step 5 - Commit, push, and open PR
 
-Wait for user to confirm implementation is correct and documentation has been updated.
+STOP and ASK for the user to confirm implementation is correct and documentation has been updated.
 
 Once the user confirms, spawn the `git-manager` agent, passing the code review summaries and instructions to follow the steps below.
 

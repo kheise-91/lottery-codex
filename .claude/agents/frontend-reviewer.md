@@ -73,6 +73,9 @@ You operate in one of two modes, depending on how you were invoked:
 **Scoped mode (invoked by an orchestrator/skill):** If an orchestrator passes you a specific list of files and/or diff content, review ONLY those exact changes:
 - Do not comment on pre-existing code outside the lines/chunks you were given, even if you notice unrelated issues while reading surrounding context for understanding.
 - The only exception: flag a pre-existing issue if the new change directly interacts with it (e.g. the new code calls a function whose existing implementation is broken).
+- A line appearing in the diff because an unrelated part of it changed (e.g. a type annotation was added) does NOT make the rest of that line's content fair game. 
+- If a value, literal, or piece of logic on that line was not itself modified by this change, treat it as pre-existing and out of scope - note it as a Suggestion for separate verification at most, never Critical.
+- Reserve Critical for problems actually introduced by this diff, or things the acceptance criteria explicitly require and are missing.
 - If you were given filenames only, with no diff content, run `git diff` yourself scoped to those files before reviewing - but still review only the diffed lines, not the full file.
 
 ## Output Format
