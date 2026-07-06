@@ -20,7 +20,7 @@ Web application that leverages historical lottery data to calculate optimized nu
 ```
 
 - **Frontend** — React 18 + Vite + Tailwind CSS. Served as a PWA with offline caching.
-- **Backend** — PHP 8.2+ powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints, and `simplehtmldom` for HTML parsing. A legacy manual autoloader (`_functions.php`) still runs alongside Composer's `vendor/autoload.php`; full migration to Composer autoloading is planned for Phase 0.3+.
+- **Backend** — PHP 8.2+ powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints, and `simplehtmldom` for HTML parsing.
 - **Data flow** — Backend scrapes Wisconsin Lottery draw history via CURL → analyzes odd/even and low/high patterns → generates prediction panels → serves results through a REST API → React renders the UI.
 
 ## How It Works
@@ -56,8 +56,6 @@ Each sub-pattern specifies which pool each of the 5 (or 6) positions draws from,
 │   │   ├── BadgerFive.php    # Badger Five game implementation
 │   │   └── SuperCash.php     # Super Cash game implementation
 │   ├── simplehtmldom/        # HTML parser library
-│   ├── _functions.php        # Legacy manual autoloader (still active alongside Composer)
-│   ├── autoloader.php        # PSR-4 autoloader entry point
 │   ├── composer.json         # PHP dependencies
 │   ├── composer.lock         # Locked dependency versions
 │   └── vendor/               # Composer-installed dependencies (git-ignored)
