@@ -46,7 +46,7 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
    **Done when:** `vendor/autoload.php` exists and loads game classes by namespace.
 
-- [-] **[0.3 — Namespace + type-hint existing game classes](https://gitea.heise.home/kheise/lottery-codex/milestone/14)**
+- [x] **[0.3 — Namespace + type-hint existing game classes](https://gitea.heise.home/kheise/lottery-codex/milestone/14)**
    - Add `namespace LotteryCodex\Games;` to both `BadgerFive.php` and `SuperCash.php`
    - Add PHP 8.2 property types, return types, constructor promotion where appropriate
    - Remove side-effects from constructors (no scraping in `__construct`)
