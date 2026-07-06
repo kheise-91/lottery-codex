@@ -16,9 +16,9 @@ class BadgerFive implements \JsonSerializable
 
     private array $lowEven = [2, 4, 6, 8, 10, 12, 14, 16];
 
-    private array $highOdd = [17, 19, 21, 23, 25, 27, 29];
+    private array $highOdd = [17, 19, 21, 23, 25, 27, 29, 31];
 
-    private array $highEven = [18, 20, 22, 24, 26, 28];
+    private array $highEven = [18, 20, 22, 24, 26, 28, 30];
 
     private array $pattern1 = [
         // 3-Odd 2-Even / 3-Low 2-High //
@@ -135,7 +135,7 @@ class BadgerFive implements \JsonSerializable
         $panel = [];
 
         foreach ($pattern as $i => $p) {
-            $cutoff = ($p === 'highEven') ? 5 : 7;
+            $cutoff = ($p === 'highEven') ? 6 : 7;
             $num = $this->{$p}[rand(0, $cutoff)];
 
             while (in_array($num, $excluded)) {
