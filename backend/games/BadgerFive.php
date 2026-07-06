@@ -12,13 +12,13 @@ class BadgerFive implements \JsonSerializable
 
     private array $panels = [];
 
-    private array $lowOdd = [1, 3, 5, 7, 9, 11, 13, 15];
+    private array $lowOdd = [1, 3, 5, 7, 9, 11, 13, 15]; // indexes: 0-7
 
-    private array $lowEven = [2, 4, 6, 8, 10, 12, 14, 16];
+    private array $lowEven = [2, 4, 6, 8, 10, 12, 14, 16]; // indexes: 0-7
 
-    private array $highOdd = [17, 19, 21, 23, 25, 27, 29, 31];
+    private array $highOdd = [17, 19, 21, 23, 25, 27, 29, 31]; // indexes: 0-7
 
-    private array $highEven = [18, 20, 22, 24, 26, 28, 30];
+    private array $highEven = [18, 20, 22, 24, 26, 28, 30]; // indexes: 0-6
 
     private array $pattern1 = [
         // 3-Odd 2-Even / 3-Low 2-High //
