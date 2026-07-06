@@ -12,15 +12,15 @@ Six models are available via llama-swap. All share the same 256K-class context w
 
 ## Model Roster
 
-| Name | Qwen Code Alias | Base Model | Quant | Architecture | MTP | Thinking |
+| Name | Claude Code Alias | Base Model | Quant | Architecture | MTP | Thinking |
 | ---- | ----------------- | ---------- | ----- | ------------ | --- | -------- |
 |`Qwen-Agent`|none (default)|Qwen3-Coder-Next|UD-Q4_K_XL|80B MoE · 3B active|No|None|
-|`Quick-Coder`|`qc-quick-coder`|Qwen3.6-35B-A3B|UD-Q8_K_XL|35B MoE · 3B active|Yes|Off|
-|`Swift-Reasoner`|`qc-swift-reasoner`|Qwen3.6-35B-A3B|UD-Q8_K_XL|35B MoE · 3B active|Yes|On|
-|`Precise-Coder`|`qc-precise-coder`|Qwen3.6-27B|UD-Q4_K_XL|27B dense|Yes|Off|
-|`Deep-Reasoner`|`qc-deep-reasoner`|Qwen3.6-27B|UD-Q4_K_XL|27B dense|Yes|On|
-|`Titan-Coder`|`qc-titan-coder`|Qwen3.5-122B-A10B|UD-Q3_K_XL|122B MoE · 10B active|Yes|Off|
-|`Titan-Reasoner`|`qc-titan-reasoner`|Qwen3.5-122B-A10B|UD-Q3_K_XL|122B MoE · 10B active|Yes|On|
+|`Quick-Coder`|`cc-quick-coder`|Qwen3.6-35B-A3B|UD-Q8_K_XL|35B MoE · 3B active|Yes|Off|
+|`Swift-Reasoner`|`cc-swift-reasoner`|Qwen3.6-35B-A3B|UD-Q8_K_XL|35B MoE · 3B active|Yes|On|
+|`Precise-Coder`|`cc-precise-coder`|Qwen3.6-27B|UD-Q4_K_XL|27B dense|Yes|Off|
+|`Deep-Reasoner`|`cc-deep-reasoner`|Qwen3.6-27B|UD-Q4_K_XL|27B dense|Yes|On|
+|`Titan-Coder`|`cc-titan-coder`|Qwen3.5-122B-A10B|UD-Q3_K_XL|122B MoE · 10B active|Yes|Off|
+|`Titan-Reasoner`|`cc-titan-reasoner`|Qwen3.5-122B-A10B|UD-Q3_K_XL|122B MoE · 10B active|Yes|On|
 
 ---
 
@@ -32,13 +32,13 @@ Six models are available via llama-swap. All share the same 256K-class context w
  
 Purpose-built for agentic workflows. Unlike the general 3.6 models, Coder-Next was trained specifically on 800K executable coding tasks with real environment feedback — tool calls, bash loops, file edits, and failure recovery. Nothing else in this lineup was trained the same way.
  
-It has no thinking mode by design; it's optimized for decisive, low-latency tool actions rather than extended internal reasoning. In a Qwen Code session you're waiting on tool execution more than token generation anyway, so the slower raw speed matters less.
+It has no thinking mode by design; it's optimized for decisive, low-latency tool actions rather than extended internal reasoning. In a Claude Code session you're waiting on tool execution more than token generation anyway, so the slower raw speed matters less.
  
-**Use with:** Qwen Code CLI (`qwen` command).
+**Use with:** Claude Code (`claude` command).
  
 **Reach for it when:**
  
-* Starting any `qwen` session
+* Starting any `claude` session
 * Running multi-step agentic tasks (edit → test → fix loops)
 * Working across multiple files or an entire repo
 * Any workflow that relies on tool use and execution feedback
@@ -53,7 +53,7 @@ Your fastest model for everyday coding tasks. MoE architecture activates only ~3
  
 Good default for Continue.dev chat. Switch to `Precise-Coder` when quality starts to matter.
  
-**Use with:** Qwen Code / Continue.dev
+**Use with:** Claude Code / Continue.dev
  
 **Reach for it when:**
  
@@ -73,7 +73,7 @@ Same weights as `Quick-Coder` with thinking enabled. MoE efficiency still applie
  
 Think of it as the middle option: more than `Quick-Coder`, less wait than `Deep-Reasoner`.
  
-**Use with:** Qwen Code / Continue.dev
+**Use with:** Claude Code / Continue.dev
  
 **Reach for it when:**
  
@@ -92,7 +92,7 @@ The highest-quality coding model in the lineup. Dense architecture means every o
  
 Benchmarks back this up: 77.2% on SWE-bench Verified (within 3.7 points of Claude Opus 4.6), 59.3% on Terminal-Bench 2.0. Thinking is off, so responses are direct and fast relative to `Deep-Reasoner` — use this when you already know what you want and just need it done right.
  
-**Use with:** Qwen Code / Continue.dev
+**Use with:** Claude Code / Continue.dev
  
 **Reach for it when:**
  
@@ -110,7 +110,7 @@ Benchmarks back this up: 77.2% on SWE-bench Verified (within 3.7 points of Claud
  
 Same weights as `Precise-Coder`, different mode. Thinking enabled means the model works through the problem step-by-step inside `<think>` blocks before committing to a response. The 27B dense architecture gives it the most reasoning depth in the lineup — it will out-think both MoE models on hard problems. Worth the extra wait on genuinely difficult tasks.
  
-**Use with:** Qwen Code / Continue.dev
+**Use with:** Claude Code / Continue.dev
  
 **Reach for it when:**
  
@@ -130,7 +130,7 @@ The largest and most capable model in the roster. 122B total parameters routed t
  
 Benchmarks: 72.4% on SWE-bench Verified and 49.4% on Terminal-Bench 2.0 — putting it slightly ahead of `Qwen-Agent` on agentic coding tasks despite carrying no agentic-specific training. Vision-capable, with a native 262K context window extensible to 1M. MTP draft decoding matters a lot here — without it, the 10B active parameter count would make this noticeably slower than everything else in the lineup; with MTP, the gap narrows substantially.
  
-**Use with:** Qwen Code / Continue.dev
+**Use with:** Claude Code / Continue.dev
  
 **Reach for it when:**
  
@@ -149,7 +149,7 @@ Same weights as `Titan-Coder`, with thinking enabled. This is the deepest reason
  
 Best reserved for the rare case where `Deep-Reasoner` isn't quite enough — gnarly architecture decisions, debugging issues that span multiple subsystems, or problems where getting the answer right the first time matters more than getting it fast.
  
-**Use with:** Qwen Code / Continue.dev
+**Use with:** Claude Code / Continue.dev
  
 **Reach for it when:**
  
