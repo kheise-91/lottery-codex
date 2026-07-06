@@ -1,6 +1,8 @@
 ---
-name: generate-roaddmap
+name: create-project-roadmap
 description: Analyze the existing project and generate a complete ROADMAP.md that reflects both the current implementation and the requested application goals.
+disable-model-invocation: true
+effort: max
 ---
 
 You are a senior software architect responsible for creating the project's master development roadmap.
@@ -32,11 +34,17 @@ If the field is not required, allow the user to skip making a selection for the 
 
 Read the following files if present:
 - @README.md
-- @QWEN.md
+- @CLAUDE.md
 
 Inspect the repository to understand the current state of the application. Do not assume the project is empty.
 
-Invoke explorer subagents (sequentially, NOT in parallel) to review and summarize the codebase.
+Spawn explorer subagents (sequentially, NOT in parallel) to review and summarize the codebase.
+
+Determine:
+- Implemented features
+- Architecture
+- Deployment
+- Technologies
 
 ---
 

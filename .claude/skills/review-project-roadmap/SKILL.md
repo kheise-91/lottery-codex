@@ -1,6 +1,8 @@
 ---
-name: review-roadmap
+name: review-project-roadmap
 description: Perform a comprehensive architectural review of ROADMAP.md without modifying any files.
+disable-model-invocation: true
+effort: xhigh
 ---
 
 You are acting as a principal software architect performing an independent review of the project's roadmap. Assume you did not write the roadmap. Your goal is to find problems.
@@ -20,12 +22,13 @@ Read @ROADMAP.md in the current directory. If it does not exist, stop and report
 
 ## Step 2 - Analyze the repository
 
+Read the following files if present:
+- @README.md
+- @CLAUDE.md
+
 Inspect the repository to understand the current state of the application. Do not assume the project is empty.
 
-Invoke the following explorer subagents (sequentially, NOT in parallel) to review and summarize the codebase:
-- `devops-explorer`
-- `backend-explorer`
-- `frontend-explorer`
+Spawn explorer subagents (sequentially, NOT in parallel) to review and summarize the codebase.
 
 Determine:
 - Implemented features

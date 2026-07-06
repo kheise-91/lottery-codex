@@ -1,5 +1,5 @@
 ---
-name: project-development-workflow
+name: development-workflow
 title: Project Development Workflow
 description: The workflow followed while working on this project.
 ---
@@ -12,13 +12,13 @@ description: The workflow followed while working on this project.
 Initialize project (README.md, .gitignore etc)
 
 ### Step 2 - Scope Project
-*Custom Qwen Code commands available: `/roadmap:generate`, `/roadmap:review`*
+*Custom Claude Code commands available: `/create-roadmap`, `/review-roadmap`*
 
 ### Step 3 - Create Gitea Project Boards
 Create project boards for each Phase in the Gitea repository.
 
 ### Step 4 - Scope Tasks
-*Custom Qwen Code commands available: `/mockups:create`, `/gitea:create-sub-phase`*
+*Custom Claude Code commands available: `/generate-mockups`, `/create-sub-phase`*
 
 For each project sub-phase:
 - Create mockups of UI/UX changes (optional - update sub-phase description in roadmap if needed to summarize chosen mockup)
@@ -29,7 +29,7 @@ For each project sub-phase:
 - Update project roadmap: mark sub-phase as "In progress" and link title to Gitea milestone
 
 ### Step 5 - Complete Tasks
-*Custom Qwen Code command available: `/gitea:complete-issue`*
+*Custom Claude Code command available: `/complete-issue`*
 
 For each issue:
 - Checkout pre-made branch (`Y-m-d-short-task-summary`) and rebase on `phase-X-Y` branch
@@ -37,7 +37,7 @@ For each issue:
 - Open pull request for `Y-m-d-short-task-summary` branch into `phase-X-Y` branch
 
 ### Step 6 - Assemble Project
-*Custom Qwen Code command available: `/docs:update`*
+*Custom Claude Code command available: `/qa-review`, `/update-documentation`*
 
 When all issues for sub-phase/milestone have been completed and merged:
 - Perform a QA review of sub-phase branch (inside sub-phase branch)
@@ -50,6 +50,61 @@ When all issues for sub-phase/milestone have been completed and merged:
 When all sub-phases have been completed and merged:
 - Update all documentation
 - Package app for production environment and deploy(ment)
+
+---
+
+## Flowchart
+
+*Example flowchart diagram utilizing Claude Code skills*
+
+```mermaid
+flowchart TD
+    Start([1 - Create Project])
+    End([7 - Deploy Project])
+
+    subgraph SCOPE_PROJECT["2 - Scope Project"]
+        S1["/create-project-roadmap"]
+        S2@{ shape: subproc, label: "/expand-project-roadmap" }
+        S3@{ shape: subproc, label: "/review-project-roadmap" }
+    end
+
+    G1@{ shape: trap-t, label: "3 - Create Project Boards <br> (Gitea)"}
+
+    subgraph SCOPE_TASKS["4-  Scope Tasks"]
+        C1{"/create-mockup"}
+        TC1@{ shape: proc, label: "/create-sub-phase" }
+    end
+
+    subgraph DEVELOPMENT["5 - Complete Tasks"]
+        D1@{ shape: proc, label: " &emsp; /complete-issue &emsp; " }
+    end
+
+    subgraph ASSEMBLE["6 - Assemble Project"]
+        QA["/qa-review"]
+        DOC["/update-documentation"]
+    end
+
+    Start --> SCOPE_PROJECT
+    S1 --> S2
+    S2 --> S3
+    S3 --> G1
+    G1 -.-> SCOPE_TASKS
+    C1 --> TC1
+    TC1 --> DEVELOPMENT
+    D1 --> ASSEMBLE
+    QA --> DOC
+    DOC --> End
+
+    classDef sequential fill:#E1F5EE,stroke:#1D9E75,color:#085041
+    classDef choice fill:#EEEDFE,stroke:#7F77DD,color:#26215C
+    classDef decision fill:#FAEEDA,stroke:#EF9F27,color:#412402
+    classDef terminal fill:#F1EFE8,stroke:#888780,color:#2C2C2A
+
+    class S1,S2,S3,G1,QA,DOC sequential
+    class TC1,TC2,D1,D2,D3 choice
+    class C1,C2,C3 decision
+    class Start,End terminal
+```
 
 ---
 

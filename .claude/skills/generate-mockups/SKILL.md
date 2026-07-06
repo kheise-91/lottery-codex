@@ -1,25 +1,20 @@
 ---
-name: generate-mockup
+name: generate-mockups
 description: Generate multiple UI mockup variants for a roadmap sub-phase using the frontend UX agent.
+disable-model-invocation: true
+effort: xhigh
+arguments: [subPhase, numberOfMockups]
 ---
 
-You will receive a string of arguments in {{args}}. Before doing anything else, parse this string to find specific flags and their values.
+The subPhase number is: $subPhase. If no $subPhase number is passed, stop and ask the user for a sub-phase number before proceeding.
 
-Once extracted, you can proceed to the steps below.
-
-Look for these exact flags:
-- `--sub-phase [value]` (The specific project sub-phase from the roadmap, e.g., 3.2)
-- `--number-of-mockups [value]` (The total number of designs to make, e.g., 3)
-
-If no sub-phase is specified, stop and ask the user to provide one.
-
-If no number-of-mockups is specified, default to 3.
+The number of mockups to create is: $numberOfMockups. If no $numberOfMockups is passed, default to creating 3 mockups.
 
 ---
 
 ## Step 1 - Read the sub-phase
 
-Read @ROADMAP.md and find the sub-phase specified by the user (e.g. "3.2" matches `- [ ] **3.2...**`)
+Read @ROADMAP.md and find the sub-phase matching "$subPhase" (e.g. "3.2" matches `- [ ] **3.2...**`)
 
 Extract the sub-phase title and the full sub-phase description including any implementation notes and "done when" definition.
 
@@ -51,11 +46,11 @@ Summarize the extracted frontend requirements in plain language before proceedin
 
 ---
 
-## Step 3 - Delegate project style extraction to `frontend-explorer` subagent
+## Step 3 - Delegate project style extraction to `frontend-explorer` agent
 
-Spawn the `frontend-explorer` subagent to analyze the existing frontend architecture. Do not use local file tools for this step; you MUST invoke the specified explorer subagent.. 
+Spawn the `frontend-explorer` agent to analyze the existing frontend architecture. Do not use local file tools for this step; you MUST spawn the specified explorer agent.. 
 
-Provide the subagent with this exact prompt:
+Provide the agent with this exact prompt:
 ```text
 Analyze the existing codebase inside `frontend/src/` to extract visual design conventions for a new mockup. 
 1. Inspect the global stylesheet (e.g., `frontend/src/index.css`) for Tailwind patterns, CSS variables, and core theme colors.
@@ -64,13 +59,13 @@ Analyze the existing codebase inside `frontend/src/` to extract visual design co
 Return a markdown summary of these visual styles to the orchestrator. Do not attempt to read files outside your permitted directories or write any mockup files.
 ```
 
-Await the subagent's markdown response before moving on to Step 4. Use the subagent's summary to assist with planning and generating the mockups.
+Await the agent's markdown response before moving on to Step 4. Use the agent's summary to assist with planning and generating the mockups.
 
 ---
 
 ## Step 4 - Plan distinct mockup variants
 
-Before writing any HTML, think through [number-of-mockups] meaningfully different approaches to the frontend design extracted in Step 2. 
+Before writing any HTML, think through $numberOfMockups meaningfully different approaches to the frontend design extracted in Step 2. 
 
 Variants must differ in **structure or interaction pattern** - not just color or size.
 
@@ -87,17 +82,17 @@ For each mockup variant, decide:
 
 ---
 
-## Step 5 - Invoke `frontend-engineer` subagents to generate mockup variants
+## Step 5 - Spawn `frontend-engineer` agents to generate mockup variants
 
-For each planned mockup variant: invoke a `frontend-engineer` subagent to produce a complete, self-contained HTML file for each variant following the expected requirements found in the subagent's definition.
+For each planned mockup variant: spawn a `frontend-engineer` agent to produce a complete, self-contained HTML file for each variant following the expected requirements found in the agent's definition.
 
-Pass the subagent the sub-phase number and variant info, extracted design requirements and project styles from steps 2 and 3, and any other information needed to create the specified variant.
+Pass the agent the sub-phase number and variant info, extracted design requirements and project styles from steps 2 and 3, and any other information needed to create the specified variant.
 
 ---
 
 ## Step 6 - Report
 
-Print a summary table with all the files created from the subagents:
+Print a summary table with all the files created from the agents:
 
 | File | Approach | Best suited for |
 |---|---|---|
