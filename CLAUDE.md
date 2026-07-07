@@ -92,6 +92,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
 ```
 
 - **Backend entry point:** `backend/api.php` — Slim Framework router serving 4 REST endpoints
+- **Game interface:** `backend/games/GameInterface.php` — defines the contract for game implementations (`getGameDetails()`, `getHistory()`, `generatePanels()`)
 - **Game classes:** `backend/games/BadgerFive.php`, `backend/games/SuperCash.php` — pattern analysis and panel generation logic
 - **Autoloading:** Composer PSR-4 (`LotteryCodex\Games\` → `games/`)
 - **Frontend:** Minimal React app currently — `App.jsx` is a placeholder. Full component hierarchy (pages, hooks, contexts) is planned per the migration roadmap.
