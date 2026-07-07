@@ -54,7 +54,7 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
    **Done when:** Both classes load via Composer autoloader with zero PHP warnings.
 
-- [ ] **0.4 — Create GameInterface**
+- [-] **[0.4 — Create GameInterface](https://gitea.heise.home/kheise/lottery-codex/milestone/22)**
    - Define `GameInterface` with: `getGameDetails()`, `getHistory()`, `generatePanels(int $pattern, int $tickets)`
    - Have both BadgerFive and SuperCash implement the interface
 
