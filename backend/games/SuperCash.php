@@ -18,7 +18,7 @@ class SuperCash implements \JsonSerializable
 
     private array $highEven = [22, 24, 26, 28, 30, 32, 34, 36, 38]; // indexes: 0-8
 
-    private array $pattern1 = [
+    private array $pattern = [
         // 3-Odd 3-Even / 3-Low 3-High //
         1 => ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven', 'highEven'],
         2 => ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highEven'],
@@ -78,6 +78,7 @@ class SuperCash implements \JsonSerializable
 
         echo json_encode(["Pattern Counts for Previous 500 Drawings" => $patterns], JSON_PRETTY_PRINT);
     }
+
 
     // private function loadPreviousDrawings() {
     // 	// Get previous drawing numbers to look at which patterns have been drawn recently
@@ -228,9 +229,9 @@ class SuperCash implements \JsonSerializable
         return $this->highEven;
     }
 
-    public function getPattern1(): array
+    public function getPattern(): array
     {
-        return $this->pattern1;
+        return $this->pattern;
     }
 
     public function jsonSerialize(): array
