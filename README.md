@@ -53,6 +53,7 @@ Each sub-pattern specifies which pool each of the 5 (or 6) positions draws from,
 ├── backend/
 │   ├── api/                  # REST API router and controllers
 │   ├── games/                # Game logic classes
+│   │   ├── GameInterface.php # Contract for game implementations
 │   │   ├── BadgerFive.php    # Badger Five game implementation
 │   │   └── SuperCash.php     # Super Cash game implementation
 │   ├── simplehtmldom/        # HTML parser library
