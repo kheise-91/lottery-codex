@@ -10,7 +10,7 @@ class BadgerFive implements \JsonSerializable
 {
     private array $previousDrawings = [];
 
-    private array $panels = [];
+    private array $tickets = [];
 
     private array $lowOdd = [1, 3, 5, 7, 9, 11, 13, 15]; // indexes: 0-7
 
@@ -29,9 +29,8 @@ class BadgerFive implements \JsonSerializable
         ['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven']
     ];
 
-    public function __construct(
-        private int $numOfTickets
-    ) {
+    public function __construct()
+    {
     }
 
     private function loadPreviousDrawings(): self
@@ -81,35 +80,40 @@ class BadgerFive implements \JsonSerializable
         return $this;
     }
 
-    private function loadPanels(): self
+    private function createTickets(int $count): self
     {
-        for ($ticket = 1; $ticket <= $this->numOfTickets; $ticket++) {
-            foreach ($this->pattern as $subPattern) {
-                // CREATE NEW PANEL //
-                $newPanel = $this->generatePanel($subPattern);
+        for ($i = 0; $i < $count; $i++) {
+            $ticket = [];
 
-                // VERIFY PANEL IS UNIQUE //
-                while (in_array($newPanel, $this->panels)) {
-                    $newPanel = $this->generatePanel($subPattern);
+            foreach ($this->pattern as $subPattern) {
+                // CREATE NEW PANEL FROM SUB-PATTERN //
+                $panel = $this->createPanel($subPattern);
+
+                // VERIFY PANEL IS UNIQUE ACROSS ALL GENERATED PANELS //
+                $allPanels = [];
+                foreach ($this->tickets as $existingTicket) {
+                    $allPanels = array_merge($allPanels, $existingTicket);
+                }
+                while (in_array($panel, $allPanels)) {
+                    $panel = $this->createPanel($subPattern);
                 }
 
-                // ADD PANEL TO MASTER ARRAY //
-                $this->panels[] = $newPanel;
+                $ticket[] = $panel;
             }
+
+            $this->tickets[] = $ticket;
         }
 
         return $this;
     }
 
-    private function generatePanel(array $subPattern): array
+    private function createPanel(array $subPattern): array
     {
         $panel = [];
 
-        foreach ($subPattern as $i => $p) {
-            $cutoff = count($this->{"{$p}"}) - 1;
-            $num = $this->{$p}[rand(0, $cutoff)];
-
-            array_push($panel, $num);
+        foreach ($subPattern as $p) {
+            $cutoff = count($this->{$p}) - 1;
+            $panel[] = $this->{$p}[random_int(0, $cutoff)];
         }
 
         sort($panel);
@@ -162,15 +166,15 @@ class BadgerFive implements \JsonSerializable
         return $this->previousDrawings;
     }
 
-    public function setPanels(array $panels): self
+    public function setTickets(array $tickets): self
     {
-        $this->panels = $panels;
+        $this->tickets = $tickets;
         return $this;
     }
 
-    public function getPanels(): array
+    public function getTickets(): array
     {
-        return $this->panels;
+        return $this->tickets;
     }
 
     public function getLowOdd(): array
