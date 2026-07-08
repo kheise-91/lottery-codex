@@ -7,5 +7,5 @@ interface GameInterface
 {
     public function getGameDetails(): array;
     public function getHistory(): array;
-    public function generatePanels(int $tickets): array;
+    public function generateTickets(int $tickets): array;
 }
