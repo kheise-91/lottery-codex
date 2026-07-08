@@ -55,8 +55,9 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
    **Done when:** Both classes load via Composer autoloader with zero PHP warnings.
 
 - [-] **[0.4 — Create GameInterface](https://gitea.heise.home/kheise/lottery-codex/milestone/22)**
-   - Define `GameInterface` with: `getGameDetails()`, `getHistory()`, `generatePanels(int $tickets)`
+   - Define `GameInterface` with: `getGameDetails()`, `getHistory()`, `generateTickets(int $tickets)`
    - `$pattern` parameter removed — each game class has one internal `$pattern` array; sub-pattern count equals physical panels per ticket card
+   - `generateTickets()` returns tickets as nested arrays (each ticket contains multiple panels) — not a flat array of panels
    - Have both BadgerFive and SuperCash implement the interface
 
    **Done when:** Both game classes type-hint against the interface.
@@ -85,7 +86,7 @@ Create the API front controller with mock data endpoints. This establishes front
    - `GET /api/games` → return static list of available games (Badger Five, Super Cash)
    - `GET /api/games/{gameId}` → return game rules/details
    - `GET /api/games/{gameId}/history` → return mock historical drawings
-   - `POST /api/games/{gameId}/generate` → accept `{tickets}`, return generated panels
+   - `POST /api/games/{gameId}/generate` → accept `{tickets}`, return generated tickets (nested array: ticket → panels)
 
    **Done when:** All 4 endpoints return valid JSON via `curl http://localhost:5959/api/games`.
 
@@ -222,7 +223,7 @@ Replace mock data with actual BadgerFive game class instances. This is where the
 
 - [ ] **4.1 — Wire BadgerFive into API endpoints**
    - Replace mock history in `GET /api/games/badger-five/history` with `$game->getHistory()`
-   - Replace mock panels in `POST /api/games/badger-five/generate` with `$game->generatePanels($tickets)`
+   - Replace mock panels in `POST /api/games/badger-five/generate` with `$game->generateTickets($tickets)`
    - Add try-catch wrappers around game class calls
 
    **Done when:** API returns real data from BadgerFive for both history and generation.
