@@ -22,11 +22,11 @@ class BadgerFive implements \JsonSerializable
 
     private array $pattern = [
         // 3-Odd 2-Even / 3-Low 2-High //
-        1 => ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
-        2 => ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
-        3 => ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
-        4 => ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd'],
-        5 => ['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd'],
+        ['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven']
     ];
 
     public function __construct(
@@ -84,37 +84,24 @@ class BadgerFive implements \JsonSerializable
     private function loadPanels(): self
     {
         for ($ticket = 1; $ticket <= $this->numOfTickets; $ticket++) {
-            foreach ($this->pattern as $subNum => $subPattern) {
-                $excludedNumbers = [];
+            foreach ($this->pattern as $subPattern) {
+                // CREATE NEW PANEL //
+                $newPanel = $this->generatePanel($subPattern);
 
-                for ($panel = 1; $panel <= count($this->pattern); $panel++) {
-                    // CREATE NEW PANEL //
-                    $newPanel = $this->generatePanel($subPattern, $excludedNumbers);
-
-                    // VERIFY PANEL IS UNIQUE //
-                    while (in_array($newPanel, $this->panels)) {
-                        $newPanel = $this->generatePanel($subPattern, $excludedNumbers);
-                    }
-
-                    // ADD PANEL TO EXCLUDED NUMBERS FOR FIRST SUB-PATTERN //
-                    if ($subNum === 1) {
-                        foreach ($newPanel as $num) {
-                            $excludedNumbers[] = $num;
-                        }
-                    } else {
-                        $excludedNumbers = [];
-                    }
-
-                    // ADD PANEL TO MASTER ARRAY //
-                    $this->panels[] = $newPanel;
+                // VERIFY PANEL IS UNIQUE //
+                while (in_array($newPanel, $this->panels)) {
+                    $newPanel = $this->generatePanel($subPattern);
                 }
+
+                // ADD PANEL TO MASTER ARRAY //
+                $this->panels[] = $newPanel;
             }
         }
 
         return $this;
     }
 
-    private function generatePanel(array $subPattern, array $excluded): array
+    private function generatePanel(array $subPattern): array
     {
         $panel = [];
 
@@ -122,12 +109,7 @@ class BadgerFive implements \JsonSerializable
             $cutoff = count($this->{"{$p}"}) - 1;
             $num = $this->{$p}[rand(0, $cutoff)];
 
-            while (in_array($num, $excluded)) {
-                $num = $this->{$p}[rand(0, $cutoff)];
-            }
-
             array_push($panel, $num);
-            array_push($excluded, $num);
         }
 
         sort($panel);
