@@ -6,7 +6,7 @@ namespace LotteryCodex\Games;
 
 require_once __DIR__ . '/../simple_html_dom.php';
 
-class BadgerFive implements \JsonSerializable
+class BadgerFive implements GameInterface, \JsonSerializable
 {
     private array $previousDrawings = [];
 
@@ -31,6 +31,35 @@ class BadgerFive implements \JsonSerializable
 
     public function __construct()
     {
+    }
+
+    public function getGameDetails(): array
+    {
+        return [
+            'name' => 'Badger Five',
+            'range' => [1, 31],
+            'ballCount' => 5,
+            'drawDays' => ['Daily'],
+            'groups' => [
+                'lowOdd'   => $this->getLowOdd(),
+                'lowEven'  => $this->getLowEven(),
+                'highOdd'  => $this->getHighOdd(),
+                'highEven' => $this->getHighEven(),
+            ],
+        ];
+    }
+
+    public function getHistory(): array
+    {
+        $this->loadPreviousDrawings();
+        return $this->getPreviousDrawings();
+    }
+
+    public function generateTickets(int $tickets): array
+    {
+        $this->tickets = [];
+        $this->createTickets($tickets);
+        return $this->getTickets();
     }
 
     private function loadPreviousDrawings(): self
