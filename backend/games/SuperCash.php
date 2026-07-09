@@ -6,7 +6,7 @@ namespace LotteryCodex\Games;
 
 require_once __DIR__ . '/../simple_html_dom.php';
 
-class SuperCash implements \JsonSerializable
+class SuperCash implements GameInterface, \JsonSerializable
 {
     private array $previousDrawings = [];
 
@@ -28,9 +28,34 @@ class SuperCash implements \JsonSerializable
         4 => ['lowEven', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highOdd'],
     ];
 
-    public function __construct(
-        private int $numOfTickets
-    ) {
+    public function __construct()
+    {
+    }
+
+    public function getGameDetails(): array
+    {
+        return [
+            'name' => 'Super Cash',
+            'range' => [1, 39],
+            'ballCount' => 6,
+            'drawDays' => ['Daily'],
+            'groups' => [
+                'lowOdd'   => $this->getLowOdd(),
+                'lowEven'  => $this->getLowEven(),
+                'highOdd'  => $this->getHighOdd(),
+                'highEven' => $this->getHighEven(),
+            ],
+        ];
+    }
+
+    public function getHistory(): array
+    {
+        return $this->getPreviousDrawings();
+    }
+
+    public function generateTickets(int $tickets): array
+    {
+        return [];
     }
 
     private function analyzePreviousDrawings(array $previousDrawings): void
