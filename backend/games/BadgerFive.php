@@ -6,11 +6,11 @@ namespace LotteryCodex\Games;
 
 require_once __DIR__ . '/../simple_html_dom.php';
 
-class BadgerFive implements \JsonSerializable
+class BadgerFive implements GameInterface, \JsonSerializable
 {
     private array $previousDrawings = [];
 
-    private array $panels = [];
+    private array $tickets = [];
 
     private array $lowOdd = [1, 3, 5, 7, 9, 11, 13, 15]; // indexes: 0-7
 
@@ -20,31 +20,46 @@ class BadgerFive implements \JsonSerializable
 
     private array $highEven = [18, 20, 22, 24, 26, 28, 30]; // indexes: 0-6
 
-    private array $pattern1 = [
+    private array $pattern = [
         // 3-Odd 2-Even / 3-Low 2-High //
-        1 => ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
-        2 => ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd'],
-        3 => ['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd'],
+        ['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven']
     ];
 
-    private array $pattern2 = [
-        // 3-Odd 2-Even / 2-Low 3-High //
-        1 => ['lowOdd', 'lowEven', 'highOdd', 'highOdd', 'highEven'],
-        2 => ['lowOdd', 'lowOdd', 'highOdd', 'highEven', 'highEven'],
-        3 => ['lowEven', 'lowEven', 'highOdd', 'highOdd', 'highOdd'],
-    ];
+    public function __construct()
+    {
+    }
 
-    private array $pattern3 = [
-        // 2-Odd 3-Even / 3-Low 2-High //
-        1 => ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highEven'],
-        2 => ['lowOdd', 'lowOdd', 'lowEven', 'highEven', 'highEven'],
-        3 => ['lowEven', 'lowEven', 'lowEven', 'highOdd', 'highOdd'],
-    ];
+    public function getGameDetails(): array
+    {
+        return [
+            'name' => 'Badger Five',
+            'range' => [1, 31],
+            'ballCount' => 5,
+            'drawDays' => ['Daily'],
+            'groups' => [
+                'lowOdd'   => $this->getLowOdd(),
+                'lowEven'  => $this->getLowEven(),
+                'highOdd'  => $this->getHighOdd(),
+                'highEven' => $this->getHighEven(),
+            ],
+        ];
+    }
 
-    public function __construct(
-        private int $patternNum,
-        private int $numOfTickets
-    ) {
+    public function getHistory(): array
+    {
+        $this->loadPreviousDrawings();
+        return $this->getPreviousDrawings();
+    }
+
+    public function generateTickets(int $tickets): array
+    {
+        $this->tickets = [];
+        $this->createTickets($tickets);
+        return $this->getTickets();
     }
 
     private function loadPreviousDrawings(): self
@@ -94,91 +109,80 @@ class BadgerFive implements \JsonSerializable
         return $this;
     }
 
-    private function loadPanels(): self
+    private function createTickets(int $count): self
     {
-        $pattern = $this->{"pattern{$this->patternNum}"};
+        for ($i = 0; $i < $count; $i++) {
+            $ticket = [];
 
-        for ($ticket = 1; $ticket <= $this->numOfTickets; $ticket++) {
-            foreach ($pattern as $subNum => $subPattern) {
-                $panelLimit = ($subNum === 1) ? 3 : 1;
-                $excludedNumbers = [];
+            foreach ($this->pattern as $subPattern) {
+                // CREATE NEW PANEL FROM SUB-PATTERN //
+                $panel = $this->createPanel($subPattern);
 
-                for ($panel = 1; $panel <= $panelLimit; $panel++) {
-                    // CREATE NEW PANEL //
-                    $newPanel = $this->generatePanel($subPattern, $excludedNumbers);
-
-                    // VERIFY PANEL IS UNIQUE //
-                    while (in_array($newPanel, $this->panels)) {
-                        $newPanel = $this->generatePanel($subPattern, $excludedNumbers);
-                    }
-
-                    // ADD PANEL TO EXCLUDED NUMBERS FOR FIRST SUB-PATTERN //
-                    if ($subNum === 1) {
-                        foreach ($newPanel as $num) {
-                            $excludedNumbers[] = $num;
-                        }
-                    } else {
-                        $excludedNumbers = [];
-                    }
-
-                    // ADD PANEL TO MASTER ARRAY //
-                    $this->panels[] = $newPanel;
+                // VERIFY PANEL IS UNIQUE ACROSS ALL GENERATED PANELS //
+                $allPanels = [];
+                foreach ($this->tickets as $existingTicket) {
+                    $allPanels = array_merge($allPanels, $existingTicket);
                 }
+                while (in_array($panel, $allPanels)) {
+                    $panel = $this->createPanel($subPattern);
+                }
+
+                $ticket[] = $panel;
             }
+
+            $this->tickets[] = $ticket;
         }
 
         return $this;
     }
 
-    private function generatePanel(array $pattern, array $excluded): array
+    private function createPanel(array $subPattern): array
     {
         $panel = [];
 
-        foreach ($pattern as $i => $p) {
-            $cutoff = ($p === 'highEven') ? 6 : 7;
-            $num = $this->{$p}[rand(0, $cutoff)];
-
-            while (in_array($num, $excluded)) {
-                $num = $this->{$p}[rand(0, $cutoff)];
-            }
-
-            array_push($panel, $num);
-            array_push($excluded, $num);
+        foreach ($subPattern as $p) {
+            $cutoff = count($this->{$p}) - 1;
+            $panel[] = $this->{$p}[random_int(0, $cutoff)];
         }
 
         sort($panel);
         return $panel;
     }
 
-    public function formatPattern(int $patternNum): string
-    {
-        return ($patternNum === 3)
-            ? "2-Odd 3-Even / 3-Low 2-High"
-            : ($patternNum === 2
-                ? "3-Odd 2-Even / 2-Low 3-High"
-                : "3-Odd 2-Even / 3-Low 2-High");
-    }
+    /**
+     * The two functions below this are commented out for the time being. 
+     * I'm not sure if I will need them. 
+     * They're not being used, but just to be safe, I commented them out in case I want to use them again at a later date.
+     */
+    // public function formatPattern(int $patternNum): string
+    // {
+    //     return ($patternNum === 3)
+    //         ? "2-Odd 3-Even / 3-Low 2-High"
+    //         : ($patternNum === 2
+    //             ? "3-Odd 2-Even / 2-Low 3-High"
+    //             : "3-Odd 2-Even / 3-Low 2-High");
+    // }
 
-    public function formatSubPattern(int $patternNum, int $subPatternNum): string
-    {
-        $string = '';
-        $prevRange = 'Low';
+    // public function formatSubPattern(int $patternNum, int $subPatternNum): string
+    // {
+    //     $string = '';
+    //     $prevRange = 'Low';
 
-        foreach ($this->{"pattern{$patternNum}"}[$subPatternNum] as $group) {
-            $group = str_replace(
-                ['lowOdd', 'lowEven', 'highOdd', 'highEven'],
-                ['Low-Odd', 'Low-Even', 'High-Odd', 'High-Even'],
-                $group
-            );
-            $pieces = explode('-', $group);
-            $range = $pieces[0];
+    //     foreach ($this->{"pattern{$patternNum}"}[$subPatternNum] as $group) {
+    //         $group = str_replace(
+    //             ['lowOdd', 'lowEven', 'highOdd', 'highEven'],
+    //             ['Low-Odd', 'Low-Even', 'High-Odd', 'High-Even'],
+    //             $group
+    //         );
+    //         $pieces = explode('-', $group);
+    //         $range = $pieces[0];
 
-            $string .= ($range === $prevRange) ? " {$group}" : " / {$group}";
-            $prevRange = $range;
-        }
+    //         $string .= ($range === $prevRange) ? " {$group}" : " / {$group}";
+    //         $prevRange = $range;
+    //     }
 
-        return trim($string);
-    }
+    //     return trim($string);
+    // }
 
     public function setPreviousDrawings(array $previousDrawings): self
     {
@@ -191,15 +195,15 @@ class BadgerFive implements \JsonSerializable
         return $this->previousDrawings;
     }
 
-    public function setPanels(array $panels): self
+    public function setTickets(array $tickets): self
     {
-        $this->panels = $panels;
+        $this->tickets = $tickets;
         return $this;
     }
 
-    public function getPanels(): array
+    public function getTickets(): array
     {
-        return $this->panels;
+        return $this->tickets;
     }
 
     public function getLowOdd(): array
@@ -222,19 +226,9 @@ class BadgerFive implements \JsonSerializable
         return $this->highEven;
     }
 
-    public function getPattern1(): array
+    public function getPattern(): array
     {
-        return $this->pattern1;
-    }
-
-    public function getPattern2(): array
-    {
-        return $this->pattern2;
-    }
-
-    public function getPattern3(): array
-    {
-        return $this->pattern3;
+        return $this->pattern;
     }
 
     public function jsonSerialize(): array

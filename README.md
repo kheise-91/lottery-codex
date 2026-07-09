@@ -1,168 +1,105 @@
 # Lottery Codex
 
-Web application that leverages historical lottery data to calculate optimized number combinations. Built with a PHP backend API and a React single-page frontend, it scrapes previous drawing results from the [Wisconsin Lottery](https://wilottery.com) and analyzes historical drawing data to generate optimized number combinations using pattern-analysis techniques inspired by the [Lottery Codex](https://lotterycodex.com) methodology.
+Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/even and low/high distribution patterns (Lottery Codex methodology), and generates optimized number panels for Badger Five and Super Cash games.
 
 ## Supported Games
 
-| Game | Numbers | Range | Draw Days |
-|------|---------|-------|-----------|
-| **Badger Five** | 5 | 1–31 | Daily |
-| **Super Cash** | 6 | 1–39 | Daily |
+| Game | Numbers | Range | Draw Days | Status |
+|------|---------|-------|-----------|--------|
+| **Badger Five** | 5 | 1-31 | Daily | Fully functional |
+| **Super Cash** | 6 | 1-39 | Daily | Partially broken (`generateTickets` returns empty array; scrapes wrong URL) |
 
 ## Architecture
 
 ```
-┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
-│   React SPA      │────────▶│  PHP API         │────────▶│ wilottery.com   │
-│  (frontend/)     │ ◀────── │  (backend/)      │ (CURL)  │  (scraping)     │
-│                  │  JSON   │                  │         │                 │
-└─────────────────┘         └──────────────────┘         └─────────────────┘
+Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scraping)
+     :5959                    Docker container                live HTTP request
 ```
 
-- **Frontend** — React 18 + Vite + Tailwind CSS. Served as a PWA with offline caching.
-- **Backend** — PHP 8.2+ powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints, and `simplehtmldom` for HTML parsing.
-- **Data flow** — Backend scrapes Wisconsin Lottery draw history via CURL → analyzes odd/even and low/high patterns → generates prediction panels → serves results through a REST API → React renders the UI.
-
-## How It Works
-
-1. **Scrape** — The backend fetches recent drawing results from the Wisconsin Lottery website using CURL and HTML DOM parsing.
-2. **Analyze** — Each historical drawing is classified by its odd/even and low/high distribution pattern (e.g., `3-Odd 2-Even / 3-Low 2-High`).
-3. **Generate** — Based on selected patterns, the system generates unique number panels. Each ticket contains 5 panels split across 3 sub-patterns (3 + 1 + 1), with numbers drawn from constrained pools (low-odd, low-even, high-odd, high-even) to match the target distribution.
-
-### Pattern System
-
-Each game supports multiple patterns that define odd/even and low/high splits:
-
-| Pattern | Odd/Even | Low/High |
-|---------|----------|----------|
-| 1 | 3-Odd 2-Even | 3-Low 2-High |
-| 2 | 3-Odd 2-Even | 2-Low 3-High |
-| 3 | 2-Odd 3-Even | 3-Low 2-High |
-
-Numbers are categorized into four pools:
-- **Low-Odd** — odd numbers in the lower half of the range
-- **Low-Even** — even numbers in the lower half
-- **High-Odd** — odd numbers in the upper half
-- **High-Even** — even numbers in the upper half
-
-Each sub-pattern specifies which pool each of the 5 (or 6) positions draws from, ensuring the final panel matches the target distribution.
-
-## Project Structure
-
-```
-├── backend/
-│   ├── api/                  # REST API router and controllers
-│   ├── games/                # Game logic classes
-│   │   ├── BadgerFive.php    # Badger Five game implementation
-│   │   └── SuperCash.php     # Super Cash game implementation
-│   ├── simplehtmldom/        # HTML parser library
-│   ├── composer.json         # PHP dependencies
-│   ├── composer.lock         # Locked dependency versions
-│   └── vendor/               # Composer-installed dependencies (git-ignored)
-├── frontend/
-│   ├── src/
-│   │   ├── components/       # Reusable UI components
-│   │   ├── hooks/            # Custom React hooks
-│   │   ├── services/         # API client layer
-│   │   ├── App.jsx           # Router and layout
-│   │   └── main.jsx          # Entry point
-│   ├── public/               # Static assets and PWA manifest
-│   ├── vite.config.js        # Vite build config with API proxy
-│   └── package.json          # Node.js dependencies
-├── docker/                   # Docker configuration
-├── docker-compose.yml        # Container orchestration
-└── docs/                     # Project documentation
-```
+- **Frontend** -- React 18 + Vite + Tailwind CSS v4. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). No routing, pages, or API integration implemented yet.
+- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints planned but not yet routed (`backend/api.php` does not exist). Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library.
+- **Infrastructure** -- Single Docker container running Nginx + PHP-FPM. No database, no caching layer.
 
 ## Quick Start
 
 ### Prerequisites
 
 - Docker and Docker Compose
-- PHP 8.2+ (for local development without Docker)
-- Composer (for backend dependency management)
-- Node.js 18+ (for frontend development)
 
-### With Docker
+### With Docker (primary workflow)
 
 ```bash
-docker compose up --build
+docker compose up --build    # Start at http://localhost:5959
+docker compose down          # Stop containers
 ```
 
-The application starts at `http://localhost:5959`.
-
-### Local Development
-
-**Backend:**
-
-```bash
-cd backend
-composer install
-php -S localhost:8000
-```
-
-**Frontend:**
+### Local Development (iterative frontend)
 
 ```bash
 cd frontend
-npm install
-npm run dev
+npm install                  # Install dependencies
+npm run dev                  # Vite dev server on port 5173, proxies /api to backend
+npm run build                # Production build to dist/
 ```
 
-The frontend dev server proxies API requests to the backend.
+The Vite dev server proxies `/api` requests to `http://192.168.0.91:5959`. Update `vite.config.js` if the backend host changes.
 
-## API Endpoints
+## Project Structure
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/games` | List available games |
-| GET | `/api/games/{gameId}` | Get game details and rules |
-| GET | `/api/games/{gameId}/history` | Get historical drawing results |
-| POST | `/api/generate` | Generate prediction panels |
-
-### Generate Request
-
-```json
-{
-  "game": "badger-five",
-  "pattern": 1,
-  "tickets": 3
-}
+```
+├── backend/
+│   ├── games/                      # Game logic classes (implements GameInterface)
+│   │   ├── GameInterface.php       # Contract: getGameDetails(), getHistory(), generateTickets()
+│   │   ├── BadgerFive.php          # Fully functional -- scraping + panel generation working
+│   │   └── SuperCash.php           # Partially broken -- see status table above
+│   ├── simplehtmldom/              # HTML parser library (vendored, not via Composer)
+│   ├── composer.json               # PHP dependencies: slim/slim ^4.0, slim/psr7 ^1.6
+│   └── vendor/                     # Composer-installed dependencies (git-ignored)
+├── frontend/
+│   ├── src/
+│   │   ├── main.jsx                # React 18 createRoot entry point
+│   │   ├── App.jsx                 # Placeholder counter demo component
+│   │   └── index.css               # Tailwind v4 import: @import "tailwindcss"
+│   ├── public/                     # Static assets and PWA manifest
+│   ├── vite.config.js              # Vite config with API proxy to backend
+│   └── package.json                # Node.js dependencies
+├── docker/                         # Dockerfile, nginx.conf
+├── docker-compose.yml              # Container orchestration (single service)
+└── docs/                           # Project documentation
 ```
 
-### Generate Response
+## Documentation
 
-```json
-{
-  "panels": [
-    {"numbers": [3, 8, 15, 22, 29], "subPattern": 1},
-    {"numbers": [5, 10, 17, 24, 31], "subPattern": 1},
-    {"numbers": [1, 6, 13, 20, 27], "subPattern": 1},
-    {"numbers": [7, 12, 19, 26, 30], "subPattern": 2},
-    {"numbers": [2, 9, 14, 23, 28], "subPattern": 3}
-  ],
-  "pattern": 1
-}
-```
+- [API Reference](docs/api/README.md) -- Planned REST endpoints and request/response shapes. Note: `backend/api.php` is not yet implemented; all endpoints are documented as planned.
+- [Components](docs/components/README.md) -- Frontend component index and hierarchy. Currently only the `App` placeholder exists.
+  - [App Component Detail](docs/components/App.md)
+- [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
+  - [Docker Configuration](docs/infrastructure/docker.md)
+  - [Nginx Configuration](docs/infrastructure/nginx.md)
 
-## Frontend Routes
+## Pattern System (Lottery Codex Methodology)
 
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Dashboard | Game selection |
-| `/games/:gameId` | Game Page | Tabbed view: previous drawings and panel generation |
-| `/history/:gameId` | History | Full historical drawing browser |
+The core algorithm classifies numbers into four pools and generates panels matching target odd/even and low/high distributions:
+
+| Pool | Badger Five (1-31) | Super Cash (1-39) |
+|------|---------------------|--------------------|
+| **Low-Odd** | 1, 3, 5, 7, 9, 11, 13, 15 | 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 |
+| **Low-Even** | 2, 4, 6, 8, 10, 12, 14, 16 | 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 |
+| **High-Odd** | 17, 19, 21, 23, 25, 27, 29, 31 | 21, 23, 25, 27, 29, 31, 33, 35, 37, 39 |
+| **High-Even** | 18, 20, 22, 24, 26, 28, 30 | 22, 24, 26, 28, 30, 32, 34, 36, 38 |
+
+Each sub-pattern specifies which pool each ball position draws from. The final panel is sorted ascending (required for lottery tickets). Uniqueness enforcement uses a linear scan across all previously generated panels -- O(n^2) in total panels.
 
 ## Technologies
 
-- **Backend**: PHP 8.2+, Slim Framework 4, Composer (PSR-4), nikic/fast-route, CURL, simplehtmldom
-- **Frontend**: React 18, Vite, Tailwind CSS v4, React Router v6, Headless UI, Heroicons
-- **Infrastructure**: Docker, Nginx
+- **Backend:** PHP 8.2-FPM, Slim Framework 4, Composer (PSR-4), nikic/fast-route, simplehtmldom
+- **Frontend:** React 18, Vite 5, Tailwind CSS v4
+- **Infrastructure:** Docker, Nginx
 
 ## References
 
-- [Wisconsin Lottery](https://wilottery.com) — Source of drawing data
-- [Lottery Codex](https://lotterycodex.com) — Pattern analysis methodology
+- [Wisconsin Lottery](https://wilottery.com) -- Source of drawing data
+- [Lottery Codex](https://lotterycodex.com) -- Pattern analysis methodology
 
 ## License
 
