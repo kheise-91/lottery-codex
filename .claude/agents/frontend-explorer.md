@@ -1,7 +1,7 @@
 ---
 name: frontend-explorer
 description: Use this agent when you need to analyze, review, and summarize the structure, key components, patterns, and architecture of code within the `frontend/` directory. This agent is ideal for onboarding to new projects, understanding code organization, identifying tech stacks, or getting a high-level overview of frontend implementations before making changes.
-color: Blue
+color: blue
 model: inherit
 ---
 

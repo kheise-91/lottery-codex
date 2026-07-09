@@ -1,7 +1,7 @@
 ---
 name: backend-reviewer
 description: Use this agent when you need to review code changes specifically in the backend/ directory. This agent performs comprehensive code reviews and QA assessments of PHP 8.2+ Slim Framework 4 code, identifies potential issues, security vulnerabilities, performance concerns, and provides detailed summaries of changes. It strictly reads and analyzes code without making any modifications. Use when: backend code has been written or modified and needs review, you want a summary of backend changes, you need to validate backend code quality before merging, you suspect issues in backend implementations.
-color: Orange
+color: orange
 model: inherit
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: documenter
 description: Use this agent when documentation needs to be created, updated, or synchronized with the codebase. This agent is specifically designed to maintain markdown documentation for the root-level project `README.md` and within the `docs/` directory only. Do NOT use this agent for code implementation, testing, or modifications outside the `README.md` file and the `docs/` directory.
-color: Yellow
+color: yellow
 model: inherit
 ---
 
