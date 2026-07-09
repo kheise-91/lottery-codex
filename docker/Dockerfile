@@ -34,9 +34,11 @@ RUN sed -i 's|^listen = .*|listen = 127.0.0.1:9000|' /usr/local/etc/php-fpm.d/ww
 RUN sed -i 's/^user = .*/user = www-data/' /usr/local/etc/php-fpm.d/www.conf
 RUN sed -i 's/^group = .*/group = www-data/' /usr/local/etc/php-fpm.d/www.conf
 
-# Enable error reporting in PHP
-RUN echo 'display_errors = On' > /usr/local/etc/php/conf.d/display-errors.ini
-RUN echo 'log_errors = On' >> /usr/local/etc/php/conf.d/display-errors.ini
+# Disable display_errors for production safety; log errors to file instead
+RUN printf 'display_errors = Off\nlog_errors = On\nerror_log = /var/log/php/error.log\n' > /usr/local/etc/php/conf.d/99-custom.ini
+
+# Create error log directory, writable by PHP-FPM (runs as www-data)
+RUN mkdir -p /var/log/php && chown www-data:www-data /var/log/php
 
 # Copy nginx configuration
 COPY docker/nginx.conf /etc/nginx/sites-available/default
