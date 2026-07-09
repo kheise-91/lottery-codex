@@ -54,8 +54,10 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
    **Done when:** Both classes load via Composer autoloader with zero PHP warnings.
 
-- [ ] **0.4 — Create GameInterface**
-   - Define `GameInterface` with: `getGameDetails()`, `getHistory()`, `generatePanels(int $pattern, int $tickets)`
+- [x] **[0.4 — Create GameInterface](https://gitea.heise.home/kheise/lottery-codex/milestone/22)**
+   - Define `GameInterface` with: `getGameDetails()`, `getHistory()`, `generateTickets(int $tickets)`
+   - `$pattern` parameter removed — each game class has one internal `$pattern` array; sub-pattern count equals physical panels per ticket card
+   - `generateTickets()` returns tickets as nested arrays (each ticket contains multiple panels) — not a flat array of panels
    - Have both BadgerFive and SuperCash implement the interface
 
    **Done when:** Both game classes type-hint against the interface.
@@ -84,7 +86,7 @@ Create the API front controller with mock data endpoints. This establishes front
    - `GET /api/games` → return static list of available games (Badger Five, Super Cash)
    - `GET /api/games/{gameId}` → return game rules/details
    - `GET /api/games/{gameId}/history` → return mock historical drawings
-   - `POST /api/games/{gameId}/generate` → accept `{pattern, tickets}`, return mock panels
+   - `POST /api/games/{gameId}/generate` → accept `{tickets}`, return generated tickets (nested array: ticket → panels)
 
    **Done when:** All 4 endpoints return valid JSON via `curl http://localhost:5959/api/games`.
 
@@ -154,8 +156,8 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
    **Done when:** Historical drawings render as cards matching the OLD/ visual style.
 
 - [ ] **2.6 — Create PanelDisplay component (`src/components/games/PanelDisplay.jsx`)**
-   - Groups panels in sets of 5 per ticket (3 from sub-pattern 1, 1 from sp-2, 1 from sp-3)
-   - Color-coded backgrounds: green for sp-1, yellow for sp-2, orange for sp-3 (matching OLD CSS)
+   - Groups panels in sets per ticket (5 for BadgerFive, 6 for SuperCash) — one panel per sub-pattern
+   - Color-coded backgrounds by sub-pattern index (matching OLD CSS)
    - Shows sub-pattern labels above each panel
 
    **Done when:** Generated panels render with correct grouping and color coding.
@@ -169,7 +171,7 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
 
 - [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`)**
    - Combines: tabs, drawing history list, panel generation form, and panel display
-   - Form controls: pattern selector (1–3), ticket count input
+   - Form controls: ticket count input only — pattern selection is internal to each game class
    - "Generate" button triggers API call via `useGeneratePanels` hook
 
    **Done when:** User can view drawings, select options, generate panels, and see results — all within one page.
@@ -221,7 +223,7 @@ Replace mock data with actual BadgerFive game class instances. This is where the
 
 - [ ] **4.1 — Wire BadgerFive into API endpoints**
    - Replace mock history in `GET /api/games/badger-five/history` with `$game->getHistory()`
-   - Replace mock panels in `POST /api/games/badger-five/generate` with `$game->generatePanels($pattern, $tickets)`
+   - Replace mock panels in `POST /api/games/badger-five/generate` with `$game->generateTickets($tickets)`
    - Add try-catch wrappers around game class calls
 
    **Done when:** API returns real data from BadgerFive for both history and generation.

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace LotteryCodex\Games;
 
-class SuperCash implements \JsonSerializable
+require_once __DIR__ . '/../simple_html_dom.php';
+
+class SuperCash implements GameInterface, \JsonSerializable
 {
     private array $previousDrawings = [];
 
-    private array $panels = [];
+    private array $tickets = [];
 
     private array $lowOdd = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]; // indexes: 0-9
 
@@ -18,7 +20,7 @@ class SuperCash implements \JsonSerializable
 
     private array $highEven = [22, 24, 26, 28, 30, 32, 34, 36, 38]; // indexes: 0-8
 
-    private array $pattern1 = [
+    private array $pattern = [
         // 3-Odd 3-Even / 3-Low 3-High //
         1 => ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven', 'highEven'],
         2 => ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highEven'],
@@ -28,11 +30,32 @@ class SuperCash implements \JsonSerializable
 
     public function __construct()
     {
-        // SuperCashPD dependency removed - file does not exist
-        // $this->pd = new SuperCashPD();
+    }
 
-        // Constructor now instantiates without requiring external dependencies
-        // Analysis methods can be called directly via analyzePreviousDrawings()
+    public function getGameDetails(): array
+    {
+        return [
+            'name' => 'Super Cash',
+            'range' => [1, 39],
+            'ballCount' => 6,
+            'drawDays' => ['Daily'],
+            'groups' => [
+                'lowOdd'   => $this->getLowOdd(),
+                'lowEven'  => $this->getLowEven(),
+                'highOdd'  => $this->getHighOdd(),
+                'highEven' => $this->getHighEven(),
+            ],
+        ];
+    }
+
+    public function getHistory(): array
+    {
+        return $this->getPreviousDrawings();
+    }
+
+    public function generateTickets(int $tickets): array
+    {
+        return [];
     }
 
     private function analyzePreviousDrawings(array $previousDrawings): void
@@ -79,113 +102,93 @@ class SuperCash implements \JsonSerializable
         echo json_encode(["Pattern Counts for Previous 500 Drawings" => $patterns], JSON_PRETTY_PRINT);
     }
 
-    // private function loadPreviousDrawings() {
-    // 	// Get previous drawing numbers to look at which patterns have been drawn recently
-    // 	$html = file_get_html('https://wilottery.com/winners/draw-history?game=supercash');
-    // 	foreach ($html->find('.winning-numbers-line') AS $numSet) {
-    // 		$drawing = array();
+    private function loadPreviousDrawings(): self
+    {
+        $html = file_get_html('https://wilottery.com/winners/draw-history?game=badger-5');
 
-    // 		foreach ($numSet->find('.date') AS $dateContainer) {
-    // 			foreach ($dateContainer->find('strong') AS $dateText) {
-    // 				$dateDrawn = date('l, F jS', strtotime($dateText->plaintext));
-    // 			}
-    // 		}
+        foreach ($html->find('.winning-numbers-line') as $numSet) {
+            $drawing = [];
 
-    // 		foreach ($numSet->find('.winning-number') AS $num) {
-    // 			$drawing[] = intval($num->plaintext);
-    // 		}
+            foreach ($numSet->find('.date') as $dateContainer) {
+                foreach ($dateContainer->find('strong') as $dateText) {
+                    $dateDrawn = date('l, F jS', strtotime($dateText->plaintext));
+                }
+            }
 
-    // 		$this->previousDrawings[$dateDrawn]['numbers'] = $drawing;
-    // 	}
+            foreach ($numSet->find('.winning-number') as $num) {
+                $drawing[] = (int) $num->plaintext;
+            }
 
-    // 	foreach ($this->previousDrawings AS $dateDrawn => $drawing) {
-    // 		$odd = $even = 0;
-    // 		$low = $high = 0;
-    // 		foreach ($drawing['numbers'] AS $num) {
-    // 			if (in_array($num, $this->lowOdd))        { $odd++;  $low++; }
-    // 			else if (in_array($num, $this->lowEven))  { $even++; $low++; }
-    // 			else if (in_array($num, $this->highOdd))  { $odd++;  $high++; }
-    // 			else if (in_array($num, $this->highEven)) { $even++; $high++; }
-    // 		}
+            $this->previousDrawings[$dateDrawn]['numbers'] = $drawing;
+        }
 
-    // 		$pattern = "{$odd}-Odd {$even}-Even / {$low}-Low {$high}-High";
-    // 		$this->previousDrawings[$dateDrawn]['pattern'] = $pattern;
-    // 	}
-    // }
+        foreach ($this->previousDrawings as $dateDrawn => $drawing) {
+            $odd = $even = 0;
+            $low = $high = 0;
 
-    // private function loadAllPanels() {
-    // 	for ($pattern = 1; $pattern <= 2; $pattern++) {
-    // 		$this->panels["pattern{$pattern}"] = array();
+            foreach ($drawing['numbers'] as $num) {
+                if (in_array($num, $this->lowOdd)) {
+                    $odd++;
+                    $low++;
+                } elseif (in_array($num, $this->lowEven)) {
+                    $even++;
+                    $low++;
+                } elseif (in_array($num, $this->highOdd)) {
+                    $odd++;
+                    $high++;
+                } elseif (in_array($num, $this->highEven)) {
+                    $even++;
+                    $high++;
+                }
+            }
 
-    // 		for ($set = 1; $set <= 2; $set++) {
-    // 			$this->panels["pattern{$pattern}"]["set{$set}"] = array();
-    // 			$excludedNumbers = array();
+            $pattern = "{$odd}-Odd {$even}-Even / {$low}-Low {$high}-High";
+            $this->previousDrawings[$dateDrawn]['pattern'] = $pattern;
+        }
 
-    // 			for ($panel = 1; $panel <= 3; $panel++) {
-    // 				// NOTE: Loop must use <= to include first panel (fix: change < to <=)
-    // 				for ($panelNum = 1; $panelNum <= $panel; $panelNum++) {
-    // 					$thisPanel = ${"panel{$panelNum}"};
+        return $this;
+    }
 
-    // 					foreach ($thisPanel AS $num) {
-    // 						$excludedNumbers[] = $num;
-    // 					}
-    // 				}
+    private function createTickets(int $count): self
+    {
+        for ($i = 0; $i < $count; $i++) {
+            $ticket = [];
 
-    // 				${"panel{$panel}"} = $this->generatePanel($pattern, $excludedNumbers);
-    // 				$this->panels["pattern{$pattern}"]["set{$set}"]["panel{$panel}"] = ${"panel{$panel}"};
-    // 			}
-    // 		}
-    // 	}
-    // }
+            foreach ($this->pattern as $subPattern) {
+                // CREATE NEW PANEL FROM SUB-PATTERN //
+                $panel = $this->createPanel($subPattern);
 
-    // private function loadPanels($totalSets, $totalPanels, $patternNum) {
-    // 	$panelCt = 1;
-    // 	$panelsPerSet = round(($totalPanels / $totalSets));
+                // VERIFY PANEL IS UNIQUE ACROSS ALL GENERATED PANELS //
+                $allPanels = [];
+                foreach ($this->tickets as $existingTicket) {
+                    $allPanels = array_merge($allPanels, $existingTicket);
+                }
+                while (in_array($panel, $allPanels)) {
+                    $panel = $this->createPanel($subPattern);
+                }
 
-    // 	for ($set = 1; $set <= $totalSets; $set++) {
-    // 		$excludedNumbers = array();
-    // 		$this->panels["set{$set}"] = array();
+                $ticket[] = $panel;
+            }
 
-    // 		for ($panel = 1; $panel <= $panelsPerSet; $panel++) {
-    // 			// NOTE: Loop must use <= to include first panel (fix: change < to <=)
-    // 			for ($panelNum = 1; $panelNum <= $panel; $panelNum++) {
-    // 				$thisPanel = ${"panel{$panelNum}"};
+            $this->tickets[] = $ticket;
+        }
 
-    // 				foreach ($thisPanel AS $num) {
-    // 					$excludedNumbers[] = $num;
-    // 				}
-    // 			}
+        return $this;
+    }
 
-    // 			${"panel{$panel}"} = $this->generatePanel($patternNum, $excludedNumbers);
-    // 			$this->panels["set{$set}"]["panel{$panel}"] = ${"panel{$panel}"};
+    private function createPanel(array $subPattern): array
+    {
+        $panel = [];
 
-    // 			$panelCt++;
-    // 			if ($panelCt > $totalPanels) break 2;
-    // 		}
-    // 	}
-    // }
+        foreach ($subPattern as $p) {
+            $cutoff = count($this->{$p}) - 1;
+            $panel[] = $this->{$p}[random_int(0, $cutoff)];
+        }
 
-    // private function generatePanel($patternNum, $excludedNumbers) {
-    // 	$panel   = array();
-    // 	$pattern = $this->{"pattern{$patternNum}"};
+        sort($panel);
+        return $panel;
+    }
 
-    // 	foreach ($pattern AS $i => $p) {
-    // 		$cutoff = ($p == 'highEven') ? 6 : 7;
-    // 		$num = $this->{$p}[rand(0, $cutoff)];
-
-    // 		while (in_array($num, $excludedNumbers)) {
-    // 			$num = $this->{$p}[rand(0, $cutoff)];
-    // 		}
-
-    // 		array_push($panel, $num);
-    // 		array_push($excludedNumbers, $num);
-    // 	}
-
-    // 	sort($panel);
-    // 	return $panel;
-    // }
-
-    //==== GETTERS AND SETTERS ================================================================================================================//
     public function setPreviousDrawings(array $previousDrawings): self
     {
         $this->previousDrawings = $previousDrawings;
@@ -197,15 +200,15 @@ class SuperCash implements \JsonSerializable
         return $this->previousDrawings;
     }
 
-    public function setPanels(array $panels): self
+    public function setTickets(array $tickets): self
     {
-        $this->panels = $panels;
+        $this->tickets = $tickets;
         return $this;
     }
 
-    public function getPanels(): array
+    public function getTickets(): array
     {
-        return $this->panels;
+        return $this->tickets;
     }
 
     public function getLowOdd(): array
@@ -228,9 +231,9 @@ class SuperCash implements \JsonSerializable
         return $this->highEven;
     }
 
-    public function getPattern1(): array
+    public function getPattern(): array
     {
-        return $this->pattern1;
+        return $this->pattern;
     }
 
     public function jsonSerialize(): array
