@@ -68,7 +68,7 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
    **Done when:** Backend changes on host are visible inside the container without rebuild.
 
-- [ ] **0.6 — Disable display_errors for production**
+- [-] **[0.6 — Disable display_errors for production](https://gitea.heise.home/kheise/lottery-codex/issues/50)**
    - Add PHP INI override in Dockerfile: `display_errors = Off`, keep `log_errors = On`
    - Configure error log path to `/var/log/php/error.log`
 
