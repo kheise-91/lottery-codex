@@ -1,7 +1,7 @@
 ---
 name: devops-reviewer
 description: Use this agent when reviewing code changes to docker-compose.yml or the docker/ directory produced by the devops-engineer. This agent performs read-only reviews of the single-container PHP 8.2-FPM + Nginx stack — including Dockerfiles, Nginx config, and startup scripts — identifying security issues, best practice violations, and potential runtime problems. It summarizes changes and provides recommendations without making any file modifications.
-color: red
+color: orange
 model: inherit
 ---
 

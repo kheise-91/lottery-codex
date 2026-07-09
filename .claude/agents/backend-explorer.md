@@ -1,7 +1,7 @@
 ---
 name: backend-explorer
 description: Use this agent when you need to analyze, review, and provide a comprehensive summary of the codebase structure, key components, architecture patterns, and important implementation details within the `backend/` directory. This agent is ideal for onboarding new team members, understanding existing codebases, identifying architectural decisions, or getting a high-level overview of backend systems before making changes.
-color: orange
+color: cyan
 model: inherit
 ---
 

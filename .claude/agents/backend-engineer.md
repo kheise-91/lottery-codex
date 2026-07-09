@@ -1,7 +1,7 @@
 ---
 name: backend-engineer
 description: Use this agent when you need to create, modify, review, or debug PHP backend code. This specialist handles server-side logic, API development, data interactions, and backend architecture. It is strictly restricted to writing files only within the `backend/` directory and its subdirectories. Use for tasks like creating controllers, services, models, middleware, configuration files, routes, and other backend components.
-color: orange
+color: purple
 model: inherit
 ---
 

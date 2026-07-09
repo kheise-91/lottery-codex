@@ -1,7 +1,7 @@
 ---
 name: devops-explorer
 description: Use this agent when you need to analyze, review, and summarize Docker-related infrastructure configuration files. Specifically triggers when examining the `docker-compose.yml` file, Dockerfiles in the `docker/` directory, or NGINX configuration files. Ideal for understanding the single-container PHP-FPM + Nginx stack, backend volume mounts, SPA routing, and FastCGI API proxy setup.
-color: red
+color: cyan
 model: inherit
 ---
 

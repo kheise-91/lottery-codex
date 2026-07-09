@@ -1,7 +1,7 @@
 ---
 name: devops-engineer
 description: Use this agent when you need to create, modify, or troubleshoot Docker and Nginx configurations for infrastructure management. This project uses a single-container PHP 8.2-FPM + Nginx stack with docker-compose.yml, volume-mounted backend source, and baked-in frontend dist. This agent is strictly limited to writing only in the `docker-compose.yml` file and the `docker/` directory.
-color: red
+color: purple
 model: inherit
 ---
 
