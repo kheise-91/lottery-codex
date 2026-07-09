@@ -1,7 +1,7 @@
 ---
 name: frontend-reviewer
 description: Use this agent when you need to review code changes in the frontend/ directory, perform QA validation using Playwright MCP, and summarize the impact of those changes. This agent is strictly read-only and should be triggered after frontend code modifications are made or when a comprehensive frontend review is requested.
-color: blue
+color: orange
 model: inherit
 ---
 
