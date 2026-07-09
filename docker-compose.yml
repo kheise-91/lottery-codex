@@ -8,6 +8,6 @@ services:
     ports:
       - 5959:80
     volumes:
-      - /home/admin/Projects/lottery-codex/backend:/var/www/html/backend:rw
+      - ./backend:/var/www/html/backend:rw
     environment:
       - TZ=America/Chicago
