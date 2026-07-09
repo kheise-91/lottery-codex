@@ -62,7 +62,7 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
    **Done when:** Both game classes type-hint against the interface.
 
-- [ ] **0.5 — Fix Docker volume mount path**
+- [x] **[0.5 — Fix Docker volume mount path](https://gitea.heise.home/kheise/lottery-codex/milestone/23)**
    - Update `docker-compose.yml` to use a relative bind mount: `./backend:/var/www/html/backend:rw`
    - Verify container can see backend files after rebuild
 
