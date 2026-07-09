@@ -54,7 +54,7 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
    **Done when:** Both classes load via Composer autoloader with zero PHP warnings.
 
-- [-] **[0.4 — Create GameInterface](https://gitea.heise.home/kheise/lottery-codex/milestone/22)**
+- [x] **[0.4 — Create GameInterface](https://gitea.heise.home/kheise/lottery-codex/milestone/22)**
    - Define `GameInterface` with: `getGameDetails()`, `getHistory()`, `generateTickets(int $tickets)`
    - `$pattern` parameter removed — each game class has one internal `$pattern` array; sub-pattern count equals physical panels per ticket card
    - `generateTickets()` returns tickets as nested arrays (each ticket contains multiple panels) — not a flat array of panels
