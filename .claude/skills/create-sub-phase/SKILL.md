@@ -1,10 +1,12 @@
 ---
 name: create-sub-phase
-description: Sets up sub-phase - creates the sub-phase branch, Gitea milestone, Gitea issues and individual issue branches based on the user provided sub-phase in the project roadmap.
+description: Sets up sub-phase - creates the sub-phase branch, Gitea milestone, Gitea issues and individual issue branches based on the user provided sub-phase in the project roadmap. The steps laid out below are for setting up work in Gitea. No application files should be edited. No tasks should be implemented.
 disable-model-invocation: true
 effort: xhigh
 arguments: [subPhase]
 ---
+
+You are orchestrating the preparation and planning of a sub-phase from the project roadmap. The steps below are for preparation and planning only and ensure the sub-phase is properly scoped and set up in Gitea for development work. Make sure no application files are edited and no tasks get implemented.
 
 The subPhase number is: $subPhase. If no $subPhase number is passed, stop and ask the user for a sub-phase number before proceeding.
 
