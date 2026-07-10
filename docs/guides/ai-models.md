@@ -1,5 +1,5 @@
 ---
-name: ai-models-guide
+name: ai-models
 title: AI Models Guide
 description: A comprehensive list of local models used during the development of this project, and how each model was used.
 ---

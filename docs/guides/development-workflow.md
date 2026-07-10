@@ -1,6 +1,6 @@
 ---
 name: development-workflow
-title: Project Development Workflow
+title: Project Development Workflow Guide
 description: The workflow followed while working on this project.
 ---
 
@@ -112,3 +112,5 @@ flowchart TD
 ## Resources
 
 - [AI Models Guide](/docs/guides/ai-models.md)
+- [Claude Agents Guide](/docs/guides/claude-agents.md)
+- [Claude Skills Guide](/docs/guides/claude-skills.md)
