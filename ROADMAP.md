@@ -80,7 +80,7 @@ Fix critical bugs and establish the backend foundation. Without this, nothing el
 
 Create the API front controller with mock data endpoints. This establishes frontend-backend connectivity before touching real scraping logic.
 
-- [ ] **1.1 — Create `backend/api.php` Slim router**
+- [-] **[1.1 — Create `backend/api.php` Slim router](https://gitea.heise.home/kheise/lottery-codex/milestone/25)**
    - Bootstrap Composer autoloader and Slim app
    - Implement 4 endpoints:
    - `GET /api/games` → return static list of available games (Badger Five, Super Cash)
