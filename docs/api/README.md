@@ -1,6 +1,6 @@
 # API Reference
 
-Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) exists as a bootstrap file with autoloader, error middleware, and JSON Content-Type middleware. **Routes are not yet defined** -- the routing layer and controllers do not exist. This document describes the planned endpoint contract based on `GameInterface` method signatures.
+Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) exists as a bootstrap file with autoloader, error middleware, and JSON Content-Type middleware. **`GET /api/games` is implemented**; remaining routes are planned based on `GameInterface` method signatures.
 
 ## Entry Point
 
@@ -137,7 +137,7 @@ Each panel is a sorted integer array of length equal to the game's `ballCount`. 
 
 | Endpoint | Implementation Status | Notes |
 |----------|----------------------|-------|
-| GET `/api/games` | Not implemented | `backend/api.php` exists as bootstrap; routes not yet defined |
+| GET `/api/games` | Implemented | Returns JSON array of game metadata from `GameInterface::getGameDetails()` |
 | GET `/api/games/{gameId}` | Not implemented | Same -- routing layer missing |
 | GET `/api/games/{gameId}/history` | Not implemented | Game classes implement `getHistory()` but no route wired up |
 | POST `/api/games/{gameId}/generate` | Not implemented | Game classes implement `generateTickets()` but no route wired up |
