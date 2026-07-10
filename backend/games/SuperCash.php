@@ -35,10 +35,12 @@ class SuperCash implements GameInterface, \JsonSerializable
     public function getGameDetails(): array
     {
         return [
-            'name' => 'Super Cash',
+            'id' => 'supercash',
+            'name' => 'SuperCash!',
             'range' => [1, 39],
             'ballCount' => 6,
             'drawDays' => ['Daily'],
+            'optimalPattern' => '3-Odd 3-Even / 3-Low 3-High',
             'groups' => [
                 'lowOdd'   => $this->getLowOdd(),
                 'lowEven'  => $this->getLowEven(),
