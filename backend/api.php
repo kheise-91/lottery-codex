@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace LotteryCodex;
 
+use Psr\Http\Message\{Request, Response};
+use LotteryCodex\Games\BadgerFive;
+use LotteryCodex\Games\SuperCash;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 $app = \Slim\Factory\AppFactory::create();
@@ -17,6 +21,12 @@ $app->add(function ($request, $handler) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-// TODO: Routes go here in subsequent tasks
+$app->get('/api/games', function (Request $request, Response $response) {
+    $games = [new BadgerFive(), new SuperCash()];
+    $data = ['games' => array_map(fn($g) => $g->getGameDetails(), $games)];
+    $body = $response->getBody();
+    $body->write(json_encode($data, JSON_PRETTY_PRINT));
+    return $response;
+});
 
 $app->run();
