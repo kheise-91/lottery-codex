@@ -4,7 +4,7 @@
 
 ## Project Goal
 
-Build a web application that scrapes Wisconsin Lottery drawing history, analyzes odd/even and low/high distribution patterns (Lottery Codex methodology), and generates optimized number panels for Badger Five and Super Cash games.
+Build a web application that scrapes Wisconsin Lottery drawing history, analyzes pattern distribution (odd/even and low/high per Lottery Codex methodology), and generates optimized number panels for Badger Five and Super Cash games.
 
 **Stack:** React 18 SPA + PHP 8.2-FPM backend · Docker single-container deployment · No database
 
@@ -17,9 +17,9 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 | **Backend API** | `api.php` missing; Nginx routes to nothing | Slim Framework router with 4 REST endpoints |
 | **BadgerFive game class** | Fully functional (scraping + panel generation) but pre-PHP-7 style, no namespace/types | Namespaced, typed, Composer-loaded |
 | **SuperCash game class** | Fatal error (missing `SuperCashPD.php`), core methods commented out | Fixed constructor, no external dependencies, analysis-only for now |
-| **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard → Game Page with tabs → History browser |
+| **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard → GamePage split-view (desktop) / tabbed (mobile) → PatternDistribution + History browser |
 | **Routing** | No router installed | React Router DOM v6, 3 routes |
-| **State management** | Single `useState(0)` placeholder | Context API + useReducer for game data/history/panels |
+| **State management** | Single `useState(0)` placeholder | Context API + useReducer for game data/history/tickets |
 | **Docker volume mount** | Hardcoded host path (`/home/admin/Projects/...`) that doesn't match this machine | Relative bind mount or correct absolute path |
 | **Production errors** | `display_errors = On` leaks stack traces | Errors logged only, hidden from users |
 
@@ -86,7 +86,7 @@ Create the API front controller with mock data endpoints. This establishes front
    - `GET /api/games` → return static list of available games (Badger Five, Super Cash)
    - `GET /api/games/{gameId}` → return game rules/details
    - `GET /api/games/{gameId}/history` → return mock historical drawings
-   - `POST /api/games/{gameId}/generate` → accept `{tickets}`, return generated tickets (nested array: ticket → panels)
+   - `POST /api/games/{gameId}/generate` → accept `{ "count": N }`, call `$game->generateTickets($count)`, return nested array of tickets (each ticket = array of panels)
 
    **Done when:** All 4 endpoints return valid JSON via `curl http://localhost:5959/api/games`.
 
@@ -104,14 +104,14 @@ Create the API front controller with mock data endpoints. This establishes front
 
 - [ ] **1.4 — Create API service layer (`src/services/api.js`)**
    - Build a lightweight fetch wrapper with base URL configuration
-   - Export functions: `fetchGames()`, `fetchGameDetails(id)`, `fetchHistory(id)`, `generatePanels(id, payload)`
+   - Export functions: `fetchGames()`, `fetchGameDetails(id)`, `fetchHistory(id)`, `generateTickets(id, count)`
    - Configure Vite `.env` with `VITE_API_BASE_URL` for dev/prod flexibility
 
    **Done when:** Service functions return typed JSON responses from the backend.
 
 - [ ] **1.5 — Create custom hooks (`src/hooks/`)**
    - `useGameHistory(gameId)` → fetches and caches historical drawings, returns `{data, loading, error}`
-   - `useGeneratePanels(gameId)` → triggers panel generation, returns `{panels, pattern, tickets, loading, error, generate}`
+   - `useGenerateTickets(gameId)` → triggers ticket generation (each ticket contains multiple panels), returns `{tickets, loading, error, generate}`
 
    **Done when:** Hooks can be consumed by components without direct API calls.
 
@@ -123,7 +123,7 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
 
 - [ ] **2.1 — Set up Context + useReducer state management**
    - Create `src/contexts/GameContext.jsx` with reducer for: games list, selected game, history data, panel results
-   - Actions: `SET_GAMES`, `SELECT_GAME`, `FETCH_HISTORY`, `GENERATE_PANELS`
+   - Actions: `SET_GAMES`, `SELECT_GAME`, `FETCH_HISTORY`, `GENERATE_TICKETS`
    - Wrap app in `<GameProvider>`
 
    **Done when:** Components can dispatch actions and read state from context.
@@ -150,7 +150,7 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
    **Done when:** Ball renders numbers identically to the legacy UI.
 
 - [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**
-   - Shows: date (formatted "Monday, January 1st"), pattern string, row of number balls
+   - Shows: date (formatted "Monday, January 1st"), full pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High"), row of number balls
    - Match legacy fieldset layout with `<legend>` for date and `<h5>` for pattern
 
    **Done when:** Historical drawings render as cards matching the OLD/ visual style.
@@ -162,23 +162,34 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
 
    **Done when:** Generated panels render with correct grouping and color coding.
 
-- [ ] **2.7 — Create Tabs component (`src/components/common/Tabs.jsx`)**
+- [ ] **2.7 — Create Tabs component (`src/components/common/Tabs.jsx`, mobile only)**
    - Two-tab switcher: "Previous Drawings" / "Generated Panels"
+   - Hidden on desktop (≥768px) where split-view is used instead
    - Use `@headlessui/react` Tab component (already installed)
    - Match legacy tab styling (slate gray inactive, light active with small-caps)
 
-   **Done when:** Tabs switch content without page reload.
+   **Done when:** Tabs switch content without page reload; hidden on desktop breakpoint.
 
-- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`)**
-   - Combines: tabs, drawing history list, panel generation form, and panel display
-   - Form controls: ticket count input only — pattern selection is internal to each game class
-   - "Generate" button triggers API call via `useGeneratePanels` hook
+- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with split-view layout**
+   - Desktop (≥768px): Split-view grid — history + pattern distribution on left (5/12), generation form + panels on right (7/12)
+   - Mobile (<768px): Tabbed interface via Tabs component — "Previous Drawings" and "Generated Panels"
+   - Form controls: ticket count dropdown only (1, 2, 3, 5, 10) — no pattern selector; pattern is internal to each game class
+   - Desktop: auto-generate panels when ticket count changes; Mobile: explicit "Generate" button
+   - Uses `useGameHistory` and `useGenerateTickets` hooks
 
-   **Done when:** User can view drawings, select options, generate panels, and see results — all within one page.
+   **Done when:** User can view drawings, generate panels, and see results — split-view on desktop, tabs on mobile.
 
-- [ ] **2.9 — Wire up React Router in App.jsx**
-   - Routes: `/` → Dashboard, `/games/:gameId` → GamePage, `/history/:gameId` → HistoryPage (stub)
-   - Replace placeholder counter with router outlet inside Layout
+- [ ] **2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)**
+   - Calculates and displays pattern frequencies from historical drawings
+   - Shows full pattern text (e.g., "3-Odd 2-Even / 3-Low 2-High") with percentage bar chart
+   - Color-coded bars: green (≥60%), yellow (40–59%), orange (20–39%), slate (<20%)
+   - Sticky positioning on desktop left panel; at top of mobile drawings tab
+
+   **Done when:** Pattern distribution renders accurate statistics from history data with correct color tiers.
+
+- [ ] **2.10 — Wire up React Router in App.jsx**
+    - Routes: `/` → Dashboard, `/games/:gameId` → GamePage, `/history/:gameId` → HistoryPage (stub)
+    - Replace placeholder counter with router outlet inside Layout
 
    **Done when:** All three routes render without errors; navigation works.
 
@@ -189,17 +200,20 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
 Convert the legacy CSS from `OLD/` into Tailwind utility classes and custom component styles.
 
 - [ ] **3.1 — Migrate core color palette to Tailwind**
-   - Map legacy colors: page background (`bg-neutral-200`), text (`text-neutral-800`), fieldset borders (`border-neutral-400`)
-   - Define sub-pattern highlight classes in components (green/yellow/orange at 10% opacity)
+    - Map legacy colors: page background (`bg-neutral-200`), text (`text-neutral-800`), fieldset borders (`border-neutral-400`)
+    - Define sub-pattern highlight classes in components (green/yellow/orange at 10% opacity)
+    - Pattern distribution bar colors: green (≥60%), yellow (40–59%), orange (20–39%), slate (<20%)
 
    **Done when:** All hardcoded inline styles are replaced with Tailwind utilities.
 
-- [ ] **3.2 — Implement responsive layout matching legacy breakpoint**
-   - Mobile: fieldsets full-width, single column
-   - Tablet+ (`md:`): fieldsets narrow to ~33%, grid of panels
-   - Match the `@media (min-width: 768px)` behavior from OLD CSS
+- [ ] **3.2 — Implement responsive split-view layout**
+   - Mobile (<768px): Tabbed interface, full-width fieldsets, single column panels
+   - Desktop (≥768px): Split-view grid — 5/12 left panel (history + distribution) + 7/12 right panel (form + panels in 3-column grid)
+   - Left panel: sticky pattern distribution at top, scrollable drawing history below
+   - Right panel: generation form at top, generated panels below
+   - Match the `@media (min-width: 768px)` behavior from OLD CSS for individual card styling
 
-   **Done when:** Layout transitions correctly at 768px breakpoint.
+   **Done when:** Layout transitions correctly at 768px breakpoint; split-view on desktop, tabs on mobile.
 
 - [ ] **3.3 — Polish tab active/inactive states**
    - Inactive tabs: slate gray background, white text
@@ -209,9 +223,10 @@ Convert the legacy CSS from `OLD/` into Tailwind utility classes and custom comp
    **Done when:** Tabs visually match the legacy implementation pixel-for-pixel.
 
 - [ ] **3.4 — Add loading and error states**
-   - Skeleton loaders for history fetching and panel generation
-   - Error banners for API failures (network errors, invalid game)
-   - Disabled button state during in-flight requests
+    - Skeleton loaders for history fetching and panel generation
+    - Error banners for API failures (network errors, invalid game)
+    - Disabled button state during in-flight requests
+    - Pattern distribution shows "No data" message when history is empty
 
    **Done when:** User sees meaningful feedback during all async operations.
 
@@ -278,7 +293,7 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
    - Implement scraping logic for `https://wilottery.com/winners/draw-history?game=super-cash`
    - Note: SuperCash class is now instantiable without the SuperCashPD dependency. The constructor no longer requires external dependencies.
 
-   **Done when:** SuperCash class instantiates and generates panels correctly.
+   **Done when:** SuperCash `generateTickets()` returns properly structured ticket arrays with 6-number panels per sub-pattern.
 
 - [ ] **6.2 — Wire SuperCash into API endpoints**
    - Enable SuperCash in `GET /api/games` list
@@ -335,9 +350,99 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
 
 - **Phase 0** must complete before anything else — it fixes the foundation
 - **Phases 1–3** can partially overlap once mock API works (Phase 1.1 done)
-- **Phase 4** depends on all frontend components being functional (Phase 2.9 + Phase 3.1)
+- **Phase 4** depends on all frontend components being functional (Phase 2.10 + Phase 3.1)
 - **Phase 5** is independent of frontend; can run in parallel with Phases 2–3
 - **Phase 6+** requires Badger Five to be fully working end-to-end
+
+---
+
+## Visual Design Reference
+
+### Desktop Layout (≥768px) - Split View with Pattern Distribution
+```
+┌────────────────────────────────────┬───────────────────────────────────┐
+│                                    │                                   │
+│   Previous Drawings                │     Generated Panels              │
+│   ─────────────────                │     ─────────────────             │
+│                                    │                                   │
+│  Pattern Distribution              │     Tickets: [3 ▼]                │
+│  (Last 50 Drawings)                │     Auto-generate on change       │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━          │                                   │
+│  3O/2E, 3L/2H ████████████░░ 80%   │     ┌─────────────────────┐       │
+│  3O/2E, 2L/3H ████░░░░░░░░░░ 40%   │     │   Ticket Card 1     │       │
+│  2O/3E, 3L/2H ██░░░░░░░░░░░░ 20%   │     ├─────────────────────┤       │
+│                                    │     │  Sub-Pattern 1      │       │
+│  ────────────────────────          │     │  ● ○ ● ● ○          │       │
+│                                    │     ├─────────────────────┤       │
+│  [Monday, Jan 15th]                │     │  Sub-Pattern 2      │       │
+│  Pattern: 3L/2H                    │     │  ○ ● ● ○ ●          │       │
+│  ● ○ ● ● ○                         │     └─────────────────────┘       │
+│                                    │                                   │
+│  [Sunday, Jan 14th]                │   More tickets scroll here...     │
+│  Pattern: 2L/3H                    │                                   │
+│  ○ ● ● ● ○                         │                                   │
+│                                    │                                   │
+└────────────────────────────────────┴───────────────────────────────────┘
+
+Left Panel (5/12 width)              Right Panel (7/12 width)
+- Sticky pattern stats               - Generation form at top
+- Scrollable drawings below          - Generated panels in grid below
+``` 
+
+### Mobile Layout (<768px) - Tabbed Interface
+```
+┌─────────────────────────────────┐
+│   Previous Drawings  │ Generate │ ← Tabs (toggle)
+├─────────────────────────────────┤
+│                                 │
+│  Pattern Distribution           │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━       │
+│  3O/2E, 3L/2H ████████░░ 80%    │
+│  3O/2E, 2L/3H ████░░░░░░ 40%    │
+│                                 │
+│  [Monday, Jan 15th]             │
+│  Pattern: 3L/2H                 │
+│  ● ○ ● ● ○                      │
+│                                 │
+│  [Sunday, Jan 14th]             │
+│  Pattern: 2L/3H                 │
+│  ○ ● ● ● ○                      │
+│                                 │
+│  ...more drawings scroll...     │
+│                                 │
+└─────────────────────────────────┘
+
+Tab 1 Active (Previous Drawings)
+- Pattern distribution at top
+- Scrollable drawing cards below
+```
+
+### Mobile Layout (<768px) - Generated Panels Tab
+```
+┌─────────────────────────────────┐
+│   Previous │ Generate Panels    │ ← Tabs (toggle)
+├─────────────────────────────────┤
+│                                 │
+│  Generate Optimized Panels      │
+│                                 │
+│  Tickets: [3 ▼]                 │
+│  [Generate Button]              │
+│                                 │
+│  ┌─────────────────────┐        │
+│  │   Ticket Card 1     │        │
+│  ├─────────────────────┤        │
+│  │  Sub-Pattern 1      │        │
+│  │  ● ○ ● ● ○          │        │
+│  └─────────────────────┘        │
+│                                 │
+│  More tickets scroll here...    │
+│                                 │
+└─────────────────────────────────┘
+
+Tab 2 Active (Generated Panels)
+- Simple generation form (ticket count only)
+- Generated panels display below
+```
 
 ---
 
@@ -350,13 +455,14 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 | 1 | `docker compose up --build` starts without errors | 0 |
 | 2 | All 4 API endpoints return valid JSON | 1 |
 | 3 | Dashboard displays game cards and navigates to game pages | 2 |
-| 4 | Game page shows historical drawings with balls matching legacy UI | 2 + 3 |
-| 5 | Panel generation form works (pattern selector, ticket count, generate button) | 2 |
+| 4 | Game page shows historical drawings with full pattern text and balls matching legacy UI | 2 + 3 |
+| 5 | Panel generation form works (ticket count dropdown, auto-generate on desktop) | 2 |
 | 6 | Generated panels display real data from BadgerFive class | 4 |
-| 7 | Tab switching between "Previous Drawings" and "Generated Panels" works smoothly | 2 + 3 |
-| 8 | Responsive layout works on mobile (<768px) and desktop (≥768px) | 3 |
-| 9 | No PHP errors visible to end users; errors logged only | 0 |
-| 10 | PWA installs and serves cached content offline | existing |
+| 7 | Tab switching between "Previous Drawings" and "Generated Panels" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
+| 8 | Responsive split-view layout works on mobile (<768px tabs) and desktop (≥768px split-view) | 3 |
+| 9 | Pattern distribution shows accurate pattern statistics with color-coded bars from history data | 2 + 3 |
+| 10 | No PHP errors visible to end users; errors logged only | 0 |
+| 11 | PWA installs and serves cached content offline | existing |
 
 ---
 
@@ -386,12 +492,13 @@ frontend/.env                      # VITE_API_BASE_URL configuration
 frontend/src/contexts/GameContext.jsx    # State management with useReducer
 frontend/src/services/api.js               # Fetch wrapper for all API endpoints
 frontend/src/hooks/useGameHistory.js       # History data hook
-frontend/src/hooks/useGeneratePanels.js    # Panel generation hook
+frontend/src/hooks/useGenerateTickets.js   # Ticket generation hook (each ticket = group of panels)
 frontend/src/components/layout/Layout.jsx  # App shell (header + main)
 frontend/src/components/common/Tabs.jsx    # Tab navigation component
 frontend/src/components/games/Ball.jsx     # Number ball display
 frontend/src/components/games/DrawingCard.jsx   # Historical drawing card
 frontend/src/components/games/PanelDisplay.jsx  # Generated panel groups
+frontend/src/components/games/PatternDistribution.jsx   # Pattern frequency bar chart
 frontend/src/pages/Dashboard.jsx           # Game selection landing page
 frontend/src/pages/GamePage.jsx            # Main game view with tabs
 frontend/src/pages/HistoryPage.jsx         # Full history browser (stub)
