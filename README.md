@@ -17,7 +17,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
 ```
 
 - **Frontend** -- React 18 + Vite + Tailwind CSS v4. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). No routing, pages, or API integration implemented yet.
-- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints planned but not yet routed (`backend/api.php` does not exist). Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library.
+- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints partially implemented (`backend/api.php` exists with `GET /api/games` route). Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM. No database, no caching layer.
 
 ## Quick Start
@@ -70,7 +70,7 @@ The Vite dev server proxies `/api` requests to `http://192.168.0.91:5959`. Updat
 
 ## Documentation
 
-- [API Reference](docs/api/README.md) -- Planned REST endpoints and request/response shapes. Note: `backend/api.php` is not yet implemented; all endpoints are documented as planned.
+- [API Reference](docs/api/README.md) -- REST endpoints and request/response shapes. Note: `GET /api/games` is implemented; remaining endpoints are planned.
 - [Components](docs/components/README.md) -- Frontend component index and hierarchy. Currently only the `App` placeholder exists.
   - [App Component Detail](docs/components/App.md)
 - [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
