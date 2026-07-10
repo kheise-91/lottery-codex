@@ -5,7 +5,7 @@ disable-model-invocation: true
 effort: max
 ---
 
-## Step 1 - Confirm branch
+# Step 1 - Confirm branch
 
 ```bash
 git branch --show-current
@@ -15,7 +15,7 @@ If on `master`, stop and report: "Checkout a feature branch before running /qa-r
 
 ---
 
-## Step 2 - Get changed files and route to reviewer agents
+# Step 2 - Get changed files and route to reviewer agents
 
 ```bash
 git diff master...HEAD --stat
@@ -39,7 +39,7 @@ Do NOT review those files yourself. All code reviews should be handled by the sp
 
 ---
 
-## Step 3 - Spawn the applicable reviewer agents in parallel
+# Step 3 - Spawn the applicable reviewer agents in parallel
 
 Each reviewer has a scoped-mode switch: when given diff content, it reviews ONLY those changes - not the full file, and not pre-existing code outside the diff (except where a pre-existing issue is directly broken by this change).
 
@@ -58,7 +58,7 @@ Follow your standard review process and output format, tagging findings as Criti
 
 ---
 
-## Step 4 - Synthesize the final report
+# Step 4 - Synthesize the final report
 
 Do not re-review any files yourself. Read the reports returned by each spawned agent and produce one consolidated summary:
 

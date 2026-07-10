@@ -11,7 +11,7 @@ The roadmap is the single source of truth for the remainder of the project. Futu
 
 ---
 
-## Step 1 - Parse the input
+# Step 1 - Parse the input
 
 Extract the following labeled fields from {{args}}. Fields follow the format `Label: value` and run until the next label. Field names are case-insensitive.
 
@@ -30,7 +30,7 @@ If the field is not required, allow the user to skip making a selection for the 
 
 ---
 
-## Step 2 - Analyze the existing project
+# Step 2 - Analyze the existing project
 
 Read the following files if present:
 - @README.md
@@ -48,7 +48,7 @@ Determine:
 
 ---
 
-## Step 3 - Analyze the requested application
+# Step 3 - Analyze the requested application
 
 Analyze the user's description.
 
@@ -69,7 +69,7 @@ Do not invent unrelated functionality. Ask the user any questiosn if clarificati
 
 ---
 
-## Step 4 - Compare desired state with current implementation
+# Step 4 - Compare desired state with current implementation
 
 Determine:
 - Work already completed
@@ -96,7 +96,7 @@ Use:
 
 ---
 
-## Step 5 - Create the roadmap
+# Step 5 - Create the roadmap
 
 Create a complete roadmap. 
 
@@ -108,7 +108,7 @@ Prefer feature-oriented phases whenever practical.
 
 ---
 
-## Step 6 - Create sub-phases
+# Step 6 - Create sub-phases
 
 Each phase should contain as many sub-phases as necessary.
 
@@ -118,7 +118,7 @@ Keep granularity consistent.
 
 ---
 
-## Step 7 - Write descriptions
+# Step 7 - Write descriptions
 
 Every phase must contain:
 - Title
@@ -144,7 +144,7 @@ Stay at roadmap level.
 
 ---
 
-## Step 8 - Review before writing
+# Step 8 - Review before writing
 
 Critically review the roadmap.
 
@@ -165,7 +165,7 @@ Automatically fix minor issues. If significant problems remain, report them and 
 
 ---
 
-## Step 9 - Write ROADMAP.md
+# Step 9 - Write ROADMAP.md
 
 If @ROADMAP.md already exists, ask before overwriting.
 
@@ -230,7 +230,7 @@ Write the roadmap using exactly the format below. The generated roadmap MUST fol
 
 ---
 
-## Step 10 - Final validation
+# Step 10 - Final validation
 
 Before finishing, verify:
 - Every requested feature exists somewhere in the roadmap

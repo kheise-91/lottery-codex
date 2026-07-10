@@ -13,14 +13,14 @@ Do not modify any files.
 
 ---
 
-## Step 1 - Read the roadmap
+# Step 1 - Read the roadmap
 
 Read @ROADMAP.md in the current directory. If it does not exist, stop and report:
 > "No ROADMAP.md found - run `/roadmap:generate` first."
 
 ---
 
-## Step 2 - Analyze the repository
+# Step 2 - Analyze the repository
 
 Read the following files if present:
 - @README.md
@@ -38,7 +38,7 @@ Determine:
 
 ---
 
-## Step 3 - Review the roadmap
+# Step 3 - Review the roadmap
 
 Critically review the roadmap. Treat every omission as a possible problem.
 
@@ -90,7 +90,7 @@ Flag:
 
 ---
 
-## Step 4 - Produce the report
+# Step 4 - Produce the report
 
 Do not modify ROADMAP.md. Your review is advisory only. Structure the report exactly as follows.
 
