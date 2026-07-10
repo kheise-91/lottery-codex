@@ -90,26 +90,34 @@ Create the API front controller with mock data endpoints. This establishes front
 
    **Done when:** All 4 endpoints return valid JSON via `curl http://localhost:5959/api/games`.
 
-- [ ] **1.2 — Add nginx `fastcgi_split_path_info`**
+- [ ] **1.2 — Introduce `GamesController` layer**
+   - Create `backend/controllers/GamesController.php` with `list()`, `show()`, `history()`, `generate()` methods
+   - Use a `$registry` array (`'game-id' => ClassName::class`) as the single place to register new games
+   - Shrink `api.php` to a thin routing table (~8 lines) that delegates to the controller
+   - `resolve()` method does game lookup once, reused by all methods; returns `GameInterface|null`
+
+   **Done when:** `api.php` is a thin routing table; all endpoint logic lives in the controller.
+
+- [ ] **1.3 — Add nginx `fastcgi_split_path_info`**
    - Add `fastcgi_split_path_info ^(/api/)(.*)$;` to nginx.conf `/api` location block
    - Ensure `$request_uri` is passed correctly for Slim routing
 
    **Done when:** Slim router can distinguish between `/api/games` and `/api/generate`.
 
-- [ ] **1.3 — Install React Router DOM v6 in frontend**
+- [ ] **1.4 — Install React Router DOM v6 in frontend**
    - `npm install react-router-dom@6` in `frontend/`
    - Set up `<BrowserRouter>` wrapper in `main.jsx`
 
    **Done when:** Frontend builds without errors and renders a router outlet.
 
-- [ ] **1.4 — Create API service layer (`src/services/api.js`)**
+- [ ] **1.5 — Create API service layer (`src/services/api.js`)**
    - Build a lightweight fetch wrapper with base URL configuration
    - Export functions: `fetchGames()`, `fetchGameDetails(id)`, `fetchHistory(id)`, `generateTickets(id, count)`
    - Configure Vite `.env` with `VITE_API_BASE_URL` for dev/prod flexibility
 
    **Done when:** Service functions return typed JSON responses from the backend.
 
-- [ ] **1.5 — Create custom hooks (`src/hooks/`)**
+- [ ] **1.6 — Create custom hooks (`src/hooks/`)**
    - `useGameHistory(gameId)` → fetches and caches historical drawings, returns `{data, loading, error}`
    - `useGenerateTickets(gameId)` → triggers ticket generation (each ticket contains multiple panels), returns `{tickets, loading, error, generate}`
 
@@ -471,6 +479,7 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 ### Backend — New Files
 ```
 backend/composer.json              # PSR-4 autoloading + Slim dependencies
+backend/controllers/GamesController.php  # Route handlers for all game endpoints
 backend/vendor/                    # Composer vendor directory (gitignored)
 backend/api.php                    # Slim Framework router entry point
 backend/games/GameInterface.php    # Interface for all game classes
