@@ -91,7 +91,7 @@ php -S localhost:8000        # Quick local server (no Nginx)
 Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scraping)
 ```
 
-- **Backend entry point:** `backend/api.php` — Slim Framework bootstrap (autoloader, error middleware, JSON Content-Type); routes not yet defined
+- **Backend entry point:** `backend/api.php` — Slim Framework bootstrap (autoloader, error middleware, JSON Content-Type); `GET /api/games` route implemented, remaining routes planned
 - **Game interface:** `backend/games/GameInterface.php` — defines the contract for game implementations (`getGameDetails()`, `getHistory()`, `generatePanels()`)
 - **Game classes:** `backend/games/BadgerFive.php`, `backend/games/SuperCash.php` — pattern analysis and panel generation logic
 - **Autoloading:** Composer PSR-4 (`LotteryCodex\Games\` → `games/`)
