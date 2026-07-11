@@ -58,9 +58,11 @@ class SuperCash implements GameInterface, \JsonSerializable
         return $this->getPreviousDrawings();
     }
 
-    public function generateTickets(int $tickets): array
+    public function generateTickets(int $count): array
     {
-        return [];
+        $this->tickets = [];
+        $this->createTickets($count);
+        return $this->getTickets();
     }
 
     private function analyzePreviousDrawings(array $previousDrawings): void
