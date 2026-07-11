@@ -38,9 +38,10 @@ class BadgerFive implements GameInterface, \JsonSerializable
         return [
             'id' => 'badger-five',
             'name' => 'Badger 5',
-            'range' => [1, 31],
-            'ballCount' => 5,
-            'drawDays' => ['Daily'],
+            'status' => 'enabled',
+            'drawFrequency' => ['Daily'],
+            'numberRange' => ['min' => 1, 'max' => 31],
+            'numbersPerDraw' => 5,
             'optimalPattern' => '3-Odd 2-Even / 3-Low 2-High',
             'groups' => [
                 'lowOdd'   => $this->getLowOdd(),
