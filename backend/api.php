@@ -22,8 +22,18 @@ $app->add(function ($request, $handler) {
 });
 
 $app->get('/api/games', function (Request $request, Response $response) {
+    $data = ['games' => []];
     $games = [new BadgerFive(), new SuperCash()];
-    $data = ['games' => array_map(fn($g) => $g->getGameDetails(), $games)];
+
+    foreach ($games AS $game) {
+        $details = $game->getGameDetails();
+        $data['games'][] = [
+            'id' => $details['id'],
+            'name' => $details['name'],
+            'status' => $details['status']
+        ];
+    }
+
     $body = $response->getBody();
     $body->write(json_encode($data, JSON_PRETTY_PRINT));
     return $response;
