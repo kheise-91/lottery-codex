@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace LotteryCodex;
 
-use Psr\Http\Message\{Request, Response};
+use Psr\Http\Message\{RequestInterface, ResponseInterface};
 use LotteryCodex\Games\BadgerFive;
 use LotteryCodex\Games\SuperCash;
 
@@ -16,12 +16,12 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 // JSON Content-Type middleware — applied to every response
 $app->add(function ($request, $handler) {
-    /** @var \Psr\Http\Message\ResponseInterface $response */
+    /** @var ResponseInterface $response */
     $response = $handler->handle($request);
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-$app->get('/api/games', function (Request $request, Response $response) {
+$app->get('/api/games', function (RequestInterface $request, ResponseInterface $response) {
     $data = ['games' => []];
     $games = [new BadgerFive(), new SuperCash()];
 
@@ -39,7 +39,7 @@ $app->get('/api/games', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->get('/api/games/{gameId}', function (Request $request, Response $response, array $attrs) {
+$app->get('/api/games/{gameId}', function (RequestInterface $request, ResponseInterface $response, array $attrs) {
     $games = [new BadgerFive(), new SuperCash()];
 
     foreach ($games as $game) {
@@ -55,7 +55,7 @@ $app->get('/api/games/{gameId}', function (Request $request, Response $response,
     return $response->withStatus(404);
 });
 
-$app->get('/api/games/{gameId}/history', function (Request $request, Response $response, array $attrs) {
+$app->get('/api/games/{gameId}/history', function (RequestInterface $request, ResponseInterface $response, array $attrs) {
     $gameId = $attrs['gameId'];
 
     $badgerFiveHistory = [
@@ -130,7 +130,7 @@ $app->get('/api/games/{gameId}/history', function (Request $request, Response $r
     return $response;
 });
 
-$app->post('/api/games/{gameId}/generate', function (Request $request, Response $response, array $attrs) {
+$app->post('/api/games/{gameId}/generate', function (RequestInterface $request, ResponseInterface $response, array $attrs) {
     $gameId = $attrs['gameId'];
 
     // Validate count parameter
@@ -138,9 +138,12 @@ $app->post('/api/games/{gameId}/generate', function (Request $request, Response 
     $count = $body['count'] ?? 0;
 
     if (!is_int($count) || $count <= 0) {
-        return $response->withStatus(400)->write(json_encode([
+        $response = $response->withStatus(400);
+        $body = $response->getBody();
+        $body->write(json_encode([
             'error' => 'Invalid count: must be a positive integer.'
         ], JSON_PRETTY_PRINT));
+        return $response;
     }
 
     // Resolve game class by gameId

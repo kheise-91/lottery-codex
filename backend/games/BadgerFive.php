@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LotteryCodex\Games;
 
-require_once __DIR__ . '/../simple_html_dom.php';
+require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
 
 class BadgerFive implements GameInterface, \JsonSerializable
 {
