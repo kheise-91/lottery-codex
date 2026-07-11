@@ -129,10 +129,13 @@ Update all necessary documentation for the changes implemented above and leave d
 Spawn the `git-manager` agent, passing the code review summaries, the issue details found at the top of the plan, and instructions to follow the steps below.
 
 ## Step 4.1 - Commit and push 
-Commit and push the changes. Stage ONLY the changes made for this issue and commit:
-```
-[[issue type]-[issue number]] [issue title]
-```
+Commit and push the changes. Stage ONLY the changes made for this issue and commit using this format: `[Type-IssueNumber] Issue title`.
+- Type: the issue's label, capitalized (e.g. `Task`, `Bug`, `Feature`)
+- IssueNumber: $issueNumber
+
+Examples: 
+- `[Bug-47] Fix 500 errors from /api/games/ endpoint`
+- `[Task-58] Implement GET /api/games/{gameId} endpoint`
 
 ## Step 4.2. Open pull request 
 Open a pull request via the Gitea MCP:
