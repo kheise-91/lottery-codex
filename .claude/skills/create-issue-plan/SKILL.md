@@ -54,7 +54,7 @@ Create a detailed plan for implementing the task found in the specified Gitea is
 
 The issue should have a list of acceptance criteria. You may add verification steps to this if you feel the list is incomplete.
 
-The plan MUST include the issue content provided by the `git-manager` agent in step 1. Follow the format below EXACTLY when creating the plan:
+The plan MUST include the issue content and sub-phase branch name provided by the `git-manager` agent in step 1. Follow the format below EXACTLY when creating the plan:
 ```md
 ## Issue Details
 **Title:** [full issue title]
