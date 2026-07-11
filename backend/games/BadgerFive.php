@@ -58,10 +58,10 @@ class BadgerFive implements GameInterface, \JsonSerializable
         return $this->getPreviousDrawings();
     }
 
-    public function generateTickets(int $tickets): array
+    public function generateTickets(int $count): array
     {
         $this->tickets = [];
-        $this->createTickets($tickets);
+        $this->createTickets($count);
         return $this->getTickets();
     }
 
