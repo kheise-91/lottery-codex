@@ -12,7 +12,7 @@ The subPhase number is: $subPhase. If no $subPhase number is passed, stop and as
 
 ---
 
-## Step 1 - Read the roadmap
+# Step 1 - Read the roadmap
 
 A sub-phase number is required.
 
@@ -29,7 +29,7 @@ If the sub-phase cannot be found, stop.
 
 ---
 
-## Step 2 - Plan the tasks
+# Step 2 - Plan the tasks
 
 Break the sub-phase into independently deliverable implementation tasks. Each task must be completable in a single focused session - roughly half a day to two days of work. 
 
@@ -69,62 +69,62 @@ For each task, determine:
 
 ---
 
-## Step 3 - Create branches, milestone, and issues
+# Step 3 - Create branches, milestone, and issues
 
 Spawn the `git-manager` agent with instructions to follow the steps below.
 
-### Step 3.1 - Create sub-phase branch
+## Step 3.1 - Create sub-phase branch
 - Derive the phase branch name from the parent phase number: Example: `Phase 3` → `phase-3`
 - Derive the new sub-phase branch name from the user provided sub-phase number: replace the `.` with `-` and prepend `phase-`. Example: `3.9` → `phase-3-9`
 - Create the new sub-phase branch off of the parent phase branch
 - Push the new sub-phase branch to origin
 
-### Step 3.2 - Create milestone
+## Step 3.2 - Create milestone
 Using the Gitea MCP, detect the repo from the current git remote. Create a milestone with:
 - **Title:** `Phase X.Y` (e.g. "Phase 3.9")
 - **Description:** The full sub-phase description from the roadmap, including the done definition and any implementation notes, formatted as markdown
 
 If the milestone already exists, skip creation and use the existing one.
 
-### Step 3.3 - Create issues
+## Step 3.3 - Create issues
 For each task in sequence, perform the steps below **one task at a time** - complete all steps for one task before moving to the next:
 
-#### Step 3.3.1 - Generate the issue branch name
+### Step 3.3.1 - Generate the issue branch name
 Format: `YYYY-MM-DD-short-task-summary`
 - Use today's date
 - Derive the summary from the task title: lowercase, hyphens, max 5 words, no special characters, no articles (a/an/the)
 - Example: `2026-05-25-add-followed-up-column`
 
-#### Step 3.3.2 - Create the issue branch
+### Step 3.3.2 - Create the issue branch
 Using the generated issue branch name, create a new branch off of the sub-phase branch (not master) and push it.
 
-#### Step 3.3.3 - Create labels 
+### Step 3.3.3 - Create labels 
 Create any missing labels via the Gitea MCP if the label doesn't already exist.
 
-#### Step 3.3.4 - Create the issue
+### Step 3.3.4 - Create the issue
 Create the issues via the Gitea MCP with: title, project board name, milestone, branch, label(s), and body as planned in Step 2.
 
-#### Step 3.3.5 - Add branch name comment to the issue
+### Step 3.3.5 - Add branch name comment to the issue
 Add a comment to the issue immediately after creation:
 ```
 Branch: `YYYY-MM-DD-short-task-summary`
 ```
 
-#### Step 3.3.6 - Add mockup file comment to the issue (if one exists)
+### Step 3.3.6 - Add mockup file comment to the issue (if one exists)
 If a mockup file was found in step 2, add a second comment to the issue:
 ```
 Mockup: `[mockup-file-path/mockup-file-name.html]`
 ```
 
-#### Step 3.3.7 - Confirm
+### Step 3.3.7 - Confirm
 Confirm the issue number, title, and branch name before proceeding to the next task.
 
-### Step 3.4 - Return created issues
+## Step 3.4 - Return created issues
 When all tasks have been converted into Gitea issues, return to the orchestrator the list of issues created, including their titles and branch names.
 
 ---
 
-## Step 4 - Return and summarize
+# Step 4 - Return and summarize
 
 After all tasks are created, check out the sub-phase branch:
 ```bash

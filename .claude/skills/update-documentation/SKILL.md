@@ -9,7 +9,7 @@ You are the orchestrator for a documentation update. Assume all development work
 
 ---
 
-## Step 1 - Spawn the reviewer agents
+# Step 1 - Spawn the reviewer agents
 
 Delegate documentation extraction sequentially.
 
@@ -22,7 +22,7 @@ Each agent is responsible for generating documentation for its own area. The age
 
 ---
 
-## Step 2 - Spawn the documenter agent
+# Step 2 - Spawn the documenter agent
 
 Spawn the `documenter` agent, passing all 3 summaries generated from step 1 and instructions to update all project documentation and verify consistency.
 
@@ -36,7 +36,7 @@ If inconsistencies remain, instruct the `documenter` subagent to report them ins
 
 ---
 
-## Step 4 - Summarize
+# Step 4 - Summarize
 
 Return a summary:
 

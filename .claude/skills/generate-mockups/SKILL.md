@@ -12,7 +12,7 @@ The number of mockups to create is: $numberOfMockups. If no $numberOfMockups is 
 
 ---
 
-## Step 1 - Read the sub-phase
+# Step 1 - Read the sub-phase
 
 Read @ROADMAP.md and find the sub-phase matching "$subPhase" (e.g. "3.2" matches `- [ ] **3.2...**`)
 
@@ -22,7 +22,7 @@ If no matching sub-phase is found, stop and alert the user.
 
 ---
 
-## Step 2 - Extract frontend design requirements
+# Step 2 - Extract frontend design requirements
 
 From the sub-phase description, extract only the information relevant to UI and frontend design:
 
@@ -46,7 +46,7 @@ Summarize the extracted frontend requirements in plain language before proceedin
 
 ---
 
-## Step 3 - Delegate project style extraction to `frontend-explorer` agent
+# Step 3 - Delegate project style extraction to `frontend-explorer` agent
 
 Spawn the `frontend-explorer` agent to analyze the existing frontend architecture. Do not use local file tools for this step; you MUST spawn the specified explorer agent.. 
 
@@ -63,7 +63,7 @@ Await the agent's markdown response before moving on to Step 4. Use the agent's 
 
 ---
 
-## Step 4 - Plan distinct mockup variants
+# Step 4 - Plan distinct mockup variants
 
 Before writing any HTML, think through $numberOfMockups meaningfully different approaches to the frontend design extracted in Step 2. 
 
@@ -82,7 +82,7 @@ For each mockup variant, decide:
 
 ---
 
-## Step 5 - Spawn `frontend-engineer` agents to generate mockup variants
+# Step 5 - Spawn `frontend-engineer` agents to generate mockup variants
 
 For each planned mockup variant: spawn a `frontend-engineer` agent to produce a complete, self-contained HTML file for each variant following the expected requirements found in the agent's definition.
 
@@ -90,7 +90,7 @@ Pass the agent the sub-phase number and variant info, extracted design requireme
 
 ---
 
-## Step 6 - Report
+# Step 6 - Report
 
 Print a summary table with all the files created from the agents:
 
