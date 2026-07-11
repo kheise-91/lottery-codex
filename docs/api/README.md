@@ -1,6 +1,6 @@
 # API Reference
 
-Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) exists as a bootstrap file with autoloader, error middleware, and JSON Content-Type middleware. **`GET /api/games` is implemented**; remaining routes are planned based on `GameInterface` method signatures.
+Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) exists as a bootstrap file with autoloader, error middleware, and JSON Content-Type middleware. **`GET /api/games`, `GET /api/games/{gameId}`, and `GET /api/games/{gameId}/history` are implemented**; the generate endpoint is planned based on `GameInterface::generatePanels()`.
 
 ## Entry Point
 
@@ -61,7 +61,7 @@ Get game details and rules. Returns the result of `GameInterface::getGameDetails
 
 ### GET `/api/games/{gameId}/history`
 
-Get historical drawing results via live scraping of wilottery.com. Returns an associative array keyed by date string, each entry containing `numbers` and `pattern`.
+Get mock historical drawing results. Returns an associative array keyed by date string, each entry containing `numbers` and `pattern`. Currently returns static/mock data; live scraping is planned for a future phase.
 
 **Path parameters:**
 
@@ -73,20 +73,21 @@ Get historical drawing results via live scraping of wilottery.com. Returns an as
 
 ```json
 {
-  "Tuesday, July 8th": {
-    "numbers": [3, 12, 19, 24, 30],
-    "pattern": "2-Odd 3-Even / 2-Low 3-High"
+  "Monday, July 1st": {
+    "numbers": [3, 12, 19, 24, 31],
+    "pattern": "3-Odd 2-Even / 3-Low 2-High"
   },
-  "Monday, July 7th": {
-    "numbers": [1, 8, 15, 22, 29],
-    "pattern": "2-Odd 3-Even / 3-Low 2-High"
+  "Sunday, June 30th": {
+    "numbers": [5, 8, 17, 22, 29],
+    "pattern": "3-Odd 2-Even / 2-Low 3-High"
   }
 }
 ```
 
+**Response (404):** Game ID not found. Supported game IDs are `badger-five` and `supercash`.
+
 **Notes:**
-- Each call performs a live HTTP request to wilottery.com. No caching is implemented.
-- If the remote page fails to load, PHP warnings/notices will be produced (no error handling on `file_get_html` return value).
+- This endpoint currently returns static mock data. Live scraping from wilottery.com is planned for a future phase.
 
 ### POST `/api/games/{gameId}/generate`
 
@@ -138,8 +139,8 @@ Each panel is a sorted integer array of length equal to the game's `ballCount`. 
 | Endpoint | Implementation Status | Notes |
 |----------|----------------------|-------|
 | GET `/api/games` | Implemented | Returns JSON array of game metadata from `GameInterface::getGameDetails()` |
-| GET `/api/games/{gameId}` | Not implemented | Same -- routing layer missing |
-| GET `/api/games/{gameId}/history` | Not implemented | Game classes implement `getHistory()` but no route wired up |
+| GET `/api/games/{gameId}` | Implemented | Returns full game details and rules for the specified game ID |
+| GET `/api/games/{gameId}/history` | Implemented (mock data) | Returns static mock historical drawing data; live scraping planned |
 | POST `/api/games/{gameId}/generate` | Not implemented | Game classes implement `generateTickets()` but no route wired up |
 
 ## Authentication
