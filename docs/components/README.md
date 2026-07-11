@@ -21,3 +21,7 @@ The following are documented in the migration roadmap but do not exist on disk:
 ## Entry Point
 
 `frontend/src/main.jsx` renders `<App />` inside React StrictMode. No router is installed (`react-router-dom` is not in `package.json`). The entire application at every URL path renders a single view: the App component.
+
+## Styling
+
+Tailwind CSS v4 is imported via `@tailwindcss/vite` plugin in `vite.config.js`. The only CSS file (`frontend/src/index.css`) contains a single line: `@import "tailwindcss";`. No Tailwind utility classes are used by any component yet.
