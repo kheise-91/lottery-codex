@@ -6,8 +6,8 @@ Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/eve
 
 | Game | Numbers | Range | Draw Days | Status |
 |------|---------|-------|-----------|--------|
-| **Badger Five** | 5 | 1-31 | Daily | Fully functional |
-| **Super Cash** | 6 | 1-39 | Daily | Partially broken (`generateTickets` returns empty array; scrapes wrong URL) |
+| **Badger 5** (`badger-five`) | 5 | 1-31 | Daily | Fully functional |
+| **SuperCash!** (`supercash`) | 6 | 1-39 | Daily | Fully functional |
 
 ## Architecture
 
@@ -16,9 +16,9 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
      :5959                    Docker container                live HTTP request
 ```
 
-- **Frontend** -- React 18 + Vite + Tailwind CSS v4. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). No routing, pages, or API integration implemented yet.
+- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). No routing, pages, or API integration implemented yet.
 - **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints implemented in `backend/api.php` (`GET /api/games`, `GET /api/games/{gameId}`, `GET /api/games/{gameId}/history`, `POST /api/games/{gameId}/generate`). Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library.
-- **Infrastructure** -- Single Docker container running Nginx + PHP-FPM. No database, no caching layer.
+- **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
 ## Quick Start
 
@@ -42,7 +42,7 @@ npm run dev                  # Vite dev server on port 5173, proxies /api to bac
 npm run build                # Production build to dist/
 ```
 
-The Vite dev server proxies `/api` requests to `http://192.168.0.91:5959`. Update `vite.config.js` if the backend host changes.
+The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Update `frontend/vite.config.js` if the backend host changes. Backend changes are reflected immediately via Docker volume mount; frontend changes require `docker compose up --build` since `frontend/dist/` is baked into the image.
 
 ## Project Structure
 
@@ -65,12 +65,13 @@ The Vite dev server proxies `/api` requests to `http://192.168.0.91:5959`. Updat
 │   └── package.json                # Node.js dependencies
 ├── docker/                         # Dockerfile, nginx.conf
 ├── docker-compose.yml              # Container orchestration (single service)
-└── docs/                           # Project documentation
+├── docs/                           # Project documentation
+└── README.md                       # This file
 ```
 
 ## Documentation
 
-- [API Reference](docs/api/README.md) -- REST endpoints and request/response shapes. All four endpoints are implemented.
+- [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented.
 - [Components](docs/components/README.md) -- Frontend component index and hierarchy. Currently only the `App` placeholder exists.
   - [App Component Detail](docs/components/App.md)
 - [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
@@ -93,8 +94,8 @@ Each sub-pattern specifies which pool each ball position draws from. The final p
 ## Technologies
 
 - **Backend:** PHP 8.2-FPM, Slim Framework 4, Composer (PSR-4), nikic/fast-route, simplehtmldom
-- **Frontend:** React 18, Vite 5, Tailwind CSS v4
-- **Infrastructure:** Docker, Nginx
+- **Frontend:** React 18, Vite 5, Tailwind CSS v4, Headless UI, Heroicons
+- **Infrastructure:** Docker, Nginx, PHP-FPM (single container)
 
 ## References
 

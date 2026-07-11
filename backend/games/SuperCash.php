@@ -39,7 +39,7 @@ class SuperCash implements GameInterface, \JsonSerializable
         return [
             'id' => 'supercash',
             'name' => 'SuperCash!',
-            'status' => 'disabled',
+            'status' => 'enabled',
             'drawFrequency' => ['Daily'],
             'numberRange' => ['min' => 1, 'max' => 39],
             'numbersPerDraw' => 6,
