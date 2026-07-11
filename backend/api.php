@@ -130,4 +130,32 @@ $app->get('/api/games/{gameId}/history', function (Request $request, Response $r
     return $response;
 });
 
+$app->post('/api/games/{gameId}/generate', function (Request $request, Response $response, array $attrs) {
+    $gameId = $attrs['gameId'];
+
+    // Validate count parameter
+    $body = json_decode($request->getBody()->getContents(), true);
+    $count = $body['count'] ?? 0;
+
+    if (!is_int($count) || $count <= 0) {
+        return $response->withStatus(400)->write(json_encode([
+            'error' => 'Invalid count: must be a positive integer.'
+        ], JSON_PRETTY_PRINT));
+    }
+
+    // Resolve game class by gameId
+    $games = [new BadgerFive(), new SuperCash()];
+    foreach ($games as $game) {
+        if ($game->getGameDetails()['id'] === $gameId) {
+            $tickets = $game->generateTickets($count);
+
+            $body = $response->getBody();
+            $body->write(json_encode(['tickets' => $tickets], JSON_PRETTY_PRINT));
+            return $response;
+        }
+    }
+
+    return $response->withStatus(404);
+});
+
 $app->run();
