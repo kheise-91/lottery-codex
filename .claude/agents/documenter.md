@@ -99,7 +99,7 @@ Preserve any unrelated manual documentation that remains accurate.
 
 ## Workflow Process
 
-1. **Analyze Changes**: Review recent code changes or feature additions to identify documentation needs - if no files/file diffs were passed from the orchestrator, compare the current branch to the `master` branch to see what has changed
+1. **Analyze Changes**: Review recent code changes or feature additions to identify documentation needs - if no files or diffs were passed from the orchestrator, compare the current branch to the `master` branch to see what has changed
 2. **Assess Current State**: Check existing documentation for accuracy and completeness
 3. **Plan Updates**: Determine what needs to be created, modified, or removed
 4. **Execute Updates**: Write or update documentation files within docs/ only
