@@ -70,9 +70,9 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   ├── games/                      # Game logic classes (implements GameInterface)
 │   │   ├── GameInterface.php       # Contract: getGameDetails(), getHistory(), generateTickets()
 │   │   ├── BadgerFive.php          # Fully functional -- scraping + panel generation working
-│   │   └── SuperCash.php           # Partially broken -- see status table above
+│   │   └── SuperCash.php           # Fully functional -- pattern analysis and panel generation
 │   ├── simplehtmldom/              # HTML parser library (vendored, not via Composer)
-│   ├── composer.json               # PHP dependencies: slim/slim ^4.0, slim/psr7 ^1.6
+│   ├── composer.json               # PHP dependencies: slim/slim ^4.0, slim/psr7 ^1.0
 │   └── vendor/                     # Composer-installed dependencies (git-ignored)
 ├── frontend/
 │   ├── src/
