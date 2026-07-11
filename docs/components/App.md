@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Placeholder/stub demo component. Displays a counter button to prove the frontend stack (React 18 + Vite + Tailwind CSS) is wired up correctly. Not an application page -- no routing, state management, or API integration exists yet.
+Placeholder/stub demo component. Displays a counter button to verify the frontend stack (React 18 + Vite + Tailwind CSS v4) is wired up correctly. Not an application page -- no routing, state management beyond local counter, or API integration exists yet.
 
 ## Props
 
@@ -30,7 +30,7 @@ Inline styles only -- Tailwind CSS v4 is imported in `index.css` but not used by
 
 - Layout: centered flexbox (`minHeight: 100vh`, `display: flex`, `alignItems: center`, `justifyContent: center`)
 - Font family: `system-ui, sans-serif`
-- Button: blue background (`#3b82f6`), white text, rounded corners
+- Button: blue background (`#3b82f6`), white text, rounded corners (`borderRadius: 0.5rem`)
 
 ## Text Content
 
