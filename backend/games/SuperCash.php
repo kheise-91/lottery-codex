@@ -22,10 +22,12 @@ class SuperCash implements GameInterface, \JsonSerializable
 
     private array $pattern = [
         // 3-Odd 3-Even / 3-Low 3-High //
-        1 => ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven', 'highEven'],
-        2 => ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highEven'],
-        3 => ['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven', 'highEven'],
-        4 => ['lowEven', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highOdd'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven', 'highEven'],
+        ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highEven'],
+        ['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven', 'highEven'],
+        ['lowEven', 'lowEven', 'lowEven', 'highOdd', 'highOdd', 'highOdd']
     ];
 
     public function __construct()
