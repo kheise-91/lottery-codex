@@ -113,7 +113,7 @@ Nginx serves the frontend from `/var/www/html/frontend/` with SPA fallback (`try
 ## Key Context
 
 - **No tests yet** — test infrastructure has not been set up
-- **SuperCash is partially broken** — missing `SuperCashPD.php` dependency was removed; class instantiates but core methods are commented out
+- **SuperCash is fully functional** — pattern analysis and panel generation working
 - **BadgerFive is the primary focus** — fully functional game class, scraping + panel generation working
 - **simplehtmldom** is vendored manually (not via Composer) in `backend/simplehtmldom/`
 - **Current branch convention:** `phase-X-Y` branches for sub-phases, with dated task branches (`Y-m-d-short-summary`) rebased onto phase branches
