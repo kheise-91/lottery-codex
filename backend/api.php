@@ -39,4 +39,20 @@ $app->get('/api/games', function (Request $request, Response $response) {
     return $response;
 });
 
+$app->get('/api/games/{gameId}', function (Request $request, Response $response, array $attrs) {
+    $games = [new BadgerFive(), new SuperCash()];
+
+    foreach ($games as $game) {
+        if ($game->getGameDetails()['id'] === $attrs['gameId']) {
+            $details = $game->getGameDetails();
+
+            $body = $response->getBody();
+            $body->write(json_encode($details, JSON_PRETTY_PRINT));
+            return $response;
+        }
+    }
+
+    return $response->withStatus(404);
+});
+
 $app->run();
