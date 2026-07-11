@@ -1,6 +1,6 @@
 # API Reference
 
-Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) exists as a bootstrap file with autoloader, error middleware, and JSON Content-Type middleware. **`GET /api/games`, `GET /api/games/{gameId}`, and `GET /api/games/{gameId}/history` are implemented**; the generate endpoint is planned based on `GameInterface::generatePanels()`.
+Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) exists as a bootstrap file with autoloader, error middleware, and JSON Content-Type middleware. All four routes are implemented: `GET /api/games`, `GET /api/games/{gameId}`, `GET /api/games/{gameId}/history`, and `POST /api/games/{gameId}/generate`.
 
 ## Entry Point
 
@@ -91,7 +91,7 @@ Get mock historical drawing results. Returns an associative array keyed by date 
 
 ### POST `/api/games/{gameId}/generate`
 
-Generate prediction panels using pattern-based selection.
+Generate prediction panels using pattern-based selection. Instantiates the appropriate game class (BadgerFive or SuperCash) based on `gameId`, calls `generateTickets($count)`, and returns the result.
 
 **Path parameters:**
 
@@ -103,35 +103,30 @@ Generate prediction panels using pattern-based selection.
 
 ```json
 {
-  "tickets": 3
+  "count": 3
 }
 ```
 
 | Field     | Type   | Description                    |
 |-----------|--------|--------------------------------|
-| `tickets` | int    | Number of tickets to generate (each ticket contains multiple panels) |
+| `count`   | int    | Number of panels to generate (must be a positive integer) |
 
-**Response (200):** Array of generated tickets. Each ticket is an array of panels:
+**Response (200):**
 
 ```json
-[
-  [
+{
+  "tickets": [
     [3, 8, 15, 24, 30],
     [3, 9, 12, 22, 31],
-    [5, 7, 14, 23, 29],
-    [1, 6, 10, 19, 27],
-    [3, 5, 11, 20, 28]
-  ],
-  [
-    [1, 4, 13, 21, 30],
-    ...
+    [5, 7, 14, 23, 29]
   ]
-]
+}
 ```
 
 Each panel is a sorted integer array of length equal to the game's `ballCount`. Numbers are drawn from constrained category pools (lowOdd, lowEven, highOdd, highEven) according to sub-pattern definitions. Uniqueness enforcement scans all previously generated panels linearly -- O(n^2) in total panels.
 
-**Response (400):** Invalid request body or missing `tickets` field.
+**Response (400):** Invalid request body -- missing or non-positive `count` field. Returns `{ "error": "Invalid count: must be a positive integer." }`.
+
 **Response (404):** Game ID not found.
 
 ## Status
@@ -141,7 +136,7 @@ Each panel is a sorted integer array of length equal to the game's `ballCount`. 
 | GET `/api/games` | Implemented | Returns JSON array of game metadata from `GameInterface::getGameDetails()` |
 | GET `/api/games/{gameId}` | Implemented | Returns full game details and rules for the specified game ID |
 | GET `/api/games/{gameId}/history` | Implemented (mock data) | Returns static mock historical drawing data; live scraping planned |
-| POST `/api/games/{gameId}/generate` | Not implemented | Game classes implement `generateTickets()` but no route wired up |
+| POST `/api/games/{gameId}/generate` | Implemented | Accepts `{ "count": N }`, returns `{ "tickets": [[panel], ...] }` |
 
 ## Authentication
 
