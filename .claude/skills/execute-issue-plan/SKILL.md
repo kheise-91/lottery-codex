@@ -14,7 +14,7 @@ The issue number is: $issueNumber. If no issue number was provided by the user, 
 
 Check for a saved issue plan in @.claude/plans/ using $issueNumber. The file name will be `issue-$issueNumber.md` (examples: `.claude/plans/issue-12.md` or `.claude/plans/issue-23.md`). Issue plans are not tracked in Git. If no issue plan was found, stop and alert the user.
 
-Read the saved issue plan. The issue details provided in the saved plan will be used in the steps below.
+Read the saved issue plan. The issue details provided in the saved issue plan will be used in the steps below.
 
 Before proceeding, confirm that the issue branch listed in the issue plan is checked out. If the issue branch listed in the plan is not checked out, stop and alert the user - do NOT proceed until the user confirms the branch is checked out.
 
@@ -23,9 +23,9 @@ Before proceeding, confirm that the issue branch listed in the issue plan is che
 # Step 1 - Spawn the engineer agents
 
 **Scope Boundary**
-The implementation scope is defined entirely by this issue's title, body, acceptance criteria, and issue plan if one exists - nothing else. The milestone description, any other issues in this milestone, and ROADMAP.md are organizational context only. Do not read ROADMAP.md. Do not implement work described in the milestone description or in any other issue. If the acceptance criteria in this issue are satisfied, the work is done.
+The implementation scope is defined entirely by the contents of the saved issue plan - nothing else. Do not implement work described in the milestone description or in any other issue. If the verification steps and acceptance criteria from the issue plan are satisfied, the work is done.
 
-Pass this same scope boundary to every agent you spawn.
+Pass this scope boundary to every agent you spawn.
 
 Before spawning any agents:
 - Derive the mockup pattern from the issue milestone: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check @frontend/mockups/ for a matching file.
@@ -36,8 +36,7 @@ Based on what the issue plan requires, spawn the appropriate agents listed below
 - `frontend-engineer`: Handles all work inside the `frontend/` directory.
 
 Context/instructions to pass to the engineer agents:
-- The full issue body
-- The issue plan
+- The saved issue plan (`issue-$issueNumber.md`)
 - The scope boundary
 - The mockup file if one exists (`frontend-engineer` only)
 - The requirement to signal completion only when all the work relevant to the agent's section has been completed and the acceptance criteria has been met
@@ -65,8 +64,7 @@ For each engineer agent that worked on implementing the issue, spawn the corresp
 Context/instructions to pass to the reviewer agents:
 
 **Context:**
-- The full issue body
-- The issue plan
+- The saved issue plan (`issue-$issueNumber.md`)
 - The scope boundary from step 1
 - The diff content scoped to this agent's section only (not just filenames)
 - App URL: https://dev-server.heise.home (`frontend-reviewer` only)
@@ -74,9 +72,7 @@ Context/instructions to pass to the reviewer agents:
 **Instructions:**
 You are reviewing the code changes made for this issue. You are in **scoped mode** - review ONLY the diff content provided - do not review the full file or flag pre-existing issues outside these changes, unless a pre-existing issue is directly broken by this change.
 - Perform code checks on the diff
-    - A line appearing in the diff because an unrelated part of it changed (e.g. a type annotation was added) does NOT make the rest of that line's content fair game. 
-    - If a value, literal, or piece of logic on that line was not itself modified by this change, treat it as pre-existing and out of scope - note it as a Suggestion for separate verification at most, never Critical.
-    - Reserve Critical for problems actually introduced by this diff, or things the acceptance criteria explicitly require and are missing.
+- Perform all verification checks and validate acceptance criteria found in the saved issue plan
 - Perform visual and interaction review using the Playwright MCP (`frontend-reviewer` only)
 - Return a short report - be direct and specific
 - Tag each finding as Critical / Warning / Suggestion
@@ -115,8 +111,7 @@ Non-Critical observations (Warnings, Suggestions) are carried into the PR body i
 Spawn the `documenter` agent, passing the following context and instructions:
 
 **Context:**
-- The full issue body
-- The issue plan
+- The saved issue plan (`issue-$issueNumber.md`)
 - The final diff content from Step 2 (all sections combined)
 
 **Instructions:**

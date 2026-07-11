@@ -72,7 +72,7 @@ The plan MUST include the issue content and sub-phase branch name provided by th
 [list of files to be added/modified/removed along with detailed instructions for each file]
 
 ## Verification
-[acceptance criteria from the issue and any other verification tasks that should take place]
+[the acceptance criteria from the issue and any other verification tasks that should take place]
 ```
 
 ---
