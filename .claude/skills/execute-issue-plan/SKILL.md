@@ -118,6 +118,8 @@ Spawn the `documenter` agent, passing the following context and instructions:
 **Instructions:**
 You are reviewing the code changes made for this issue and updating the relevant documentation. You are in **scoped mode** - review ONLY the diff content provided - do not review the full file.
 
+Remember to stick to your scope limitation and update only documentation relevant to the code changes provided.
+
 ---
 
 # Step 4 - Spawn the `git-manager` agent
