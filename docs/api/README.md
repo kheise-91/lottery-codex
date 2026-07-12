@@ -215,7 +215,7 @@ Each panel is a sorted integer array of length equal to the game's `numbersPerDr
 
 All four endpoints are handled by `GamesController` in `backend/controllers/GamesController.php`. The controller uses a `$registry` array to map game IDs (`badger-five`, `supercash`) to their fully-qualified class names. Game resolution is done via the private `resolve()` method, which returns a `GameInterface` instance or `null`.
 
-**Note:** The `history()` and `generate()` methods currently use mock/static data. They are marked with `TODO` comments for Phase 4.1 where they will be wired to real `$game->getHistory()` and `$game->generateTickets()` calls.
+**Note:** The `history()` method currently uses static mock data (marked with `TODO` for Phase 4.1). The `generate()` method delegates to `$game->generateTickets($count)` and is fully functional.
 
 ## Status
 
@@ -224,7 +224,7 @@ All four endpoints are handled by `GamesController` in `backend/controllers/Game
 | GET `/api/games` | Implemented | Returns `{ "games": [{id, name, status}] }` from game classes via `GamesController::list()` |
 | GET `/api/games/{gameId}` | Implemented | Returns full game details and rules for the specified game ID via `GamesController::show()` |
 | GET `/api/games/{gameId}/history` | Implemented (mock data) | Returns mock historical drawing data via `GamesController::history()`; live scraping planned for Phase 4.1 |
-| POST `/api/games/{gameId}/generate` | Implemented | Accepts `{ "count": N }`, returns `{ "tickets": [[panel], ...] }` via `GamesController::generate()` |
+| POST `/api/games/{gameId}/generate` | Implemented | Accepts `{ "count": N }`, returns `{ "tickets": [[panel], ...] }` by delegating to `$game->generateTickets($count)` via `GamesController::generate()` |
 
 ## Authentication
 
