@@ -39,7 +39,7 @@ Host :5959 --> Nginx:80 --> (static files from /var/www/html/frontend/)
 ### Notable Issues
 
 - Three separate `apt-get update` calls across layers could be consolidated into a single layer for smaller image size and faster rebuilds.
-- No HEALTHCHECK directive is defined for either Nginx or PHP-FPM.
+- No HEALTHCHECK directive is defined in docker-compose.yml or the Dockerfile for either Nginx or PHP-FPM.
 - The startup script uses two `RUN echo` commands instead of a single heredoc, making it harder to read and modify.
 
 ## docker-compose.yml
