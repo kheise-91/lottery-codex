@@ -90,7 +90,7 @@ Create the API front controller with mock data endpoints. This establishes front
 
    **Done when:** All 4 endpoints return valid JSON via `curl http://localhost:5959/api/games`.
 
-- [-] **1.2 — Introduce `GamesController` layer**
+- [-] **[1.2 — Introduce `GamesController` layer](https://gitea.heise.home/kheise/lottery-codex/milestone/26)**
    - Create `backend/controllers/GamesController.php` with `list()`, `show()`, `history()`, `generate()` methods
    - Use a `$registry` array (`'game-id' => ClassName::class`) as the single place to register new games
    - Shrink `api.php` to a thin routing table (~8 lines) that delegates to the controller
