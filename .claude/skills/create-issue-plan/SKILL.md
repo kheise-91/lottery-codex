@@ -12,6 +12,9 @@ Your job is to spawn the `git-manager` agent to fetch a Gitea issue, create a pl
 
 The issue number is: $issueNumber. If no issue number was provided, stop and ask the user to provide one.
 
+**Scope Boundary**
+Each sub-phase is broken down into multiple tasks, with an issue created for each task. The implementation scope for this task is defined entirely by the contents of the issue - nothing else. Do not plan any work that falls outside the scope of the issue. When the acceptance criteria found in the issue have been completed, the work for the issue is done.
+
 ---
 
 # Step 1 - Spawn the `git-manager` agent
@@ -50,7 +53,7 @@ Review @ROADMAP.md and @.claude/plans/migration-to-react-and-modern-php.md - the
 
 If there's any conflicting information between the two, please stop and ask the user for clarifications. Do not make assumptions about what is true.
 
-Create a detailed plan for implementing the task found in the specified Gitea issue, using the two planning documents for reference. If more project details are required for planning the work, start by looking in the `docs/` folder for project documentation. If more information is required even after reviewing the project documentation, you may read the pertinent project files to assist in creating the plan.
+Create a detailed plan for implementing the task found in the specified Gitea issue while sticking to the **scope boundary**. Use the two planning documents for reference. If more project details are required for planning the work, start by looking in the `docs/` folder for project documentation. If more information is required even after reviewing the project documentation, you may read the pertinent project files to assist in creating the issue plan.
 
 The issue should have a list of acceptance criteria. You may add verification steps to this if you feel the list is incomplete.
 

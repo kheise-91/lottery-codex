@@ -19,7 +19,7 @@ Read the saved issue plan. The issue details provided in the saved issue plan wi
 Before proceeding, confirm that the issue branch listed in the issue plan is checked out. If the issue branch listed in the plan is not checked out, stop and alert the user - do NOT proceed until the user confirms the branch is checked out.
 
 **Scope Boundary**
-The implementation scope is defined entirely by the contents of the saved issue plan - nothing else. Do not implement work described in the milestone description or in any other issue. If the verification steps and acceptance criteria from the issue plan are satisfied, the work is done.
+Each sub-phase is broken down into multiple tasks, with an issue created for each task. The implementation scope for this task is defined entirely by the contents of the saved issue plan - nothing else. Do not implement any work that falls outside the scope of the issue plan. When the verification steps and acceptance criteria from the issue plan are satisfied, the work is done.
 
 Pass this scope boundary to every agent you spawn.
 
