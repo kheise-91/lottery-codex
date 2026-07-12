@@ -91,7 +91,7 @@ php -S localhost:8000        # Quick local server (no Nginx)
 Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scraping)
 ```
 
-- **Backend entry point:** `backend/api.php` — Slim Framework bootstrap (autoloader, error middleware, JSON Content-Type); thin routing table (~8 lines) delegating to `GamesController`
+- **Backend entry point:** `backend/api.php` — Slim Framework bootstrap (autoloader, error middleware, JSON Content-Type); thin routing table (~14 lines) delegating all four endpoints to `GamesController`
 - **Controllers:** `backend/controllers/GamesController.php` — central layer for all game endpoint logic (`list()`, `show()`, `history()`, `generate()`); uses a `$registry` array mapping game IDs to FQCNs as the single place to register new games
 - **Game interface:** `backend/games/GameInterface.php` — defines the contract for game implementations (`getGameDetails()`, `getHistory()`, `generateTickets()`)
 - **Game classes:** `backend/games/BadgerFive.php`, `backend/games/SuperCash.php` — pattern analysis and panel generation logic
