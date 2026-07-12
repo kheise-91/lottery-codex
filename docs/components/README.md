@@ -20,7 +20,17 @@ The following are documented in the migration roadmap but do not exist on disk:
 
 ## Entry Point
 
-`frontend/src/main.jsx` renders `<App />` inside React StrictMode. No router is installed (`react-router-dom` is not in `package.json`). The entire application at every URL path renders a single view: the App component.
+`frontend/src/main.jsx` renders `<App />` inside both React StrictMode and `BrowserRouter` from `react-router-dom`:
+
+```jsx
+<StrictMode>
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+</StrictMode>
+```
+
+The entire application at every URL path currently renders a single view: the App component. Route definitions are not yet implemented.
 
 ## Styling
 
