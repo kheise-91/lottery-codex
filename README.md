@@ -35,7 +35,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
      :5959                    Docker container                live HTTP request
 ```
 
-- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). No routing, pages, or API integration implemented yet.
+- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). No routes defined yet, no pages or API integration implemented.
 - **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs to class names. Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
@@ -115,7 +115,7 @@ Each sub-pattern specifies which pool each ball position draws from. The final p
 ## Technologies
 
 - **Backend:** PHP 8.2-FPM, Slim Framework 4, Composer (PSR-4), nikic/fast-route, simplehtmldom
-- **Frontend:** React 18, Vite 5, Tailwind CSS v4, Headless UI, Heroicons
+- **Frontend:** React 18, Vite 5, Tailwind CSS v4, React Router DOM, Headless UI, Heroicons
 - **Infrastructure:** Docker, Nginx, PHP-FPM (single container)
 
 ## References

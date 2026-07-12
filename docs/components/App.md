@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Placeholder/stub demo component. Displays a counter button to verify the frontend stack (React 18 + Vite + Tailwind CSS v4) is wired up correctly. Not an application page -- no routing, state management beyond local counter, or API integration exists yet.
+Placeholder/stub demo component. Displays a counter button to verify the frontend stack (React 18 + Vite + Tailwind CSS v4) is wired up correctly. Not an application page -- no routing paths defined yet, state management beyond local counter, or API integration exists.
 
 ## Props
 
@@ -46,12 +46,14 @@ None. The component renders a self-contained div tree with no `children` prop.
 
 ## Usage
 
-App is rendered directly in the entry point (`frontend/src/main.jsx`) wrapped in React StrictMode:
+App is rendered in the entry point (`frontend/src/main.jsx`) wrapped in both React StrictMode and `BrowserRouter`:
 
 ```jsx
 <StrictMode>
-  <App />
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 </StrictMode>
 ```
 
-No routing exists -- App renders at every URL path.
+No route definitions exist yet -- App renders at every URL path.
