@@ -143,7 +143,6 @@ class GamesController
             return $this->jsonResponse($response, ['error' => 'Game not found'], 404);
         }
 
-        // Validate count parameter
         $body = json_decode((string) $request->getBody(), true);
         $count = $body['count'] ?? 0;
 
@@ -153,49 +152,12 @@ class GamesController
             ], 400);
         }
 
-        // TODO: Replace with real data in Phase 4.1 via $game->generateTickets($count)
-        if ($gameId === 'badger-five') {
-            $tickets = [];
-            for ($i = 0; $i < $count; $i++) {
-                $ticketPanels = [];
-                // BadgerFive: each ticket has 5 sub-pattern panels (matching $pattern array size)
-                for ($p = 0; $p < 5; $p++) {
-                    $panel = [];
-                    while (count($panel) < 5) {
-                        $num = random_int(1, 31);
-                        if (!in_array($num, $panel, true)) {
-                            $panel[] = $num;
-                        }
-                    }
-                    sort($panel);
-                    $ticketPanels[] = $panel;
-                }
-                $tickets[] = $ticketPanels;
-            }
-        } elseif ($gameId === 'supercash') {
-            // SuperCash: each ticket has 6 sub-pattern panels (matching $pattern array size)
-            $tickets = [];
-            for ($i = 0; $i < $count; $i++) {
-                $ticketPanels = [];
-                for ($p = 0; $p < 6; $p++) {
-                    $panel = [];
-                    while (count($panel) < 6) {
-                        $num = random_int(1, 39);
-                        if (!in_array($num, $panel, true)) {
-                            $panel[] = $num;
-                        }
-                    }
-                    sort($panel);
-                    $ticketPanels[] = $panel;
-                }
-                $tickets[] = $ticketPanels;
-            }
-        } else {
-            // Should not reach here (isRegistered check above)
-            return $this->jsonResponse($response, ['error' => 'Game not found'], 404);
+        $game = $this->resolve($gameId);
+        if (!$game) {
+            return $this->jsonResponse($response, ['error' => 'Game unavailable'], 503);
         }
 
-        return $this->jsonResponse($response, ['tickets' => $tickets]);
+        return $this->jsonResponse($response, ['tickets' => $game->generateTickets($count)]);
     }
 
     /**
