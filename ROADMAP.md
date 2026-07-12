@@ -98,7 +98,7 @@ Create the API front controller with mock data endpoints. This establishes front
 
    **Done when:** `api.php` is a thin routing table; all endpoint logic lives in the controller.
 
-- [ ] **1.3 — Add nginx `fastcgi_split_path_info`**
+- [x] **[1.3 — Add nginx `fastcgi_split_path_info`](https://gitea.heise.home/kheise/lottery-codex/milestone/27)**
    - Add `fastcgi_split_path_info ^(/api/)(.*)$;` to nginx.conf `/api` location block
    - Ensure `$request_uri` is passed correctly for Slim routing
 
