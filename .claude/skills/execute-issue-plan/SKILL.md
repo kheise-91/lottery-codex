@@ -113,11 +113,10 @@ Spawn the `documenter` agent, passing the following context and instructions:
 
 **Context:**
 - The full issue plan text - include its entire contents verbatim in the agent prompt (do NOT summarize or truncate)
-- The Scope Boundary (verbatim)
 - The final diff content from Step 2 (all sections combined)
 
 **Instructions:**
-Update all necessary documentation based on the issue plan and the provided diff. Leave documentation for unaffected sections untouched.
+You are reviewing the code changes made for this issue and updating the relevant documentation. You are in **scoped mode** - review ONLY the diff content provided - do not review the full file.
 
 ---
 
