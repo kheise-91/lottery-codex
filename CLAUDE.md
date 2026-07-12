@@ -91,10 +91,11 @@ php -S localhost:8000        # Quick local server (no Nginx)
 Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scraping)
 ```
 
-- **Backend entry point:** `backend/api.php` — Slim Framework bootstrap (autoloader, error middleware, JSON Content-Type); `GET /api/games`, `GET /api/games/{gameId}`, and `GET /api/games/{gameId}/history` routes implemented; generate endpoint planned
-- **Game interface:** `backend/games/GameInterface.php` — defines the contract for game implementations (`getGameDetails()`, `getHistory()`, `generatePanels()`)
+- **Backend entry point:** `backend/api.php` — Slim Framework bootstrap (autoloader, error middleware, JSON Content-Type); thin routing table (~8 lines) delegating to `GamesController`
+- **Controllers:** `backend/controllers/GamesController.php` — central layer for all game endpoint logic (`list()`, `show()`, `history()`, `generate()`); uses a `$registry` array mapping game IDs to FQCNs as the single place to register new games
+- **Game interface:** `backend/games/GameInterface.php` — defines the contract for game implementations (`getGameDetails()`, `getHistory()`, `generateTickets()`)
 - **Game classes:** `backend/games/BadgerFive.php`, `backend/games/SuperCash.php` — pattern analysis and panel generation logic
-- **Autoloading:** Composer PSR-4 (`LotteryCodex\Games\` → `games/`)
+- **Autoloading:** Composer PSR-4 (`LotteryCodex\Games\` → `games/`, `LotteryCodex\Controllers\` → `controllers/`)
 - **Frontend:** Minimal React app currently — `App.jsx` is a placeholder. Full component hierarchy (pages, hooks, contexts) is planned per the migration roadmap.
 
 ### API Endpoints

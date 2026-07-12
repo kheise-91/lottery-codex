@@ -1,6 +1,6 @@
 # API Reference
 
-Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) bootstraps the application with error middleware, a global JSON Content-Type middleware, and defines all four routes as inline closures.
+Slim Framework 4 REST API serving JSON endpoints. The API entry point (`backend/api.php`) bootstraps the application with error middleware, a global JSON Content-Type middleware, and delegates to `GamesController` for all game endpoint logic.
 
 ## Entry Point
 
@@ -211,14 +211,20 @@ Each panel is a sorted integer array of length equal to the game's `numbersPerDr
 
 **Response (404):** Game ID not found.
 
+## Controller Layer
+
+All four endpoints are handled by `GamesController` in `backend/controllers/GamesController.php`. The controller uses a `$registry` array to map game IDs (`badger-five`, `supercash`) to their fully-qualified class names. Game resolution is done via the private `resolve()` method, which returns a `GameInterface` instance or `null`.
+
+**Note:** The `history()` and `generate()` methods currently use mock/static data. They are marked with `TODO` comments for Phase 4.1 where they will be wired to real `$game->getHistory()` and `$game->generateTickets()` calls.
+
 ## Status
 
 | Endpoint | Implementation Status | Notes |
 |----------|----------------------|-------|
-| GET `/api/games` | Implemented | Returns `{ "games": [{id, name, status}] }` from game classes |
-| GET `/api/games/{gameId}` | Implemented | Returns full game details and rules for the specified game ID |
-| GET `/api/games/{gameId}/history` | Implemented (mock data) | Returns mock historical drawing data; live scraping planned |
-| POST `/api/games/{gameId}/generate` | Implemented | Accepts `{ "count": N }`, returns `{ "tickets": [[panel], ...] }` |
+| GET `/api/games` | Implemented | Returns `{ "games": [{id, name, status}] }` from game classes via `GamesController::list()` |
+| GET `/api/games/{gameId}` | Implemented | Returns full game details and rules for the specified game ID via `GamesController::show()` |
+| GET `/api/games/{gameId}/history` | Implemented (mock data) | Returns mock historical drawing data via `GamesController::history()`; live scraping planned for Phase 4.1 |
+| POST `/api/games/{gameId}/generate` | Implemented | Accepts `{ "count": N }`, returns `{ "tickets": [[panel], ...] }` via `GamesController::generate()` |
 
 ## Authentication
 
