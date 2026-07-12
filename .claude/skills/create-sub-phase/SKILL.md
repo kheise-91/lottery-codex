@@ -80,9 +80,22 @@ Spawn the `git-manager` agent with instructions to follow the steps below.
 - Push the new sub-phase branch to origin
 
 ## Step 3.2 - Create milestone
-Using the Gitea MCP, detect the repo from the current git remote. Create a milestone with:
+Using the Gitea MCP, detect the repo from the current git remote. Create a milestone with the information below, following the formatting exactly as shown:
 - **Title:** `Phase X.Y` (e.g. "Phase 3.9")
-- **Description:** The full sub-phase description from the roadmap, including the done definition and any implementation notes, formatted as markdown
+- **Description:**
+  ```md
+  **Title** 
+  [sub-phase title from roadmap]
+
+  **Parent Phase** 
+  [Phase X - phase title from roadmap]
+
+  **Description**
+  - [list of what this sub-phase will implement]
+
+  **Done When**
+  [done when definition for sub-phase from roadmap]
+  ```
 
 If the milestone already exists, skip creation and use the existing one.
 

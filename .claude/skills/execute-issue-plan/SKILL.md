@@ -140,7 +140,7 @@ Open a pull request via the Gitea MCP:
 - **Title:** the issue title
 - **Milestone:** Phase X.Y
 - **Body:**
-    ```
+    ```md
     ## Task Summary
     [summary of work completed and purpose for implementation]
 
