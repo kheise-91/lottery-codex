@@ -18,14 +18,14 @@ Read the saved issue plan. The issue details provided in the saved issue plan wi
 
 Before proceeding, confirm that the issue branch listed in the issue plan is checked out. If the issue branch listed in the plan is not checked out, stop and alert the user - do NOT proceed until the user confirms the branch is checked out.
 
----
-
-# Step 1 - Spawn the engineer agents
-
 **Scope Boundary**
 The implementation scope is defined entirely by the contents of the saved issue plan - nothing else. Do not implement work described in the milestone description or in any other issue. If the verification steps and acceptance criteria from the issue plan are satisfied, the work is done.
 
 Pass this scope boundary to every agent you spawn.
+
+---
+
+# Step 1 - Spawn the engineer agents
 
 Before spawning any agents:
 - Derive the mockup pattern from the issue milestone: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check @frontend/mockups/ for a matching file.
@@ -36,8 +36,8 @@ Based on what the issue plan requires, spawn the appropriate agents listed below
 - `frontend-engineer`: Handles all work inside the `frontend/` directory.
 
 Context/instructions to pass to the engineer agents:
-- The saved issue plan (`issue-$issueNumber.md`)
-- The scope boundary
+- The full issue plan text - read `.claude/plans/issue-$issueNumber.md` and include its entire contents verbatim in the agent prompt (do NOT summarize or truncate)
+- The Scope Boundary (verbatim)
 - The mockup file if one exists (`frontend-engineer` only)
 - The requirement to signal completion only when all the work relevant to the agent's section has been completed and the acceptance criteria has been met
 
@@ -64,15 +64,16 @@ For each engineer agent that worked on implementing the issue, spawn the corresp
 Context/instructions to pass to the reviewer agents:
 
 **Context:**
-- The saved issue plan (`issue-$issueNumber.md`)
-- The scope boundary from step 1
+- The full issue plan text - include its entire contents verbatim in the agent prompt (do NOT summarize or truncate)
+- The Scope Boundary (verbatim)
 - The diff content scoped to this agent's section only (not just filenames)
 - App URL: https://dev-server.heise.home (`frontend-reviewer` only)
 
 **Instructions:**
 You are reviewing the code changes made for this issue. You are in **scoped mode** - review ONLY the diff content provided - do not review the full file or flag pre-existing issues outside these changes, unless a pre-existing issue is directly broken by this change.
+- Read the entire issue plan provided by the orchestrator (`.claude/plans/issue-$issueNumber.md`)
 - Perform code checks on the diff
-- Perform all verification checks and validate acceptance criteria found in the saved issue plan
+- Perform all verification checks found in the issue plan and validate all acceptance criteria
 - Perform visual and interaction review using the Playwright MCP (`frontend-reviewer` only)
 - Return a short report - be direct and specific
 - Tag each finding as Critical / Warning / Suggestion
@@ -111,11 +112,12 @@ Non-Critical observations (Warnings, Suggestions) are carried into the PR body i
 Spawn the `documenter` agent, passing the following context and instructions:
 
 **Context:**
-- The saved issue plan (`issue-$issueNumber.md`)
+- The full issue plan text - include its entire contents verbatim in the agent prompt (do NOT summarize or truncate)
+- The Scope Boundary (verbatim)
 - The final diff content from Step 2 (all sections combined)
 
 **Instructions:**
-Update all necessary documentation for the changes implemented above and leave documentation for unaffected sections untouched.
+Update all necessary documentation based on the issue plan and the provided diff. Leave documentation for unaffected sections untouched.
 
 ---
 
