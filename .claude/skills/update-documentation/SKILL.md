@@ -53,7 +53,7 @@ Diff:
 Explorer summaries:
 `[the structured markdown summaries provided by the explorer agents]`
 
-Remember to stick to your scope limitation, and update only documentation relevant to the code changes provided.
+Remember to stick to your scope limitation and update only documentation relevant to the code changes provided.
 
 ---
 
