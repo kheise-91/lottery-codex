@@ -36,7 +36,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
 ```
 
 - **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). No routing, pages, or API integration implemented yet.
-- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints implemented in `backend/api.php` (`GET /api/games`, `GET /api/games/{gameId}`, `GET /api/games/{gameId}/history`, `POST /api/games/{gameId}/generate`). Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library.
+- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs to class names. Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
 ## Quick Start
@@ -67,6 +67,8 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 
 ```
 ├── backend/
+│   ├── controllers/                # Controller classes (GamesController with registry pattern)
+│   │   └── GamesController.php     # Central layer for all game endpoint logic
 │   ├── games/                      # Game logic classes (implements GameInterface)
 │   │   ├── GameInterface.php       # Contract: getGameDetails(), getHistory(), generateTickets()
 │   │   ├── BadgerFive.php          # Fully functional -- scraping + panel generation working
