@@ -1,8 +1,12 @@
 ---
 name: qa-review
-description: Runs a read-only QA review comparing the current branch to master. Detects which parts of the codebase changed and spawns only the relevant reviewer agents (backend-reviewer, frontend-reviewer, devops-reviewer), then synthesizes their reports into one summary. Works on any branch.
+description: Runs a read-only QA review comparing the current branch to master. Detects which parts of the codebase changed and spawns only the relevant reviewer agents (backend-reviewer, frontend-reviewer, devops-reviewer), then synthesizes their reports into one summary. Works on any branch. This is meant to be run at the end of a phase and/or sub-phase from the project roadmap.
 disable-model-invocation: true
 effort: max
+---
+
+You are the orchestrator for a QA Review of the current branch. Your job is to get the complete list of files changed and the code changed in each file, group the changes based on which section of the codebase they belong to, and pass the changes to the specified reviewer agents. When all reviewer agents have finished their reviews, generate a final report for the user to review.
+
 ---
 
 # Step 1 - Confirm branch
