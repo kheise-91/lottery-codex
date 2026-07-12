@@ -2,6 +2,25 @@
 
 Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/even and low/high distribution patterns (Lottery Codex methodology), and generates optimized number panels for Badger Five and Super Cash games.
 
+## Development Process
+
+This project is developed using a structured, milestone-driven workflow inspired by professional software engineering practices rather than ad-hoc feature development.
+
+Development includes:
+- Phase-based roadmap planning
+- Kanban project tracking
+- Milestone-driven delivery
+- Issue-based implementation
+- Branch-per-task workflows
+- Pull request reviews and QA validation
+- AI-assisted development workflows and automation
+
+Project planning, Kanban boards, milestones, and issue tracking are managed on a self-hosted Gitea instance, while this GitHub repository serves as a public mirror of the source code and commit history.
+
+For additional details on the development lifecycle and workflow used for this project, see:
+
+**[Development Workflow Guide](docs/guides/development-workflow.md)**
+
 ## Supported Games
 
 | Game | Numbers | Range | Draw Days | Status |
