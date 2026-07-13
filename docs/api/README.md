@@ -211,6 +211,8 @@ Each panel is a sorted integer array of length equal to the game's `numbersPerDr
 
 **Response (404):** Game ID not found.
 
+**Response (503):** Game class failed to instantiate. Returns `{ "error": "Game unavailable" }`.
+
 ## Controller Layer
 
 All four endpoints are handled by `GamesController` in `backend/controllers/GamesController.php`. The controller uses a `$registry` array to map game IDs (`badger-five`, `supercash`) to their fully-qualified class names. Game resolution is done via the private `resolve()` method, which returns a `GameInterface` instance or `null`.
