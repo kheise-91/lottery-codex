@@ -1,6 +1,12 @@
 # Components Index
 
-The frontend is in a scaffolding phase. Only one component exists -- the `App` placeholder demo. No page components, layouts, reusable UI elements, contexts, or custom hooks have been implemented yet. Planned directories (`components/`, `hooks/`, `services/`) do not exist on disk.
+The frontend is in a scaffolding phase. Only one component exists -- the `App` placeholder demo. No page components, layouts, reusable UI elements, contexts, or custom hooks have been implemented yet. The `services/` directory now exists and contains the API client layer. The `components/` and `hooks/` directories do not exist on disk yet.
+
+## Service Layer
+
+| Module | File | Status | Description |
+|--------|------|--------|-------------|
+| [API Service](./api.md) | `frontend/src/services/api.js` | Implemented | Fetch wrapper for all four backend API endpoints |
 
 ## Component List
 
@@ -15,7 +21,6 @@ The following are documented in the migration roadmap but do not exist on disk:
 - **Pages** -- Dashboard, Game Page, History browser
 - **Contexts** -- Game context provider for shared game state
 - **Hooks** -- `useGameHistory`, `useGeneratePanels` (planned names)
-- **Services** -- API client layer wrapping fetch calls to the backend
 - **Reusable UI components** -- Buttons, cards, tables, tabs
 
 ## Entry Point
