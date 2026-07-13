@@ -104,7 +104,7 @@ Create the API front controller with mock data endpoints. This establishes front
 
    **Done when:** Slim router can distinguish between `/api/games` and `/api/generate`.
 
-- [ ] **1.4 — Install React Router DOM v6 in frontend**
+- [x] **[1.4 — Install React Router DOM v6 in frontend](https://gitea.heise.home/kheise/lottery-codex/milestone/28)**
    - `npm install react-router-dom@6` in `frontend/`
    - Set up `<BrowserRouter>` wrapper in `main.jsx`
 
