@@ -37,6 +37,8 @@ Any request that does not match a real file or directory falls back to `index.ht
 
 ```nginx
 location /api/ {
+    fastcgi_split_path_info ^(/api/)(.*)$;
+
     include fastcgi_params;
 
     fastcgi_pass 127.0.0.1:9000;
@@ -45,12 +47,13 @@ location /api/ {
 }
 ```
 
-All requests under `/api/` are forwarded to PHP-FPM via FastCGI on TCP port 9000. Every request funnels through the single entry point `backend/api.php`, where Slim Framework parses the URI path for route matching (`PATH_INFO` is passed through).
+All requests under `/api/` are forwarded to PHP-FPM via FastCGI on TCP port 9000. Every request funnels through the single entry point `backend/api.php`, where Slim Framework parses the URI path for route matching. The `fastcgi_split_path_info` directive separates the URI into `$fastcgi_script_name` (`/api/...`) and `$fastcgi_path_info` (the remainder), which Slim uses to resolve routes like `/api/games/{gameId}`.
 
 ## FastCGI Configuration Details
 
 | Directive | Value | Purpose |
 |-----------|-------|---------|
+| `fastcgi_split_path_info` | `^(/api/)(.*)$` | Splits URI into script name and path info so Slim can resolve route parameters |
 | `fastcgi_pass` | `127.0.0.1:9000` | TCP connection to PHP-FPM (not a unix socket) |
 | `SCRIPT_FILENAME` | `/var/www/html/backend/api.php` | Hardcoded entry point -- all API requests use the same file |
 | `PATH_INFO` | `$fastcgi_path_info` | Passed so Slim can parse route parameters from URI path |

@@ -110,7 +110,7 @@ Create the API front controller with mock data endpoints. This establishes front
 
    **Done when:** Frontend builds without errors and renders a router outlet.
 
-- [ ] **1.5 — Create API service layer (`src/services/api.js`)**
+- [x] **[1.5 — Create API service layer (`src/services/api.js`)](https://gitea.heise.home/kheise/lottery-codex/milestone/29)**
    - Build a lightweight fetch wrapper with base URL configuration
    - Export functions: `fetchGames()`, `fetchGameDetails(id)`, `fetchHistory(id)`, `generateTickets(id, count)`
    - Configure Vite `.env` with `VITE_API_BASE_URL` for dev/prod flexibility
