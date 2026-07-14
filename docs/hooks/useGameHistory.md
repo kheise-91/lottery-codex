@@ -33,7 +33,7 @@ function GameHistoryPanel({ gameId }) {
 | Property  | Type     | Description                                            |
 |-----------|----------|--------------------------------------------------------|
 | `data`    | object \| null | Full response from `fetchHistory(gameId)` on success, `null` during loading or on failure |
-| `loading` | boolean  | `true` while the fetch is in progress, `false` when complete (success or failure) |
+| `loading` | boolean \| null  | `null` before first fetch, `true` while fetching, `false` when complete (success or failure) |
 | `error`   | string \| null     | Error message string on failure, `null` on success or during loading |
 
 ## Behavior
@@ -41,7 +41,7 @@ function GameHistoryPanel({ gameId }) {
 ### Loading State
 
 - Sets `loading: true` immediately when the effect runs.
-- Resets `data` and `error` to `null` before fetching (so stale data from a previous `gameId` does not persist).
+- Resets `data`, `loading`, and `error` to `null` before fetching (so stale data from a previous `gameId` does not persist).
 
 ### Success
 
@@ -70,4 +70,4 @@ function GameHistoryPanel({ gameId }) {
 ## Dependencies
 
 - React (`useState`, `useEffect`)
-- `../services/api` -- specifically `fetchHistory(gameId)`
+- [API Service](../../services/api.md) -- specifically `fetchHistory(gameId)`

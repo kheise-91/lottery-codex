@@ -98,11 +98,13 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 ## Documentation
 
 - [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented.
-- [Components](docs/components/README.md) -- Frontend component, hook, and service index. Includes the API service layer, `App` placeholder, and custom hooks.
-  - [API Service Detail](docs/components/api.md) -- Fetch wrapper module for all backend endpoints
+- [Components](docs/components/README.md) -- Frontend UI component index. Currently includes the `App` placeholder demo.
   - [App Component Detail](docs/components/App.md) -- Placeholder counter demo component
-  - [useGameHistory Hook Detail](docs/components/useGameHistory.md) -- Custom hook wrapping `fetchHistory()` with loading, error handling, and result caching
-  - [useGenerateTickets Hook Detail](docs/components/useGenerateTickets.md) -- Custom hook wrapping `generateTickets()` with loading, error handling, and ticket state
+- [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.
+  - [useGameHistory Hook Detail](docs/hooks/useGameHistory.md) -- Custom hook wrapping `fetchHistory()` with loading, error handling, and result caching
+  - [useGenerateTickets Hook Detail](docs/hooks/useGenerateTickets.md) -- Custom hook wrapping `generateTickets()` with loading, error handling, and ticket state
+- [Services](docs/services/README.md) -- Frontend API service layer. Fetch wrapper module for all backend endpoints.
+  - [API Service Detail](docs/services/api.md) -- Fetch wrapper module for all backend endpoints
 - [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
   - [Docker Configuration](docs/infrastructure/docker.md)
   - [Nginx Configuration](docs/infrastructure/nginx.md)

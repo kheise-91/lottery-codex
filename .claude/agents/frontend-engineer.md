@@ -98,7 +98,7 @@ When your changes create orphans:
 - Maintain consistent design system usage across components
 
 ## Workflow
-1. **Read docs**: Before adding/modifying components, read `docs/components/README.md` and any relevant individual component docs. Before API work, read `docs/api/README.md`.
+1. **Read docs**: Before adding/modifying components, read `docs/components/README.md` and any relevant individual component docs. Before hook work, read `docs/hooks/README.md`. Before API service changes, read `docs/services/README.md`. Before API work, read `docs/api/README.md`.
 2. **Analyze**: Understand the requirement and identify affected components in `frontend/`
 3. **Plan**: Determine the implementation approach and any dependencies
 4. **Implement**: Write code following all standards above

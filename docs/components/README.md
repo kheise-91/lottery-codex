@@ -1,19 +1,6 @@
 # Components Index
 
-The frontend is in a scaffolding phase. Only one component exists -- the `App` placeholder demo. No page components, layouts, reusable UI elements, or contexts have been implemented yet. The `services/` directory contains the API client layer and the `hooks/` directory contains the first custom hook.
-
-## Service Layer
-
-| Module | File | Status | Description |
-|--------|------|--------|-------------|
-| [API Service](./api.md) | `frontend/src/services/api.js` | Implemented | Fetch wrapper for all four backend API endpoints |
-
-## Hook List
-
-| Hook | File | Status | Description |
-|------|------|--------|-------------|
-| [useGameHistory](./useGameHistory.md) | `frontend/src/hooks/useGameHistory.js` | Implemented | Wraps `fetchHistory()` with loading, error handling, and result caching |
-| [useGenerateTickets](./useGenerateTickets.md) | `frontend/src/hooks/useGenerateTickets.js` | Implemented | Wraps `generateTickets()` with loading, error handling, and ticket state |
+The frontend is in a scaffolding phase. Only one component exists -- the `App` placeholder demo. No page components, layouts, reusable UI elements, or contexts have been implemented yet.
 
 ## Component List
 
@@ -27,18 +14,7 @@ The following are documented in the migration roadmap but do not exist on disk:
 
 - **Pages** -- Dashboard, Game Page, History browser
 - **Contexts** -- Game context provider for shared game state
-- **Hooks** -- `useGenerateTickets` is implemented; no additional hooks planned at this time
 - **Reusable UI components** -- Buttons, cards, tables, tabs
-
-## Custom Hooks
-
-### useGameHistory
-
-See [useGameHistory](./useGameHistory.md) for full documentation. The hook accepts a `gameId` string, calls `fetchHistory(gameId)` from the API service, and returns `{ data, loading, error }`. It refetches when `gameId` changes and includes cleanup to prevent state updates after unmount.
-
-### useGenerateTickets
-
-See [useGenerateTickets](./useGenerateTickets.md) for full documentation. The hook accepts a `gameId` string and provides an imperative `generate(count)` function that calls `generateTickets(gameId, count)` from the API service, returning `{ tickets, loading, error, generate }`.
 
 ## Entry Point
 
