@@ -1,5 +1,9 @@
 import { useState } from 'react'
 
+/**
+ * Root React component for the Lottery Codex application.
+ * Displays a welcome message and a counter button while the backend integration is pending.
+ */
 function App() {
   const [count, setCount] = useState(0)
 

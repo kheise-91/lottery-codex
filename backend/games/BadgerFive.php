@@ -6,6 +6,9 @@ namespace LotteryCodex\Games;
 
 require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
 
+/**
+ * Badger Five game implementation using Lottery Codex pattern analysis (3-Odd 2-Even / 3-Low 2-High).
+ */
 class BadgerFive implements GameInterface, \JsonSerializable
 {
     private array $previousDrawings = [];
@@ -33,6 +36,10 @@ class BadgerFive implements GameInterface, \JsonSerializable
     {
     }
 
+    /**
+     * Get Badger Five game metadata including number groups and optimal pattern.
+     * @return array Game details (id, name, status, drawFrequency, numberRange, numbersPerDraw, optimalPattern, groups)
+     */
     public function getGameDetails(): array
     {
         return [
@@ -52,12 +59,21 @@ class BadgerFive implements GameInterface, \JsonSerializable
         ];
     }
 
+    /**
+     * Get historical drawing data by loading previous drawings from the lottery website.
+     * @return array Array of previous drawings keyed by date, each with 'numbers' and 'pattern' keys
+     */
     public function getHistory(): array
     {
         $this->loadPreviousDrawings();
         return $this->getPreviousDrawings();
     }
 
+    /**
+     * Generate prediction tickets for Badger Five using pattern analysis.
+     * @param int $count Number of tickets to generate
+     * @return array Array of ticket panels, each panel being a sorted array of 5 integers
+     */
     public function generateTickets(int $count): array
     {
         $this->tickets = [];
@@ -65,6 +81,12 @@ class BadgerFive implements GameInterface, \JsonSerializable
         return $this->getTickets();
     }
 
+    /**
+     * Scrape and parse Wisconsin Lottery drawing history from wilottery.com,
+     * classify each drawing by odd/even and low/high patterns.
+     * @return self
+     * @throws \Exception If the HTTP request fails or HTML parsing fails
+     */
     private function loadPreviousDrawings(): self
     {
         $html = file_get_html('https://wilottery.com/winners/draw-history?game=badger-5');
@@ -112,6 +134,13 @@ class BadgerFive implements GameInterface, \JsonSerializable
         return $this;
     }
 
+    /**
+     * Generate prediction tickets based on the optimal pattern sub-patterns.
+     * Each ticket consists of 5 panels selected from the defined pattern array,
+     * with uniqueness verification across all generated panels.
+     * @param int $count Number of tickets to create
+     * @return self
+     */
     private function createTickets(int $count): self
     {
         for ($i = 0; $i < $count; $i++) {
@@ -139,6 +168,12 @@ class BadgerFive implements GameInterface, \JsonSerializable
         return $this;
     }
 
+    /**
+     * Create a single panel from a sub-pattern array by randomly selecting
+     * one number from each group (lowOdd, lowEven, highOdd, highEven).
+     * @param array $subPattern Array of group names for each position in the panel
+     * @return array Sorted array of 5 integers
+     */
     private function createPanel(array $subPattern): array
     {
         $panel = [];
