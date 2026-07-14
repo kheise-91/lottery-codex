@@ -117,7 +117,7 @@ Create the API front controller with mock data endpoints. This establishes front
 
    **Done when:** Service functions return typed JSON responses from the backend.
 
-- [ ] **1.6 — Create custom hooks (`src/hooks/`)**
+- [x] **[1.6 — Create custom hooks (`src/hooks/`)](https://gitea.heise.home/kheise/lottery-codex/milestone/30)**
    - `useGameHistory(gameId)` → fetches and caches historical drawings, returns `{data, loading, error}`
    - `useGenerateTickets(gameId)` → triggers ticket generation (each ticket contains multiple panels), returns `{tickets, loading, error, generate}`
 
