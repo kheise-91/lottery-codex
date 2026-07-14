@@ -44,15 +44,18 @@ When editing existing code:
 - Match existing style, even if you'd do it differently.
 - If you notice unrelated dead code, mention it - don't delete it.
 
-### 4. Subagent Invocation
+### 4. Spawning Agents
 
-**Always invoke subagents for research task or coding tasks.**
+When spawning agents, follow the rules below:
+- **ALWAYS spawn agents sequentially, never in parallel**
+    - Never spawn an agent if one is already working
+    - Wait for each agent to fully complete before spawning the next
+- **ALWAYS spawn agents for research task or coding tasks** 
+    - Never attempt to read or work on medium to large sections of the codebase yourself 
+- **ALWAYS ask if you don't know which subagent to use**
+    - Available agents can be found in @.claude/agents/
 
-When invoking subagents:
-- Always ask if you don't know which subagent to use
-- ALWAYS run subagents sequentially, never in parallel
-- Wait for each subagent to fully complete before invoking the next
-- This is a hard requirement due to local GPU memory constraints
+These are hard requirement due to local GPU memory constraints and context window sizes.
 
 ## Development Commands
 
