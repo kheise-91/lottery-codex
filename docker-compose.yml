@@ -12,3 +12,4 @@ services:
       - ${BACKEND_PATH}:/var/www/html/backend:rw
     environment:
       - TZ=${TZ}
+      - APP_ENV=${APP_ENV}
