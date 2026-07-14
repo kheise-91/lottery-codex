@@ -19,6 +19,7 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 | **SuperCash game class** | Fatal error (missing `SuperCashPD.php`), core methods commented out | Fixed constructor, no external dependencies, analysis-only for now |
 | **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard → GamePage split-view (desktop) / tabbed (mobile) → PatternDistribution + History browser |
 | **Routing** | No router installed | React Router DOM v6, 3 routes |
+| **Pattern health** | No frequency analysis; all patterns treated equally | Per-pattern playability indicators based on historical frequency |
 | **State management** | Single `useState(0)` placeholder | Context API + useReducer for game data/history/tickets |
 | **Docker volume mount** | Hardcoded host path (`/home/admin/Projects/...`) that doesn't match this machine | Relative bind mount or correct absolute path |
 | **Production errors** | `display_errors = On` leaks stack traces | Errors logged only, hidden from users |
@@ -201,42 +202,54 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
 
    **Done when:** All three routes render without errors; navigation works.
 
----
-
-## Phase 3 — Styling Migration & Polish
-
-Convert the legacy CSS from `OLD/` into Tailwind utility classes and custom component styles.
-
-- [ ] **3.1 — Migrate core color palette to Tailwind**
-    - Map legacy colors: page background (`bg-neutral-200`), text (`text-neutral-800`), fieldset borders (`border-neutral-400`)
-    - Define sub-pattern highlight classes in components (green/yellow/orange at 10% opacity)
-    - Pattern distribution bar colors: green (≥60%), yellow (40–59%), orange (20–39%), slate (<20%)
-
-   **Done when:** All hardcoded inline styles are replaced with Tailwind utilities.
-
-- [ ] **3.2 — Implement responsive split-view layout**
-   - Mobile (<768px): Tabbed interface, full-width fieldsets, single column panels
-   - Desktop (≥768px): Split-view grid — 5/12 left panel (history + distribution) + 7/12 right panel (form + panels in 3-column grid)
-   - Left panel: sticky pattern distribution at top, scrollable drawing history below
-   - Right panel: generation form at top, generated panels below
-   - Match the `@media (min-width: 768px)` behavior from OLD CSS for individual card styling
-
-   **Done when:** Layout transitions correctly at 768px breakpoint; split-view on desktop, tabs on mobile.
-
-- [ ] **3.3 — Polish tab active/inactive states**
-   - Inactive tabs: slate gray background, white text
-   - Active tab: light background matching page, slate text, small-caps font variant
-   - Smooth transition between states
-
-   **Done when:** Tabs visually match the legacy implementation pixel-for-pixel.
-
-- [ ] **3.4 — Add loading and error states**
+- [ ] **2.11 — Add loading and error states**
     - Skeleton loaders for history fetching and panel generation
     - Error banners for API failures (network errors, invalid game)
     - Disabled button state during in-flight requests
     - Pattern distribution shows "No data" message when history is empty
 
    **Done when:** User sees meaningful feedback during all async operations.
+
+---
+
+## Phase 3 — Pattern Health Analysis
+
+Analyze historical drawings to compute pattern frequency and "playability" indicators. This enables the UI to alert users when a pattern is overdue for occurrence.
+
+- [ ] **3.1 — Analyze pattern frequencies in game classes**
+   - After loading previous drawings, iterate over `$this->previousDrawings` to count occurrences of each unique pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High")
+   - For each pattern, calculate average interval between consecutive occurrences (in days) by parsing date headers with `strtotime()`
+   - Track days-since-last-occurrence for each pattern using the most recent drawing date vs. today
+   - Store results in a new private property: `$this->patternHealth = ['3-Odd 2-Even / 3-Low 2-High' => ['avgInterval' => 3, 'daysSince' => 4]]`
+
+   **Done when:** Each game class can compute pattern health from its own history data with zero additional API calls.
+
+- [ ] **3.2 — Add `getPatternHealth()` to GameInterface and game classes**
+   - Define `getPatternHealth(): array` in `GameInterface.php`
+   - Return format: array of objects, each with keys: `pattern`, `avgInterval` (int), `daysSince` (int), `status` (`active` | `good` | `caution`)
+   - Status logic: `active` if daysSince ≤ 1, `good` if daysSince ≥ avgInterval + 1, otherwise `caution`
+   - Implement in both `BadgerFive.php` and `SuperCash.php`
+
+   **Done when:** Both game classes return pattern health arrays via the interface method.
+
+- [ ] **3.3 — Expose pattern health via API**
+   - Update `GET /api/games/{gameId}` to include a `patternHealth` field in its response (array of `{pattern, avgInterval, daysSince, status}` objects)
+   - If no history is available, return empty array
+
+   **Done when:** Endpoint returns pattern health alongside game details.
+
+   **Done when:** API includes `patternHealth` in `/api/games/badger-five` response.
+
+- [ ] **3.4 — Render pattern health cards in GamePage**
+   - Display each pattern as a small card below the ticket count form on desktop, or above drawings tab content on mobile
+   - Color-coded status indicator: green dot for `active`, teal/emerald for `good`, amber for `caution`
+   - Text format: `"Pattern 'X' occurs every ~{N} days. Last seen {X} day(s) ago — it's okay to play."` (adjust message per status)
+   - Use concise messages matching these templates:
+     - `active`: "Pattern active — drawing expected soon."
+     - `good`: "It's okay to play."
+     - `caution`: "Pattern is on schedule. Consider waiting."
+
+   **Done when:** Game page shows pattern health cards with correct colors and messages for each discovered pattern.
 
 ---
 
@@ -291,7 +304,7 @@ The scraping logic exists and works in BadgerFive, but it's fragile. Harden it a
 
 ---
 
-## Phase 6 — Super Cash Integration (Future)
+## Phase 6 — SuperCash! & Megabucks Integration (Future)
 
 Super Cash is out of scope for initial launch. This phase activates once Badger Five is fully working end-to-end.
 
@@ -315,6 +328,21 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
    - Pattern labels adjust to game-specific distributions
 
    **Done when:** Both games render correctly without code duplication.
+
+- [ ] **6.4 — Create MegaBucks game class**
+   - Implement `GameInterface` with number range 1–48, draw 6 numbers
+   - Define number pools: Low-Odd (1,3,…,25), Low-Even (2,4,…,24), High-Odd (27,29,…,47), High-Even (26,28,…,48)
+   - Define internal pattern array for panel generation (odd/even × low/high distribution)
+   - Implement scraping logic for `https://wilottery.com/winners/draw-history?game=megabucks`
+
+   **Done when:** `new MegaBucks()` instantiates and returns valid results from all interface methods.
+
+- [ ] **6.5 — Wire MegaBucks into API and frontend**
+   - Register MegaBucks in the controller's `$registry`: `'megabucks' => \LotteryCodex\Games\MegaBucks::class`
+   - Dashboard card auto-appears via `GET /api/games` (no new endpoint needed)
+   - Frontend navigates to `/games/megabucks`; Ball/PanelDisplay handle 6-number panels
+
+   **Done when:** User can select MegaBucks from dashboard, view history, and generate panels alongside Super Cash.
 
 ---
 
@@ -357,9 +385,10 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
 ```
 
 - **Phase 0** must complete before anything else — it fixes the foundation
-- **Phases 1–3** can partially overlap once mock API works (Phase 1.1 done)
-- **Phase 4** depends on all frontend components being functional (Phase 2.10 + Phase 3.1)
-- **Phase 5** is independent of frontend; can run in parallel with Phases 2–3
+- **Phases 1–2** can partially overlap once mock API works (Phase 1.1 done)
+- **Phase 3 backend parts (3.1–3.3)** are independent of frontend; can run in parallel with Phases 2–4
+- **Phase 3 UI part (3.4)** depends on GamePage being functional (Phase 2.8 + Phase 3.3)
+- **Phase 5** is independent of frontend; can run in parallel with Phases 2–4
 - **Phase 6+** requires Badger Five to be fully working end-to-end
 
 ---
@@ -374,7 +403,9 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
 │   ─────────────────                │     ─────────────────             │
 │                                    │                                   │
 │  Pattern Distribution              │     Tickets: [3 ▼]                │
-│  (Last 50 Drawings)                │     Auto-generate on change       │
+│  (Last 50 Drawings)                │     ● It's okay to play.          │
+│                                    │     ○ On schedule                 │
+│                                    │     Auto-generate on change       │
 │  ━━━━━━━━━━━━━━━━━━━━━━━━          │                                   │
 │  3O/2E, 3L/2H ████████████░░ 80%   │     ┌─────────────────────┐       │
 │  3O/2E, 2L/3H ████░░░░░░░░░░ 40%   │     │   Ticket Card 1     │       │
@@ -433,6 +464,10 @@ Tab 1 Active (Previous Drawings)
 │                                 │
 │  Generate Optimized Panels      │
 │                                 │
+│  Pattern Health               │
+│  ● It's okay to play.         │
+│  ○ On schedule                │
+│                                 │
 │  Tickets: [3 ▼]                 │
 │  [Generate Button]              │
 │                                 │
@@ -465,12 +500,13 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 | 3 | Dashboard displays game cards and navigates to game pages | 2 |
 | 4 | Game page shows historical drawings with full pattern text and balls matching legacy UI | 2 + 3 |
 | 5 | Panel generation form works (ticket count dropdown, auto-generate on desktop) | 2 |
-| 6 | Generated panels display real data from BadgerFive class | 4 |
-| 7 | Tab switching between "Previous Drawings" and "Generated Panels" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
-| 8 | Responsive split-view layout works on mobile (<768px tabs) and desktop (≥768px split-view) | 3 |
-| 9 | Pattern distribution shows accurate pattern statistics with color-coded bars from history data | 2 + 3 |
-| 10 | No PHP errors visible to end users; errors logged only | 0 |
-| 11 | PWA installs and serves cached content offline | existing |
+| 6 | Pattern health cards display correct colors and messages based on pattern frequency analysis | 3 |
+| 7 | Generated panels display real data from BadgerFive class | 4 |
+| 8 | Tab switching between "Previous Drawings" and "Generated Panels" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
+| 9 | Responsive split-view layout works on mobile (<768px tabs) and desktop (≥768px split-view) | 3 |
+| 10 | Pattern distribution shows accurate pattern statistics with color-coded bars from history data | 2 + 3 |
+| 11 | No PHP errors visible to end users; errors logged only | 0 |
+| 12 | PWA installs and serves cached content offline | existing |
 
 ---
 
@@ -482,7 +518,7 @@ backend/composer.json              # PSR-4 autoloading + Slim dependencies
 backend/controllers/GamesController.php  # Route handlers for all game endpoints
 backend/vendor/                    # Composer vendor directory (gitignored)
 backend/api.php                    # Slim Framework router entry point
-backend/games/GameInterface.php    # Interface for all game classes
+backend/games/GameInterface.php    # Interface for all game classes; add getPatternHealth() method
 ```
 
 ### Backend — Modified Files
