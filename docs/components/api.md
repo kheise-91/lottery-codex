@@ -184,5 +184,5 @@ function GameList() {
 
 This service layer is the data-fetching foundation for:
 
-- **Hooks (Phase 1.6):** Custom hooks like `useGameHistory` and `useGeneratePanels` will wrap these functions with React state management, loading states, and caching logic.
+- **Hooks (Phase 1.6):** Custom hooks like `useGameHistory` and `useGenerateTickets` wrap these functions with React state management, loading states, and result handling.
 - **Components (Phase 2):** Page components and UI elements will consume either the service functions directly or the hooks built on top of them.
