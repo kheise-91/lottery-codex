@@ -30,6 +30,8 @@ Spawn the following agents in order, one at a time:
 
 Each agent is responsible for generating documentation for its own area. The agents should return structured markdown summaries. Do not proceed until all three have completed.
 
+Wait for all explorer agents to complete before proceeding.
+
 ---
 
 # Step 3 - Spawn the documenter agent
@@ -54,6 +56,8 @@ Explorer summaries:
 `[the structured markdown summaries provided by the explorer agents]`
 
 Remember to stick to your scope limitation and update only documentation relevant to the code changes provided.
+
+Wait for the `documenter` agent to complete before proceeding.
 
 ---
 

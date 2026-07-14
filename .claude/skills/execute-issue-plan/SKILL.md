@@ -21,8 +21,6 @@ Before proceeding, confirm that the issue branch listed in the issue plan is che
 **Scope Boundary**
 Each sub-phase is broken down into multiple tasks, with an issue created for each task. The implementation scope for this task is defined entirely by the contents of the saved issue plan - nothing else. Do not implement any work that falls outside the scope of the issue plan. When the verification steps and acceptance criteria from the issue plan are satisfied, the work is done.
 
-Pass this scope boundary to every agent you spawn.
-
 ---
 
 # Step 1 - Spawn the engineer agents
@@ -31,9 +29,9 @@ Before spawning any agents:
 - Derive the mockup pattern from the issue milestone: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check @frontend/mockups/ for a matching file.
 
 Based on what the issue plan requires, spawn the appropriate agents listed below sequentially:
-- `devops-engineer`: Handles all work for the `docker-compose.yml` file and files inside the `docker/` directory.
-- `backend-engineer`: Handles all work inside the `backend/` directory.
-- `frontend-engineer`: Handles all work inside the `frontend/` directory.
+- `devops-engineer` agent: Handles all work for the `docker-compose.yml` file and files inside the `docker/` directory.
+- `backend-engineer` agent: Handles all work inside the `backend/` directory.
+- `frontend-engineer` agent: Handles all work inside the `frontend/` directory.
 
 Context/instructions to pass to the engineer agents:
 - The full issue plan text - read `.claude/plans/issue-$issueNumber.md` and include its entire contents verbatim in the agent prompt (do NOT summarize or truncate)
@@ -42,6 +40,8 @@ Context/instructions to pass to the engineer agents:
 - The requirement to signal completion only when all the work relevant to the agent's section has been completed and the acceptance criteria has been met
 
 Agents MUST be spawned sequentially - NEVER in parallel. Spawn only the agents the issue actually requires. A frontend-only issue skips the backend-engineer, backend-only issue skips frontend-engineer, etc.
+
+Wait for all agents to complete before proceeding.
 
 ---
 
@@ -57,9 +57,9 @@ git diff --cached
 Split the diff output by top-level path (`frontend/`, `backend/`, `docker-compose.yml`/`docker/`) and match it to the section(s) that had an engineer spawned in Step 1.
 
 For each engineer agent that worked on implementing the issue, spawn the corresponding reviewer agent:
-- The `devops-reviewer` will review the work done by the `devops-engineer` agent
-- The `backend-reviewer` will review the work done by the `backend-engineer` agent
-- The `frontend-reviewer` will review the work done by the `frontend-engineer` agent
+- The `devops-reviewer` agent will review the work done by the `devops-engineer` agent
+- The `backend-reviewer` agent will review the work done by the `backend-engineer` agent
+- The `frontend-reviewer` agent will review the work done by the `frontend-engineer` agent
 
 Context/instructions to pass to the reviewer agents:
 
@@ -105,6 +105,8 @@ Follow the steps below for each Critical issue until the final verdict is **PASS
 
 Non-Critical observations (Warnings, Suggestions) are carried into the PR body in Step 4, not acted on here.
 
+Wait for all agents to complete before proceeding.
+
 ---
 
 # Step 3 - Spawn the `documenter` agent
@@ -119,6 +121,8 @@ Spawn the `documenter` agent, passing the following context and instructions:
 You are reviewing the code changes made for this issue and updating the relevant documentation. You are in **scoped mode** - review ONLY the diff content provided - do not review the full file.
 
 Remember to stick to your scope limitation and update only documentation relevant to the code changes provided.
+
+Wait for the `documenter` agent to complete before proceeding.
 
 ---
 

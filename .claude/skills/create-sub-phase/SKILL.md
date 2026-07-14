@@ -135,6 +135,8 @@ Confirm the issue number, title, and branch name before proceeding to the next t
 ## Step 3.4 - Return created issues
 When all tasks have been converted into Gitea issues, return to the orchestrator the list of issues created, including their titles and branch names.
 
+Wait for the `git-manager` agent to complete before proceeding.
+
 ---
 
 # Step 4 - Return and summarize

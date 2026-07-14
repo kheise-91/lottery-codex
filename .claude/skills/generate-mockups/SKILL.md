@@ -88,6 +88,8 @@ For each planned mockup variant: spawn a `frontend-engineer` agent to produce a 
 
 Pass the agent the sub-phase number and variant info, extracted design requirements and project styles from steps 2 and 3, and any other information needed to create the specified variant.
 
+Wait for all engineer agents to complete before proceeding.
+
 ---
 
 # Step 6 - Report

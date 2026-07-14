@@ -45,6 +45,8 @@ Checkout the pre-created issue branch AND rebase on the sub-phase branch.
 ## Step 1.5 - Return details
 Return the issue's full contents, the issue branch name, and the sub-phase branch name.
 
+Wait for the `git-manager` agent to complete before proceeding.
+
 ---
 
 # Step 2 - Create the implementation plan

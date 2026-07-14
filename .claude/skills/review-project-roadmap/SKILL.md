@@ -36,6 +36,8 @@ Determine:
 - Deployment
 - Technologies
 
+Wait for all explorer agents to complete before proceeding.
+
 ---
 
 # Step 3 - Review the roadmap

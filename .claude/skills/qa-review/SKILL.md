@@ -60,6 +60,8 @@ Diff:
 
 Follow your standard review process and output format, tagging findings as Critical / Warning / Suggestion.
 
+Wait for all reviewer agents to complete before proceeding.
+
 ---
 
 # Step 4 - Synthesize the final report

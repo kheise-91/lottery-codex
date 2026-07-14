@@ -46,6 +46,8 @@ Determine:
 - Deployment
 - Technologies
 
+Wait for all explorer agents to complete before proceeding.
+
 ---
 
 # Step 3 - Analyze the requested application
