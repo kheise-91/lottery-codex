@@ -151,7 +151,7 @@ class GamesController
             return $this->jsonResponse($response, ['error' => 'Game not found'], 404);
         }
 
-        $body = json_decode((string) $request->getBody(), true);
+        $body = json_decode((string) $request->getBody(), true) ?: [];
         $count = $body['count'] ?? 0;
 
         if (!is_int($count) || $count <= 0) {

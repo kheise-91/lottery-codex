@@ -9,8 +9,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $app = \Slim\Factory\AppFactory::create();
 
-// Error middleware — stack traces hidden from client
-$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+// Error middleware — stack traces hidden in production
+$displayErrors = (getenv('APP_ENV') ?? 'production') === 'development';
+$errorMiddleware = $app->addErrorMiddleware(true, true, $displayErrors);
 
 // JSON Content-Type middleware — applied to every response
 $app->add(function ($request, $handler) {
