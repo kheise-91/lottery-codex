@@ -1,12 +1,18 @@
 # Components Index
 
-The frontend is in a scaffolding phase. Only one component exists -- the `App` placeholder demo. No page components, layouts, reusable UI elements, contexts, or custom hooks have been implemented yet. The `services/` directory now exists and contains the API client layer. The `components/` and `hooks/` directories do not exist on disk yet.
+The frontend is in a scaffolding phase. Only one component exists -- the `App` placeholder demo. No page components, layouts, reusable UI elements, or contexts have been implemented yet. The `services/` directory contains the API client layer and the `hooks/` directory contains the first custom hook.
 
 ## Service Layer
 
 | Module | File | Status | Description |
 |--------|------|--------|-------------|
 | [API Service](./api.md) | `frontend/src/services/api.js` | Implemented | Fetch wrapper for all four backend API endpoints |
+
+## Hook List
+
+| Hook | File | Status | Description |
+|------|------|--------|-------------|
+| [useGameHistory](./useGameHistory.md) | `frontend/src/hooks/useGameHistory.js` | Implemented | Wraps `fetchHistory()` with loading, error handling, and result caching |
 
 ## Component List
 
@@ -20,8 +26,12 @@ The following are documented in the migration roadmap but do not exist on disk:
 
 - **Pages** -- Dashboard, Game Page, History browser
 - **Contexts** -- Game context provider for shared game state
-- **Hooks** -- `useGameHistory`, `useGeneratePanels` (planned names)
+- **Hooks** -- `useGeneratePanels` (planned name)
 - **Reusable UI components** -- Buttons, cards, tables, tabs
+
+## Custom Hook: useGameHistory
+
+See [useGameHistory](./useGameHistory.md) for full documentation. The hook accepts a `gameId` string, calls `fetchHistory(gameId)` from the API service, and returns `{ data, loading, error }`. It refetches when `gameId` changes and includes cleanup to prevent state updates after unmount.
 
 ## Entry Point
 

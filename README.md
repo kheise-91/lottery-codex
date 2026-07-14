@@ -81,6 +81,8 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── main.jsx                # React 18 createRoot entry point
 │   │   ├── App.jsx                 # Placeholder counter demo component
 │   │   ├── index.css               # Tailwind v4 import: @import "tailwindcss"
+│   │   ├── hooks/
+│   │   │   └── useGameHistory.js   # Custom hook wrapping fetchHistory with loading/error/caching
 │   │   └── services/
 │   │       └── api.js              # Fetch wrapper for all backend API endpoints
 │   ├── public/                     # Static assets and PWA manifest
@@ -95,9 +97,10 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 ## Documentation
 
 - [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented.
-- [Components](docs/components/README.md) -- Frontend component and service index. Includes the API service layer and `App` placeholder.
+- [Components](docs/components/README.md) -- Frontend component, hook, and service index. Includes the API service layer, `App` placeholder, and custom hooks.
   - [API Service Detail](docs/components/api.md) -- Fetch wrapper module for all backend endpoints
-  - [App Component Detail](docs/components/App.md)
+  - [App Component Detail](docs/components/App.md) -- Placeholder counter demo component
+  - [useGameHistory Hook Detail](docs/components/useGameHistory.md) -- Custom hook wrapping `fetchHistory()` with loading, error handling, and result caching
 - [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
   - [Docker Configuration](docs/infrastructure/docker.md)
   - [Nginx Configuration](docs/infrastructure/nginx.md)
