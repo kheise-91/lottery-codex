@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { fetchHistory } from '../services/api';
 
+/**
+ * Custom React hook that fetches historical drawing data for a given game.
+ * @param {string} gameId - The game ID to fetch history for (e.g., 'badger-five')
+ * @returns {{ data: Object | null, loading: boolean, error: string | null }}
+ */
 export function useGameHistory(gameId) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(null);

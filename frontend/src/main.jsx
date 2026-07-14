@@ -1,3 +1,6 @@
+/**
+ * Application entry point. Renders the React app with routing support.
+ */
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'

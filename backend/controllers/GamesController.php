@@ -19,6 +19,7 @@ class GamesController
 
     /**
      * GET /api/games — List all available games.
+     * @return array JSON response with games list (id, name, status per game)
      */
     public function list(ResponseInterface $response): ResponseInterface
     {
@@ -50,6 +51,8 @@ class GamesController
 
     /**
      * GET /api/games/{gameId} — Get game details.
+     * @param string $gameId Game identifier (e.g. 'badger-five', 'supercash')
+     * @return array Game details or 404 error if game is not registered
      */
     public function show(string $gameId, ResponseInterface $response): ResponseInterface
     {
@@ -64,6 +67,8 @@ class GamesController
     /**
      * GET /api/games/{gameId}/history — Get historical drawings.
      * Uses mock data for now (Phase 1). Replaced with real game class in Phase 4.
+     * @param string $gameId Game identifier
+     * @return array Historical drawings or 404 error if game is not registered
      */
     public function history(string $gameId, ResponseInterface $response): ResponseInterface
     {
@@ -136,6 +141,9 @@ class GamesController
 
     /**
      * POST /api/games/{gameId}/generate — Generate prediction tickets.
+     * @param string $gameId Game identifier
+     * @param RequestInterface $request Expects JSON body with 'count' integer
+     * @return array Generated tickets or error (404 if game not found, 400 if invalid count, 503 if game unavailable)
      */
     public function generate(string $gameId, RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -163,6 +171,8 @@ class GamesController
     /**
      * Resolve a game ID to a GameInterface instance.
      * Returns null if the game is not registered or fails to instantiate.
+     * @param string $gameId Game identifier to resolve
+     * @return GameInterface|null Instantiated game class or null on failure
      */
     private function resolve(string $gameId): ?GameInterface
     {
@@ -190,6 +200,10 @@ class GamesController
     /**
      * Helper: write JSON and return response.
      * Content-Type is already set by the global middleware in api.php.
+     * @param ResponseInterface $response HTTP response object to modify
+     * @param array $data Data to encode as JSON
+     * @param int $status HTTP status code (default 200)
+     * @return ResponseInterface Modified response with JSON body and status
      */
     private function jsonResponse(ResponseInterface $response, array $data, int $status = 200): ResponseInterface
     {
