@@ -82,7 +82,8 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── App.jsx                 # Placeholder counter demo component
 │   │   ├── index.css               # Tailwind v4 import: @import "tailwindcss"
 │   │   ├── hooks/
-│   │   │   └── useGameHistory.js   # Custom hook wrapping fetchHistory with loading/error/caching
+│   │   │   ├── useGameHistory.js   # Custom hook wrapping fetchHistory with loading/error/caching
+│   │   │   └── useGenerateTickets.js  # Custom hook wrapping generateTickets with loading/error/state
 │   │   └── services/
 │   │       └── api.js              # Fetch wrapper for all backend API endpoints
 │   ├── public/                     # Static assets and PWA manifest
@@ -101,6 +102,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
   - [API Service Detail](docs/components/api.md) -- Fetch wrapper module for all backend endpoints
   - [App Component Detail](docs/components/App.md) -- Placeholder counter demo component
   - [useGameHistory Hook Detail](docs/components/useGameHistory.md) -- Custom hook wrapping `fetchHistory()` with loading, error handling, and result caching
+  - [useGenerateTickets Hook Detail](docs/components/useGenerateTickets.md) -- Custom hook wrapping `generateTickets()` with loading, error handling, and ticket state
 - [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
   - [Docker Configuration](docs/infrastructure/docker.md)
   - [Nginx Configuration](docs/infrastructure/nginx.md)

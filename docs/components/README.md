@@ -13,6 +13,7 @@ The frontend is in a scaffolding phase. Only one component exists -- the `App` p
 | Hook | File | Status | Description |
 |------|------|--------|-------------|
 | [useGameHistory](./useGameHistory.md) | `frontend/src/hooks/useGameHistory.js` | Implemented | Wraps `fetchHistory()` with loading, error handling, and result caching |
+| [useGenerateTickets](./useGenerateTickets.md) | `frontend/src/hooks/useGenerateTickets.js` | Implemented | Wraps `generateTickets()` with loading, error handling, and ticket state |
 
 ## Component List
 
@@ -26,12 +27,18 @@ The following are documented in the migration roadmap but do not exist on disk:
 
 - **Pages** -- Dashboard, Game Page, History browser
 - **Contexts** -- Game context provider for shared game state
-- **Hooks** -- `useGeneratePanels` (planned name)
+- **Hooks** -- `useGenerateTickets` is implemented; no additional hooks planned at this time
 - **Reusable UI components** -- Buttons, cards, tables, tabs
 
-## Custom Hook: useGameHistory
+## Custom Hooks
+
+### useGameHistory
 
 See [useGameHistory](./useGameHistory.md) for full documentation. The hook accepts a `gameId` string, calls `fetchHistory(gameId)` from the API service, and returns `{ data, loading, error }`. It refetches when `gameId` changes and includes cleanup to prevent state updates after unmount.
+
+### useGenerateTickets
+
+See [useGenerateTickets](./useGenerateTickets.md) for full documentation. The hook accepts a `gameId` string and provides an imperative `generate(count)` function that calls `generateTickets(gameId, count)` from the API service, returning `{ tickets, loading, error, generate }`.
 
 ## Entry Point
 
