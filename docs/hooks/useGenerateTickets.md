@@ -107,4 +107,4 @@ function TicketGenerator({ gameId }) {
 ## Dependencies
 
 - React (`useState`)
-- `../services/api` -- specifically `generateTickets(gameId, count)`
+- [API Service](../../services/api.md) -- specifically `generateTickets(gameId, count)`

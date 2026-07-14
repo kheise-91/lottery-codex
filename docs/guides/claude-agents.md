@@ -48,7 +48,7 @@ Implements, modifies, and debugs all frontend UI components, styling, state mana
 - WCAG 2.1 AA accessibility compliance
 - API integration against `/api/` endpoints via fetch-based service layer
 - State management via Context API + `useReducer`
-- Updates `docs/components/` after relevant changes
+- Updates `docs/components/`, `docs/hooks/`, and `docs/services/` after relevant changes
 
 **Use when:** Creating or modifying React components, updating Tailwind styles, fixing accessibility issues, integrating frontend with backend APIs, or implementing client-side routing.
 
@@ -184,7 +184,7 @@ Creates, updates, and synchronizes markdown documentation with the codebase. Mai
 
 **Key Responsibilities:**
 - API documentation in `docs/api/README.md` (endpoints, request/response formats, status codes)
-- Component documentation in `docs/components/` (component index with links)
+- Component documentation in `docs/components/` (component index), hooks in `docs/hooks/`, services in `docs/services/`
 - Infrastructure documentation in `docs/infrastructure/` (Docker, NGINX)
 - Root-level `README.md` maintenance (project description, quick-start commands)
 
@@ -214,6 +214,8 @@ Creates, updates, and synchronizes markdown documentation with the codebase. Mai
 
 - `docs/api/` — API endpoint documentation
 - `docs/components/` — Frontend component documentation
+- `docs/hooks/` — Custom React hook documentation
+- `docs/services/` — Frontend service layer documentation
 - `docs/infrastructure/` — Docker and NGINX infrastructure documentation
 
 ### Workflow

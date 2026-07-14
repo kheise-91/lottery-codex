@@ -104,7 +104,7 @@ Returns a summary report of the review.
 
 ### [`/update-documentation`](/.claude/skills/update-documentation/SKILL.md)
 
-Spawns three explorer agents sequentially (`devops-explorer`, `backend-explorer`, `frontend-explorer`) to summarize each area of the codebase, then spawns the `documenter` agent to update all project documentation based on their summaries. Updates `README.md` and relevant documentation found in `docs/api/`, `docs/components/`, and `docs/infrastructure/`.
+Spawns three explorer agents sequentially (`devops-explorer`, `backend-explorer`, `frontend-explorer`) to summarize each area of the codebase, then spawns the `documenter` agent to update all project documentation based on their summaries. Updates `README.md` and relevant documentation found in `docs/api/`, `docs/components/`, `docs/hooks/`, `docs/services/`, and `docs/infrastructure/`.
 
 **Use when:** After all sub-phases are merged into `master` and the project is feature-complete.
 Can also be run after any major phase to keep documentation up-to-date.

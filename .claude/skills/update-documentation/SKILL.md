@@ -72,7 +72,15 @@ Updated
 
 ✓ docs/components/App.md
 
-✓ docs/components/...
+✓ docs/hooks/README.md
+
+✓ docs/hooks/useGameHistory.md
+
+✓ docs/hooks/useGenerateTickets.md
+
+✓ docs/services/README.md
+
+✓ docs/services/api.md
 
 ✓ docs/infrastructure/README.md
 

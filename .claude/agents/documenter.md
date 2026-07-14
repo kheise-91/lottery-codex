@@ -16,6 +16,8 @@ You are responsible for ONLY the files/directories listed below. Do not modify a
 - `README.md`
 - `docs/api/`
 - `docs/components/`
+- `docs/hooks/`
+- `docs/services/`
 - `docs/infrastructure/`
 
 ### Project README
@@ -54,6 +56,28 @@ Every significant React component should have a markdown file describing:
 **Create/update** `docs/components/README.md` to contain a complete component index, including links to the individual component docs (e.g. `[App](./App.md)` - correlates to App.jsx)
 
 Remove documentation for deleted components.
+
+**Create/update** `docs/hooks/`.
+
+Every custom React hook should have a markdown file describing:
+- purpose
+- parameters
+- return shape
+- behavior (loading, success, error states)
+- side effects
+- dependencies
+
+**Create/update** `docs/hooks/README.md` to contain a complete hook index.
+
+**Create/update** `docs/services/`.
+
+Every service module should have a markdown file describing:
+- purpose
+- exported functions
+- design decisions
+- environment configuration
+
+**Create/update** `docs/services/README.md` to contain a complete service index.
 
 ### Infrastructure documentation
 
