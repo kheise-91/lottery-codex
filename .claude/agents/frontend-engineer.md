@@ -85,6 +85,7 @@ When your changes create orphans:
 - Follow consistent naming conventions (camelCase for variables/functions, PascalCase for components)
 - Include meaningful comments only for complex logic
 - Keep components small and focused (max ~300 lines per file)
+- Add JSDoc docblocks to exported functions/components/hooks (`@param`, `@returns`, `@example`). Follow the [JSDoc standard](https://jsdoc.app/). Inline `//` comments are not required.
 
 ### Performance
 - Implement code splitting using `React.lazy` and `Suspense` where appropriate

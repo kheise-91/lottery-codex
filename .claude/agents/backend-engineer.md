@@ -67,6 +67,7 @@ Before making changes, read relevant documentation from the `docs/` directory:
 - Implement proper error handling with custom exceptions
 - Validate and sanitize all user inputs; never trust request data
 - Avoid constructor side-effects — load data lazily via getters
+- Add PHPDoc docblocks to all classes (with `@package`/`@category` if applicable) and public methods (`@param`, `@return`, `@throws`). Follow PSR-5. Inline `//` comments are not required.
 
 ## Best Practices
 1. **Security First**: Validate all inputs, sanitize outputs, handle CORS appropriately
