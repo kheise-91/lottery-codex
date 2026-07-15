@@ -131,16 +131,16 @@ Create the API front controller with mock data endpoints. This establishes front
 Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
 
 - [ ] **2.1 — Set up Context + useReducer state management**
-   - Create `src/contexts/GameContext.jsx` with reducer for: games list, selected game, history data, panel results
+   - Create `src/contexts/GameContext.jsx` with reducer for: games list, selected game, history data, ticket results
    - Actions: `SET_GAMES`, `SELECT_GAME`, `FETCH_HISTORY`, `GENERATE_TICKETS`
    - Wrap app in `<GameProvider>`
 
    **Done when:** Components can dispatch actions and read state from context.
 
 - [ ] **2.2 — Build Layout shell (`src/components/layout/Layout.jsx`)**
-   - Header with "Lottery Codex" branding (match legacy styling)
+   - Header with "Lottery Codex" branding
    - Main content area for page routing
-   - Mobile-first, full-height flex column layout (matching PWA pattern from OLD/)
+   - Mobile-first, full-height flex column layout
 
    **Done when:** Layout renders consistently across mobile and desktop viewports.
 
@@ -153,20 +153,18 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
 
 - [ ] **2.4 — Create Ball component (`src/components/games/Ball.jsx`)**
    - Circular element (32px), centered text, bordered
-   - Match legacy styling: `border-radius: 50%`, silver border, 16px font
    - Accept `number` prop; support variant colors for sub-patterns
 
    **Done when:** Ball renders numbers identically to the legacy UI.
 
 - [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**
    - Shows: date (formatted "Monday, January 1st"), full pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High"), row of number balls
-   - Match legacy fieldset layout with `<legend>` for date and `<h5>` for pattern
 
    **Done when:** Historical drawings render as cards matching the OLD/ visual style.
 
 - [ ] **2.6 — Create PanelDisplay component (`src/components/games/PanelDisplay.jsx`)**
    - Groups panels in sets per ticket (5 for BadgerFive, 6 for SuperCash) — one panel per sub-pattern
-   - Color-coded backgrounds by sub-pattern index (matching OLD CSS)
+   - Color-coded backgrounds by sub-pattern
    - Shows sub-pattern labels above each panel
 
    **Done when:** Generated panels render with correct grouping and color coding.
@@ -175,14 +173,13 @@ Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
    - Two-tab switcher: "Previous Drawings" / "Generated Panels"
    - Hidden on desktop (≥768px) where split-view is used instead
    - Use `@headlessui/react` Tab component (already installed)
-   - Match legacy tab styling (slate gray inactive, light active with small-caps)
 
    **Done when:** Tabs switch content without page reload; hidden on desktop breakpoint.
 
 - [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with split-view layout**
    - Desktop (≥768px): Split-view grid — history + pattern distribution on left (5/12), generation form + panels on right (7/12)
    - Mobile (<768px): Tabbed interface via Tabs component — "Previous Drawings" and "Generated Panels"
-   - Form controls: ticket count dropdown only (1, 2, 3, 5, 10) — no pattern selector; pattern is internal to each game class
+   - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
    - Desktop: auto-generate panels when ticket count changes; Mobile: explicit "Generate" button
    - Uses `useGameHistory` and `useGenerateTickets` hooks
 
