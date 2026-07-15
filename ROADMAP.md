@@ -128,7 +128,7 @@ Create the API front controller with mock data endpoints. This establishes front
 
 ## Phase 2 — Frontend Core Components
 
-Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
+Build the React component hierarchy.
 
 - [ ] **2.1 — Set up Context + useReducer state management**
    - Create `src/contexts/GameContext.jsx` with reducer for: games list, selected game, history data, ticket results
