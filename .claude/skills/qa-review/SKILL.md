@@ -19,7 +19,7 @@ If on `master`, stop and report: "Checkout a feature branch before running /qa-r
 
 ---
 
-# Step 2 - Get changed files and route to reviewer agents
+# Step 2 - Get changed files
 
 ```bash
 git diff master...HEAD --stat
@@ -43,7 +43,7 @@ Do NOT review those files yourself. All code reviews should be handled by the sp
 
 ---
 
-# Step 3 - Spawn the applicable reviewer agents in parallel
+# Step 3 - Spawn the applicable reviewer agents
 
 Each reviewer has a scoped-mode switch: when given diff content, it reviews ONLY those changes - not the full file, and not pre-existing code outside the diff (except where a pre-existing issue is directly broken by this change).
 
@@ -66,31 +66,32 @@ Wait for all reviewer agents to complete before proceeding.
 
 # Step 4 - Synthesize the final report
 
-Do not re-review any files yourself. Read the reports returned by each spawned agent and produce one consolidated summary:
-
+Do not re-review any files yourself. Read the reports returned by each spawned agent and print a markdown summary, starting with two tables: one summarizing all the work done and one for the final code review findings. Each file reviewed should be in a new row for the second table. Example:
 ```md
-## QA Summary - [branch-name]
+# QA Review - [branch-name]
 
-### Sections reviewed
-[backend / frontend / devops - only those actually spawned]
+---
 
-### Backend
-[backend-reviewer's full report - omit if not applicable]
+## Work Summary
 
-### Frontend
-[frontend-reviewer's full report - omit if not applicable]
+| STEP # | AGENT NAME        | TASK SUMMARY                        |
+|--------|-------------------|-------------------------------------|
+| 1      | `agent-name`/none | Confirmed branch was not `master`   |
+| 3      | `agent-name`/none | Reviewed [codebase section] changes |
 
-### DevOps
-[devops-reviewer's full report - omit if not applicable]
+---
 
-### Consolidated blocking issues
-[Every Critical finding across all sections, tagged by section. If none, say so.]
+## Code Review Summary
 
-### Non-blocking notes
-[Every Warning/Suggestion finding across all sections, tagged by section - for awareness, doesn't affect the verdict.]
+| SECTION                   | FILE NAME           | REVIEW SUMMARY              |
+|---------------------------|---------------------|-----------------------------|
+| [devops/backend/frontend] | `filepath/filename` | 🔴 **Critical:** findings   |
+| [devops/backend/frontend] | `filepath/filename` | 🟠 **Warning:** findings    |
+| [devops/backend/frontend] | `filepath/filename` | 🟡 **Suggestion:** findings |
 
-### Overall verdict
+---
+
+## Overall Verdict
+
 READY TO MERGE / FAIL - [one sentence]. FAIL if any section reported a Critical finding.
 ```
-
-If FAIL, list every blocking issue grouped by section so it's clear what needs fixing before merge.

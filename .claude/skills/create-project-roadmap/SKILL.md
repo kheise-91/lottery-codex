@@ -243,11 +243,37 @@ Before finishing, verify:
 - No duplicated work exists
 - Roadmap format is correct
 
-Report:
-- Number of phases
-- Number of sub-phases
-- Completed
-- In progress
-- Remaining
+Confirm ROADMAP.md was written successfully to the project-root directory and print a markdown summary, starting with two tables: one summarizing all the work done and the second listing all the phases and sub-phases. Example:
+```md
+# Roadmap - [Project Name]
 
-Confirm ROADMAP.md was written successfully to the project-root directory.
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY      |
+|--------|-------------------|-------------------|
+| 1      | `agent-name`/none | Parsed user input |
+
+---
+
+## Phases
+
+| PHASE/SUB-PHASE # | TITLE                |
+|-------------------|----------------------|
+| 1                 | Prepare foundation   |
+| 1.1               | Install requirements |
+
+---
+
+## Details
+
+### Completed
+[work already completed]
+
+### In Progress
+[work in progress]
+
+### Work Remaining
+[work remaining to be done]
+```

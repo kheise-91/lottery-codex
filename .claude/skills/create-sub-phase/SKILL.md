@@ -146,9 +146,18 @@ After all tasks are created, check out the sub-phase branch:
 git checkout phase-[X-Y]
 ```
 
-Print a summary table:
+Print a markdown summary table of all the work done, including one row for each issue created. Example:
+```md
+# Sub-Phase Creation
 
-| # | Issue | Branch |
-|---|-------|--------|
-| 1 | #N - Issue title | `branch-name` |
-| 2 | #N - Issue title | `branch-name` |
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY                        |
+|--------|-------------------|-------------------------------------|
+| 1      | `agent-name`/none | Reviewed project roadmap            |
+| 3      | `git-manager`     | Created milestone [Milestone Title] |
+| 3      | `git-manager`     | Created issue #N - [Issue Title]    |
+| 3      | `git-manager`     | Created issue #N - [Issue Title]    |
+```

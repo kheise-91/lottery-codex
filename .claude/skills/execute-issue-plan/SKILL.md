@@ -139,7 +139,7 @@ Examples:
 - `[Bug-47] Fix 500 errors from /api/games/ endpoint`
 - `[Task-58] Implement GET /api/games/{gameId} endpoint`
 
-## Step 4.2. Open pull request 
+## Step 4.2 - Open pull request 
 Open a pull request via the Gitea MCP:
 - **From:** issue branch (`YYYY-MM-DD-task-summary`)
 - **Into:** sub-phase branch (`phase-X-Y`)
@@ -163,3 +163,38 @@ Open a pull request via the Gitea MCP:
 
 ## Step 4.3 - Return PR URL
 Return the PR URL when done.
+
+---
+
+# Step 5 - Return and summarize
+
+Print the PR URL and two markdown summary tables: one summarizing all the work done and one for the final code review findings. Each file affected should be in a new row. Example:
+```md
+# Issue Plan Execution
+
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY                         |
+|--------|-------------------|--------------------------------------|
+| 1      | `agent-name`/none | File changed: summary of changes     |
+| 2      | `agent-name`/none | Reviewed [codebase section] changes  |
+| 3      | `agent-name`/none | Doc file changed: summary of changes |
+
+---
+
+## Code Review Summary
+
+| SECTION                   | FILE NAME           | REVIEW SUMMARY              |
+|---------------------------|---------------------|-----------------------------|
+| [devops/backend/frontend] | `filepath/filename` | 🔴 **Critical:** findings   |
+| [devops/backend/frontend] | `filepath/filename` | 🟠 **Warning:** findings    |
+| [devops/backend/frontend] | `filepath/filename` | 🟡 **Suggestion:** findings |
+
+---
+
+## Pull Request URL
+
+[url of the pull request]
+```

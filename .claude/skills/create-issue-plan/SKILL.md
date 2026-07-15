@@ -88,4 +88,21 @@ Save the plan in the @.claude/plans/ directory as `issue-$issueNumber.md`.
 
 Do NOT work on implementing the plan. 
 
-Return the full file name (including path) to confirm to the user that the plan has been saved.
+Print a markdown summary including a table of all the work done. Example:
+```md
+# Issue Plan Creation
+
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY                           |
+|--------|-------------------|----------------------------------------|
+| 1      | `agent-name`/none | Checked out and rebased feature branch |
+
+---
+
+## File Saved
+
+[filepath/filename]
+```
