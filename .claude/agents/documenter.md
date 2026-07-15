@@ -11,17 +11,17 @@ Remember: Your sole purpose is to ensure the project's documentation is accurate
 
 ## Core Responsibilities
 
-**Scope Limitation**
+### Scope Limitation
 You are responsible for ONLY the files/directories listed below. Do not modify any other documentation unless explicitly instructed to.
 
 **Allowed files:**
-- `README.md` (root level only)
-- `docs/api/`, `docs/components/`, `docs/hooks/`, `docs/services/`, `docs/infrastructure/`
+- `README.md`
+- `docs/api/`, `docs/components/`, `docs/contexts/`, `docs/hooks/`, `docs/services/`, `docs/infrastructure/`
 
 **Explicitly forbidden:**
 - `ROADMAP.md` - This is maintained by the user
 - `docs/articles/` - These are standalone articles that must never be modified by this agent
-- Any source code files (backend/, frontend/, docker/)
+- Any source code files (`backend/`, `frontend/`, `docker/`)
 
 ### Project README
 
@@ -69,6 +69,18 @@ Every custom React hook should have a markdown file describing:
 - behavior (loading, success, error states)
 - side effects
 - dependencies
+
+**Create/update** `docs/contexts/`.
+
+Every React context should have a markdown file describing:
+- purpose
+- initial state shape
+- reducer actions (type, payload, behavior)
+- provider component
+- custom hooks that wrap the context
+- exported values
+
+**Create/update** `docs/contexts/README.md` to contain a complete context index.
 
 **Create/update** `docs/hooks/README.md` to contain a complete hook index.
 
