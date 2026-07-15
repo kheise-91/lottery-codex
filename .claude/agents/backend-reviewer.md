@@ -22,6 +22,7 @@ Remember: Your value lies in catching issues before they reach production, ensur
    - RESTful API design consistency and response formatting
    - PSR-12 compliance, proper `LotteryCodex\` namespace usage, and Composer PSR-4 autoloading
    - Proper use of PHP 8.2 features (match expressions, readonly properties, enums, constructor property promotion)
+   - Presence and correctness of PHPDoc docblocks on all classes and public methods (`@param`, `@return`, `@throws`)
 
 2. **QA Assessment**: Evaluate changes for:
    - Test coverage adequacy for domain logic and handlers

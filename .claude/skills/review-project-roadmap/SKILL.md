@@ -36,6 +36,8 @@ Determine:
 - Deployment
 - Technologies
 
+Wait for all explorer agents to complete before proceeding.
+
 ---
 
 # Step 3 - Review the roadmap
@@ -92,60 +94,70 @@ Flag:
 
 # Step 4 - Produce the report
 
-Do not modify ROADMAP.md. Your review is advisory only. Structure the report exactly as follows.
-
+Do not modify ROADMAP.md. Your review is advisory only. Provide one overall assessment structured as a markdown summary, including two tables: one summarizing all the work done and one for the final assessment of each phase/sub-phase. Example:
 ```md
-# Roadmap Review - Overview
+# Roadmap Review - [Project Name]
 
-## Critical Issues
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY     |
+|--------|-------------------|------------------|
+| 1      | `agent-name`/none | Read the roadmap |
+
+---
+
+## Assessment Summary
+
+| PHASE/SUB-PHASE # | VERDICT                                                               | SUMMARY               |
+|-------------------|-----------------------------------------------------------------------|-----------------------|
+| 1                 | [PASS/PASS WITH RECOMMENDATIONS/NEEDS REVISION/MAJOR REWORK REQUIRED] | [summary of findings] |
+| 1.1               | [PASS/PASS WITH RECOMMENDATIONS/NEEDS REVISION/MAJOR REWORK REQUIRED] | [summary of findings] |
+
+---
+
+## Overview
+
+### Critical Issues
 [Problems that would likely cause project failure, major rework, or missing functionality.]
 
-## Suggestions
+### Suggestions
 [Optional improvements that would strengthen the roadmap.]
 
-## Strengths
+### Strengths
 [List portions of the roadmap that appear well structured and require no changes.]
 
 ---
 
-# Roadmap Review - Details
+## Details
 
-## Missing Work
+### Missing Work
 [Features or infrastructure absent from the roadmap.]
 
-## Sequencing Problems
+### Sequencing Problems
 [Incorrect ordering.]
 
 [Explain the dependency and recommend the proper sequence.]
 
-## Scope Problems
+### Scope Problems
 [Phases or sub-phases that should be split.]
 
-## Architectural Concerns
+### Architectural Concerns
 [Design decisions that should be reconsidered.]
 
-## Scalability
+### Scalability
 [How well the ROADMAP and future project will support expansion.]
 
-## Repository Mismatches
+### Repository Mismatches
 [Differences between the roadmap and the current codebase.]
 
-## Completed Work
+### Completed Work
 [Work from the ROADMAP that has been completed already.]
 
 ---
 
-# Roadmap Review - Final Assessment
+## Final Verdict
 
-Provide one overall assessment.
-
-Choose exactly one:
-
-PASS
-
-PASS WITH RECOMMENDATIONS
-
-NEEDS REVISION
-
-MAJOR REWORK REQUIRED
+[PASS/PASS WITH RECOMMENDATIONS/NEEDS REVISION/MAJOR REWORK REQUIRED]
 ```

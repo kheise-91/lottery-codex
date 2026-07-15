@@ -30,6 +30,8 @@ Spawn the following agents in order, one at a time:
 
 Each agent is responsible for generating documentation for its own area. The agents should return structured markdown summaries. Do not proceed until all three have completed.
 
+Wait for all explorer agents to complete before proceeding.
+
 ---
 
 # Step 3 - Spawn the documenter agent
@@ -55,38 +57,32 @@ Explorer summaries:
 
 Remember to stick to your scope limitation and update only documentation relevant to the code changes provided.
 
+Wait for the `documenter` agent to complete before proceeding.
+
 ---
 
-# Step 4 - Summarize
+# Step 4 - Return and summarize
 
-Return a summary:
+Print a markdown summary of all the documentation updated, containing two tables: one summarizing all the work done and one for the list of files changed. Each file reviewed should be in a new row for the second table. Example:
+```md
+# Documentation Update - [branch-name]
 
-```text
-Updated
+---
 
-✓ README.md
+## Work Summary
 
-✓ docs/api/README.md
+| STEP # | AGENT NAME        | TASK SUMMARY                               |
+|--------|-------------------|--------------------------------------------|
+| 1      | `agent-name`/none | Confirmed branch was not `master`          |
+| 2      | `agent-name`/none | Generated [codebase section] documentation |
 
-✓ docs/components/README.md
+---
 
-✓ docs/components/App.md
+## Documentation Changes
 
-✓ docs/hooks/README.md
-
-✓ docs/hooks/useGameHistory.md
-
-✓ docs/hooks/useGenerateTickets.md
-
-✓ docs/services/README.md
-
-✓ docs/services/api.md
-
-✓ docs/infrastructure/README.md
-
-✓ docs/infrastructure/docker.md
-
-✓ docs/infrastructure/nginx.md
-
-Documentation updated successfully.
+| FILE CHANGED        | SUMMARY OF CHANGES     |
+|---------------------|------------------------|
+| `filepath/filename` | [what changed and why] |
+| `filepath/filename` | [what changed and why] |
+| `filepath/filename` | [what changed and why] |
 ```

@@ -135,6 +135,8 @@ Confirm the issue number, title, and branch name before proceeding to the next t
 ## Step 3.4 - Return created issues
 When all tasks have been converted into Gitea issues, return to the orchestrator the list of issues created, including their titles and branch names.
 
+Wait for the `git-manager` agent to complete before proceeding.
+
 ---
 
 # Step 4 - Return and summarize
@@ -144,9 +146,18 @@ After all tasks are created, check out the sub-phase branch:
 git checkout phase-[X-Y]
 ```
 
-Print a summary table:
+Print a markdown summary table of all the work done, including one row for each issue created. Example:
+```md
+# Sub-Phase Creation
 
-| # | Issue | Branch |
-|---|-------|--------|
-| 1 | #N - Issue title | `branch-name` |
-| 2 | #N - Issue title | `branch-name` |
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY                        |
+|--------|-------------------|-------------------------------------|
+| 1      | `agent-name`/none | Reviewed project roadmap            |
+| 3      | `git-manager`     | Created milestone [Milestone Title] |
+| 3      | `git-manager`     | Created issue #N - [Issue Title]    |
+| 3      | `git-manager`     | Created issue #N - [Issue Title]    |
+```

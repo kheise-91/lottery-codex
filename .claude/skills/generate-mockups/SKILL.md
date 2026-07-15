@@ -88,13 +88,32 @@ For each planned mockup variant: spawn a `frontend-engineer` agent to produce a 
 
 Pass the agent the sub-phase number and variant info, extracted design requirements and project styles from steps 2 and 3, and any other information needed to create the specified variant.
 
+Wait for all engineer agents to complete before proceeding.
+
 ---
 
-# Step 6 - Report
+# Step 6 - Return and summarize
 
-Print a summary table with all the files created from the agents:
+Print two markdown summary tables: one summarizing all the work done and one to describe the mockups created. Example:
+```md
+# Mockup Generation
 
-| File | Approach | Best suited for |
-|---|---|---|
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME          | TASK SUMMARY                                                  |
+|--------|---------------------|---------------------------------------------------------------|
+| 1      | `agent-name`/none   | Reviewed project roadmap                                      |
+| 5      | `frontend-engineer` | Created mockup: `frontend/mockups/phase-3-2-slide-panel.html` |
+| 5      | `frontend-engineer` | Created mockup: `frontend/mockups/phase-3-2-slide-panel.html` |
+
+---
+
+## Files Created
+
+| File                                          | Approach      | Best suited for  |
+|-----------------------------------------------|---------------|------------------|
 | `frontend/mockups/phase-3-2-slide-panel.html` | [description] | [when this wins] |
 | `frontend/mockups/phase-3-2-inline-list.html` | [description] | [when this wins] |
+```

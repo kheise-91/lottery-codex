@@ -45,6 +45,8 @@ Checkout the pre-created issue branch AND rebase on the sub-phase branch.
 ## Step 1.5 - Return details
 Return the issue's full contents, the issue branch name, and the sub-phase branch name.
 
+Wait for the `git-manager` agent to complete before proceeding.
+
 ---
 
 # Step 2 - Create the implementation plan
@@ -86,4 +88,21 @@ Save the plan in the @.claude/plans/ directory as `issue-$issueNumber.md`.
 
 Do NOT work on implementing the plan. 
 
-Return the full file name (including path) to confirm to the user that the plan has been saved.
+Print a markdown summary including a table of all the work done. Example:
+```md
+# Issue Plan Creation
+
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY                           |
+|--------|-------------------|----------------------------------------|
+| 1      | `agent-name`/none | Checked out and rebased feature branch |
+
+---
+
+## File Saved
+
+[filepath/filename]
+```

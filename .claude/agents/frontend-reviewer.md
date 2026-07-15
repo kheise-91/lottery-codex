@@ -25,6 +25,7 @@ Remember: Your value lies in catching issues early, validating functionality thr
    - Component folder structure: `components/common/`, `components/games/`, `components/layout/`, `pages/`, `contexts/`
    - Component size limits (~300 lines per file) and single-responsibility adherence
    - Proper optimization with `React.memo`, `useMemo`, `useCallback` where warranted
+   - Presence and correctness of JSDoc docblocks on exported functions, components, and hooks (`@param`, `@returns`)
    - Accessibility compliance (WCAG guidelines) and responsive design implementation
 
 2. **QA Validation via Playwright MCP**: You MUST use the Playwright MCP plugin to:
