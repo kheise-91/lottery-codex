@@ -130,7 +130,7 @@ Create the API front controller with mock data endpoints. This establishes front
 
 Build the React component hierarchy.
 
-- [ ] **2.1 — Set up Context + useReducer state management**
+- [x] **[2.1 — Set up Context + useReducer state management](https://gitea.heise.home/kheise/lottery-codex/milestone/31)**
    - Create `src/contexts/GameContext.jsx` with reducer for: games list, selected game, history data, ticket results
    - Actions: `SET_GAMES`, `SELECT_GAME`, `FETCH_HISTORY`, `GENERATE_TICKETS`
    - Wrap app in `<GameProvider>`
