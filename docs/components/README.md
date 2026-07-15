@@ -1,6 +1,6 @@
 # Components Index
 
-The frontend is in a scaffolding phase. Only one component exists -- the `App` placeholder demo. No page components, layouts, reusable UI elements, or contexts have been implemented yet.
+The frontend is in a scaffolding phase. Only the `App` placeholder demo and the `GameContext` provider exist on disk. No page components, layouts, reusable UI elements have been implemented yet.
 
 ## Component List
 
@@ -8,12 +8,17 @@ The frontend is in a scaffolding phase. Only one component exists -- the `App` p
 |-----------|------|--------|-------------|
 | [App](./App.md) | `frontend/src/App.jsx` | Placeholder | Counter demo proving the frontend stack works |
 
+## Contexts
+
+Contexts live in a separate documentation directory:
+
+- [GameContext](../contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history data, and ticket results
+
 ## Planned (Not Yet Implemented)
 
 The following are documented in the migration roadmap but do not exist on disk:
 
 - **Pages** -- Dashboard, Game Page, History browser
-- **Contexts** -- Game context provider for shared game state
 - **Reusable UI components** -- Buttons, cards, tables, tabs
 
 ## Entry Point
