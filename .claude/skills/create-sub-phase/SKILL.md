@@ -115,7 +115,12 @@ Using the generated issue branch name, create a new branch off of the sub-phase 
 Create any missing labels via the Gitea MCP if the label doesn't already exist.
 
 ### Step 3.3.4 - Create the issue
-Create the issues via the Gitea MCP with: title, project board name, milestone, branch, label(s), and body as planned in Step 2.
+Create the issues via the Gitea MCP as planned in Step 2. Ensure that ALL of the fields named below are set when the issue gets created: 
+- Title
+- Branch
+- Label(s)
+- Milestone
+- Body
 
 ### Step 3.3.5 - Add branch name comment to the issue
 Add a comment to the issue immediately after creation:
