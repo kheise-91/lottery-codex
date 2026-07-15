@@ -13,7 +13,7 @@ Your job is to spawn the `git-manager` agent to fetch a Gitea issue, create a pl
 The issue number is: $issueNumber. If no issue number was provided, stop and ask the user to provide one.
 
 **Scope Boundary**
-Each sub-phase is broken down into multiple tasks, with an issue created for each task. The implementation scope for this task is defined entirely by the contents of the issue - nothing else. Do not plan any work that falls outside the scope of the issue. When the acceptance criteria found in the issue have been completed, the work for the issue is done.
+Each sub-phase is broken down into multiple tasks, with an issue created for each task. The implementation scope for this task is defined entirely by the contents of the issue - nothing else. Do not plan any work that falls outside the acceptance criteria of the issue. Roadmap items may describe combined outcomes spanning multiple issues - only implement the acceptance criteria of the issue being planned, not sibling tasks mentioned in the same roadmap entry.
 
 ---
 
