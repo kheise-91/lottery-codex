@@ -116,11 +116,13 @@ Create any missing labels via the Gitea MCP if the label doesn't already exist.
 
 ### Step 3.3.4 - Create the issue
 Create the issues via the Gitea MCP as planned in Step 2. Ensure that ALL of the fields named below are set when the issue gets created: 
-- Title
-- Branch
-- Label(s)
-- Milestone
-- Body
+- title
+- body
+- milestone
+- labels
+- branch
+
+Example call structure (fill ALL parameters): `mcp__gitea__issue_write(owner=..., repo=..., title="Title", body="Body", milestone="Phase X.Y", labels=["Task"], branch="YYYY-MM-DD-short-task-summary")`
 
 ### Step 3.3.5 - Add branch name comment to the issue
 Add a comment to the issue immediately after creation:
