@@ -16,6 +16,7 @@ You are responsible for ONLY the files/directories listed below. Do not modify a
 - `README.md`
 - `docs/api/`
 - `docs/components/`
+- `docs/contexts/`
 - `docs/hooks/`
 - `docs/services/`
 - `docs/infrastructure/`
@@ -66,6 +67,18 @@ Every custom React hook should have a markdown file describing:
 - behavior (loading, success, error states)
 - side effects
 - dependencies
+
+**Create/update** `docs/contexts/`.
+
+Every React context should have a markdown file describing:
+- purpose
+- initial state shape
+- reducer actions (type, payload, behavior)
+- provider component
+- custom hooks that wrap the context
+- exported values
+
+**Create/update** `docs/contexts/README.md` to contain a complete context index.
 
 **Create/update** `docs/hooks/README.md` to contain a complete hook index.
 
