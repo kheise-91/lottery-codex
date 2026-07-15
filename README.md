@@ -81,6 +81,8 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── main.jsx                # React 18 createRoot entry point
 │   │   ├── App.jsx                 # Placeholder counter demo component
 │   │   ├── index.css               # Tailwind v4 import: @import "tailwindcss"
+│   │   ├── contexts/
+│   │   │   └── GameContext.jsx     # useReducer-based state: games, selectedGame, history, ticketResults
 │   │   ├── hooks/
 │   │   │   ├── useGameHistory.js   # Custom hook wrapping fetchHistory with loading/error/caching
 │   │   │   └── useGenerateTickets.js  # Custom hook wrapping generateTickets with loading/error/state
@@ -100,6 +102,8 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 - [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented.
 - [Components](docs/components/README.md) -- Frontend UI component index. Currently includes the `App` placeholder demo.
   - [App Component Detail](docs/components/App.md) -- Placeholder counter demo component
+- [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
+  - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results
 - [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.
   - [useGameHistory Hook Detail](docs/hooks/useGameHistory.md) -- Custom hook wrapping `fetchHistory()` with loading, error handling, and result caching
   - [useGenerateTickets Hook Detail](docs/hooks/useGenerateTickets.md) -- Custom hook wrapping `generateTickets()` with loading, error handling, and ticket state
