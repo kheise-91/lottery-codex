@@ -26,7 +26,9 @@ Each sub-phase is broken down into multiple tasks, with an issue created for eac
 # Step 1 - Spawn the engineer agents
 
 Before spawning any agents:
-- Derive the mockup pattern from the issue milestone: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check @frontend/mockups/ for a matching file.
+- Check if a mockup file was included in the issue details
+- If a mockup file was referenced in the issue plan, check @frontend/mockups/ for the matching file
+- If a mockup exists, it will serve as a visual reference when implementing frontend/UI tasks and must be passed to the `frontend-engineer` agent
 
 Based on what the issue plan requires, spawn the appropriate agents listed below sequentially:
 - `devops-engineer` agent: Handles all work for the `docker-compose.yml` file and files inside the `docker/` directory.
