@@ -8,18 +8,28 @@ function Layout() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header — gradient hero with branding */}
-      <header className="relative overflow-hidden bg-gradient-to-br from-blue-800 via-blue-600 to-blue-400 shadow-lg">
-        {/* Decorative grid overlay */}
-        <div className="absolute inset-0 opacity-10">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-            <defs>
-              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
+      <header className="relative pb-3" style={{ background: '#fff', 'box-shadow': 'hsl(225 75% 25% / 25%) 0px 8px 24px -2px, hsl(225 75% 15% / 15%) 0px 4px 12px -2px'}}>
+        {/* Background SVG: gradient + grid + curve + shadow */}  
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+          <defs>
+            <linearGradient id="header-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#1e40af" />
+              <stop offset="50%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#60a5fa" />
+            </linearGradient>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          {/* Gradient base */}
+          <rect width="100%" height="100%" fill="url(#header-gradient)" />
+          {/* Grid overlay */}
+          <rect width="100%" height="100%" fill="url(#grid)" opacity="0.1" />
+          {/* Shadow — blurred duplicate of the curve, shifted down */}
+          <path d="M0,195 C240,225 480,170 720,195 C960,225 1200,170 1440,195 L1440,220 L0,220 Z" fill="#000" opacity="0.12" style={{ filter: 'blur(6px)' }} />
+          {/* Decorative bottom curve */}
+          <path d="M0,200 C240,230 480,175 720,200 C960,230 1200,175 1440,200 L1440,220 L0,220 Z" fill="#f9fafb" />
+        </svg>
 
         {/* Header content */}
         <div className="relative max-w-4xl mx-auto px-4 py-6 sm:py-8">
@@ -40,13 +50,6 @@ function Layout() {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* Decorative bottom curve */}
-        <div className="absolute bottom-0 left-0 right-0 h-3 overflow-hidden">
-          <svg viewBox="0 0 1440 50" preserveAspectRatio="none" className="w-full h-full">
-            <path d="M0,20 C240,50 480,0 720,25 C960,50 1200,0 1440,25 L1440,50 L0,50 Z" fill="#f9fafb" />
-          </svg>
         </div>
       </header>
 
