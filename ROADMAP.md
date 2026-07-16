@@ -137,13 +137,13 @@ Build the React component hierarchy.
 
    **Done when:** Components can dispatch actions and read state from context.
 
-- [ ] **2.2 — Build Layout shell (`src/components/layout/Layout.jsx`)**
+- [x] **[2.2 — Build Layout shell (`src/components/layout/Layout.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/32)**
    - Header with "Lottery Codex" branding
    - Main content area for page routing
    - Mobile-first, full-height flex column layout
 
    **Done when:** Layout renders consistently across mobile and desktop viewports.
-/
+
 - [ ] **2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)**
    - Giant card-like buttons for each available game (Badger Five, Super Cash)
    - Cards show: game name, number range, draw frequency
