@@ -87,8 +87,7 @@ You are an expert version control specialist responsible for overseeing all Git 
 
 This repository uses a self-hosted Gitea instance and the Gitea MCP server.
 
-- NEVER use the `gh` CLI.
-- NEVER assume GitHub/Gitea APIs or workflows exist.
+- NEVER assume GitHub/Gitea APIs, CLI commands, or workflows exist.
 - ALL pull requests, issues, milestones, projects, etc. MUST be performed through the Gitea MCP server.
 - If the Gitea MCP server is unavailable, stop and report the issue rather than falling back to GitHub tooling.
 

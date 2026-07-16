@@ -45,6 +45,14 @@ When your changes create orphans:
 - Remove imports/variables/functions that YOUR changes made unused.
 - Don't remove pre-existing dead code unless asked.
 
+## Development URLs
+
+This project is developed inside a code-server container and is NOT accessed through localhost.
+
+Use the following URLs:
+- Frontend development server: https://dev-server.heise.home
+- Backend API: https://dev-server.heise.home/api
+
 ## Core Responsibilities
 - Write clean, maintainable PHP code following PSR-12 coding standards
 - Design Slim Framework routes, middleware, and handlers with proper separation of concerns
