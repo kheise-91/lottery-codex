@@ -7,7 +7,7 @@ namespace LotteryCodex\Games;
 require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
 
 /**
- * SuperCash game implementation using Lottery Codex pattern analysis (3-Odd 3-Even / 3-Low 3-High).
+ * SuperCash! game implementation using Lottery Codex pattern analysis (3-Odd 3-Even / 3-Low 3-High).
  */
 class SuperCash implements GameInterface, \JsonSerializable
 {
@@ -39,7 +39,7 @@ class SuperCash implements GameInterface, \JsonSerializable
 
     /**
      * Get SuperCash game metadata including number groups and optimal pattern.
-     * @return array Game details (id, name, status, drawFrequency, numberRange, numbersPerDraw, optimalPattern, groups)
+     * @return array Game details (id, name, status, drawFrequency, numberRange, numbersPerDraw, optimalPattern, groups, description, oddsOfWinning)
      */
     public function getGameDetails(): array
     {
@@ -55,8 +55,10 @@ class SuperCash implements GameInterface, \JsonSerializable
                 'lowOdd'   => $this->getLowOdd(),
                 'lowEven'  => $this->getLowEven(),
                 'highOdd'  => $this->getHighOdd(),
-                'highEven' => $this->getHighEven(),
+                'highEven' => $this->getHighEven()
             ],
+            'description' => 'Pick 6 numbers from 1-39 for a chance to win a fixed $350,000 top prize in a daily drawing that features a doubler multiplier for lower prize tiers.',
+            'oddsOfWinning' => '1 in 1,631,312'
         ];
     }
 
@@ -133,13 +135,12 @@ class SuperCash implements GameInterface, \JsonSerializable
     /**
      * Scrape and parse Wisconsin Lottery drawing history from wilottery.com,
      * classify each drawing by odd/even and low/high patterns.
-     * NOTE: Currently scrapes the Badger Five URL instead of SuperCash; this is a known issue.
      * @return self
      * @throws \Exception If the HTTP request fails or HTML parsing fails
      */
     private function loadPreviousDrawings(): self
     {
-        $html = file_get_html('https://wilottery.com/winners/draw-history?game=badger-5');
+        $html = file_get_html('https://wilottery.com/winners/draw-history?game=supercash');
 
         foreach ($html->find('.winning-numbers-line') as $numSet) {
             $drawing = [];
