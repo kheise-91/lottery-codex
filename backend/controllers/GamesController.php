@@ -15,6 +15,7 @@ class GamesController
     private array $registry = [
         'badger-five' => \LotteryCodex\Games\BadgerFive::class,
         'supercash'   => \LotteryCodex\Games\SuperCash::class,
+        'megabucks'   => \LotteryCodex\Games\Megabucks::class
     ];
 
     /**
@@ -109,6 +110,32 @@ class GamesController
                 ],
             ],
             'supercash' => [
+                "Monday, July 1st" => [
+                    'numbers' => [4, 11, 18, 25, 32, 37],
+                    'pattern' => '3-Odd 3-Even / 3-Low 3-High',
+                ],
+                "Sunday, June 30th" => [
+                    'numbers' => [2, 9, 14, 23, 30, 35],
+                    'pattern' => '3-Odd 3-Even / 2-Low 4-High',
+                ],
+                "Saturday, June 29th" => [
+                    'numbers' => [7, 12, 19, 26, 31, 38],
+                    'pattern' => '4-Odd 2-Even / 3-Low 3-High',
+                ],
+                "Friday, June 28th" => [
+                    'numbers' => [3, 8, 15, 22, 29, 36],
+                    'pattern' => '4-Odd 2-Even / 2-Low 4-High',
+                ],
+                "Thursday, June 27th" => [
+                    'numbers' => [1, 10, 17, 24, 33, 39],
+                    'pattern' => '5-Odd 1-Even / 3-Low 3-High',
+                ],
+                "Wednesday, June 26th" => [
+                    'numbers' => [6, 13, 20, 27, 34, 38],
+                    'pattern' => '2-Odd 4-Even / 2-Low 4-High',
+                ],
+            ],
+            'megabucks' => [
                 "Monday, July 1st" => [
                     'numbers' => [4, 11, 18, 25, 32, 37],
                     'pattern' => '3-Odd 3-Even / 3-Low 3-High',
