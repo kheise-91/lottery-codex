@@ -39,10 +39,16 @@ Branch: `branch-name`
 
 This is the pre-created issue branch for this issue. If no branch name is found for this issue, stop and report the problem - do not create a new branch.
 
-## Step 1.4 - Checkout and rebase
+## Step 1.4 - Check for mockup file
+Read the issue's comments and check for a mockup comment in the format:
+```
+Mockup: `[mockup-file-path/mockup-file-name.html]`
+```
+
+## Step 1.5 - Checkout and rebase
 Checkout the pre-created issue branch AND rebase on the sub-phase branch.
 
-## Step 1.5 - Return details
+## Step 1.6 - Return details
 Return the issue's full contents, the issue branch name, and the sub-phase branch name.
 
 Wait for the `git-manager` agent to complete before proceeding.
@@ -67,6 +73,7 @@ The plan MUST include the issue content and sub-phase branch name provided by th
 **Milestone:** [issue milestone]
 **Issue Branch:** [issue branch name]
 **Sub-phase Branch:** [sub-phase branch name]
+**Mockup:** [mockup-file-path/mockup-file-name.html]
 
 ---
 
