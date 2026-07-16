@@ -133,8 +133,8 @@ Branch: `YYYY-MM-DD-short-task-summary`
 ### Step 3.3.6 - Add mockup file comment to the issue (if one exists)
 If a mockup file was found in step 2, add a second comment to the issue:
 ```
-Mockup: `[mockup-file-path/mockup-file-name.html]`
-```
+Mockup: `mockup-file-path/mockup-file-name.html`
+``` 
 
 ### Step 3.3.7 - Confirm
 Confirm the issue number, title, and branch name before proceeding to the next task.

@@ -42,7 +42,7 @@ This is the pre-created issue branch for this issue. If no branch name is found 
 ## Step 1.4 - Check for mockup file
 Read the issue's comments and check for a mockup comment in the format:
 ```
-Mockup: `[mockup-file-path/mockup-file-name.html]`
+Mockup: `mockup-file-path/mockup-file-name.html`
 ```
 
 ## Step 1.5 - Checkout and rebase
