@@ -155,7 +155,7 @@ Build the React component hierarchy.
       - Footer contains link to the game page
    - Click navigates to `/games/{gameId}`
 
-   **Done when:** User can select a game from the dashboard and navigate to its page.
+   **Done when:** Card "buttons" render on the dashboard correctly and the user can select a game from the dashboard.
 
 - [ ] **2.4 — Create Ball component (`src/components/games/Ball.jsx`)**
    - Circular element (32px), centered text, bordered
