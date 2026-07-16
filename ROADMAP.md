@@ -143,7 +143,7 @@ Build the React component hierarchy.
    - Mobile-first, full-height flex column layout
 
    **Done when:** Layout renders consistently across mobile and desktop viewports.
-
+/
 - [ ] **2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)**
    - Giant card-like buttons for each available game (Badger Five, Super Cash)
    - Cards show: game name, number range, draw frequency
