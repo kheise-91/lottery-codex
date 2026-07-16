@@ -146,13 +146,14 @@ Build the React component hierarchy.
 
 - [ ] **2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)**
    - Giant card-like buttons for each available game (Badger 5, Superash!, Megabucks)
+   - There will be 3 cards per row
    - Cards get game details and displays the following information: game name image, description, status, draw frequency, odds of winning, and current jackpot
       - Card header has the game image (saved as `frontend/public/[game-id].svg`)
       - Number range and number of balls will be described in the description
       - The current jackpot value will just be a placeholder for this phase
       - Status appears as a badge in the top right corner
-      - Below the description is a 3 column row: draw frequency | odds of winning | current jackpot
-      - Footer contains link to the game page
+      - Below the description is a 3 column row, with icons for each item: draw frequency | odds of winning | current jackpot
+      - Footer contains link to the game page that reads "Play Now ->" if enabled or "Coming Soon" if disabled
    - Click navigates to `/games/{gameId}`
 
    **Done when:** Card "buttons" render on the dashboard correctly and the user can select a game from the dashboard.
