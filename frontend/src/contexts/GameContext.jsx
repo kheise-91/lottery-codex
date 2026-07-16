@@ -1,4 +1,5 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, useEffect } from 'react';
+import { fetchGames } from '../services/api';
 
 export const initialState = {
   games: [],
@@ -39,6 +40,18 @@ const GameContext = createContext(null);
 
 function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const games = await fetchGames();
+        dispatch({ type: 'SET_GAMES', payload: games });
+      } catch (err) {
+        console.error('Failed to fetch games:', err);
+      }
+    })();
+  }, []);
+
   return (
     <GameContext.Provider value={{ state, dispatch }}>
       {children}

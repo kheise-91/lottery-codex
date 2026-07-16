@@ -13,18 +13,29 @@ Replaces prop-drilling and per-hook state duplication by giving any descendant c
 
 ## Usage
 
-```jsx
-import { GameProvider } from './contexts/GameContext';
-import { useGame } from './contexts/GameContext';
+The `<GameProvider>` should wrap the entire application tree — placed **outside** any router so all routes share state:
 
-function App() {
-  return (
+```jsx
+import { StrictMode } from 'react';
+import { GameProvider } from './contexts/GameContext';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
     <GameProvider>
-      <GameSelector />
-      <GamePanel />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </GameProvider>
-  );
-}
+  </StrictMode>,
+);
+```
+
+The provider auto-fetches the games list from `/api/games` on mount. Components consume state via the `useGame()` hook:
+
+```jsx
+import { useGame } from './contexts/GameContext';
 
 function GamePanel() {
   const { state, dispatch } = useGame();
@@ -127,3 +138,4 @@ dispatch({
 - **Immutable updates via spread** -- Every action returns a new state object with shallow-spread copies of unchanged fields, ensuring React's referential equality checks work correctly.
 - **`undefined` clearing on game switch** -- `SELECT_GAME` sets the target game's history and ticket results entries to `undefined` rather than deleting the keys. This preserves object shape stability for consumers that may check `state.history[gameId] !== undefined`.
 - **No default export** -- All five exports are named to encourage explicit imports and make tree-shaking straightforward.
+- **Auto-fetch on mount** -- The `GameProvider` dispatches a `SET_GAMES` action immediately after the component mounts, fetching from `/api/games` via `fetchGames()`. Errors are logged to `console.error` rather than re-thrown, so the app remains usable even if the backend is temporarily unavailable.
