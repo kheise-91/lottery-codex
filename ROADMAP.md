@@ -145,8 +145,14 @@ Build the React component hierarchy.
    **Done when:** Layout renders consistently across mobile and desktop viewports.
 
 - [ ] **2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)**
-   - Giant card-like buttons for each available game (Badger Five, Super Cash)
-   - Cards show: game name, number range, draw frequency
+   - Giant card-like buttons for each available game (Badger 5, Superash!, Megabucks)
+   - Cards get game details and displays the following information: game name image, description, status, draw frequency, odds of winning, and current jackpot
+      - Card header has the game image (saved as `frontend/public/[game-id].svg`)
+      - Number range and number of balls will be described in the description
+      - The current jackpot value will just be a placeholder for this phase
+      - Status appears as a badge in the top right corner
+      - Below the description is a 3 column row: draw frequency | odds of winning | current jackpot
+      - Footer contains link to the game page
    - Click navigates to `/games/{gameId}`
 
    **Done when:** User can select a game from the dashboard and navigate to its page.
