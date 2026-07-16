@@ -57,17 +57,21 @@ When spawning agents, follow the rules below:
 
 These are hard requirement due to local GPU memory constraints and context window sizes.
 
+## Repository Platform
+
+This repository uses a self-hosted Gitea instance and the Gitea MCP server.
+
+- NEVER assume GitHub/Gitea APIs, CLI commands, or workflows exist.
+- ALL pull requests, issues, milestones, projects, etc. MUST be performed through the Gitea MCP server.
+- If the Gitea MCP server is unavailable, stop and report the issue rather than falling back to GitHub tooling.
+
 ## Development URLs
 
 This project is developed inside a code-server container and is NOT accessed through localhost.
 
 Use the following URLs:
-
-- Frontend development server:
-  https://dev-server.heise.home
-
-- Backend API:
-  https://dev-server.heise.home/api
+- Frontend development server: https://dev-server.heise.home
+- Backend API: https://dev-server.heise.home/api
 
 ## Development Commands
 
