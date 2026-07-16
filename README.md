@@ -35,7 +35,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
      :5959                    Docker container                live HTTP request
 ```
 
-- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: only the `App` placeholder component exists (counter demo). API integration layer exists at `frontend/src/services/api.js` providing fetch wrappers for all four backend endpoints. No routes or pages defined yet.
+- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Served as a PWA with manifest and service worker skeleton. Currently in scaffolding phase: `App` placeholder component (counter demo) and `Layout` shell component (branded gradient header with `<Outlet />` for nested routes). API integration layer exists at `frontend/src/services/api.js` providing fetch wrappers for all four backend endpoints. No routes or pages defined yet.
 - **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs to class names. Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
@@ -78,9 +78,12 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   └── vendor/                     # Composer-installed dependencies (git-ignored)
 ├── frontend/
 │   ├── src/
-│   │   ├── main.jsx                # React 18 createRoot entry point
+│   │   ├── main.jsx                # React 18 createRoot entry point (wraps App in GameProvider + BrowserRouter)
 │   │   ├── App.jsx                 # Placeholder counter demo component
 │   │   ├── index.css               # Tailwind v4 import: @import "tailwindcss"
+│   │   ├── components/
+│   │   │   └── layout/
+│   │   │       └── Layout.jsx      # Branded layout shell with gradient header and Outlet for nested routes
 │   │   ├── contexts/
 │   │   │   └── GameContext.jsx     # useReducer-based state: games, selectedGame, history, ticketResults
 │   │   ├── hooks/
@@ -100,8 +103,9 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 ## Documentation
 
 - [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented.
-- [Components](docs/components/README.md) -- Frontend UI component index. Currently includes the `App` placeholder demo.
+- [Components](docs/components/README.md) -- Frontend UI component index. Includes the `App` placeholder and `Layout` shell.
   - [App Component Detail](docs/components/App.md) -- Placeholder counter demo component
+  - [Layout Component Detail](docs/components/Layout.md) -- Branded layout shell with gradient header and nested route support via `<Outlet />`
 - [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
   - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results
 - [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.
