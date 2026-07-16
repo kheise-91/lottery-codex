@@ -57,6 +57,18 @@ When spawning agents, follow the rules below:
 
 These are hard requirement due to local GPU memory constraints and context window sizes.
 
+## Development URLs
+
+This project is developed inside a code-server container and is NOT accessed through localhost.
+
+Use the following URLs:
+
+- Frontend development server:
+  https://dev-server.heise.home
+
+- Backend API:
+  https://dev-server.heise.home/api
+
 ## Development Commands
 
 ### Docker (primary development workflow)
