@@ -8,7 +8,7 @@ function Layout() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header — gradient hero with branding */}
-      <header className="relative pb-3" style={{ background: '#fff', 'box-shadow': 'hsl(225 75% 25% / 25%) 0px 8px 24px -2px, hsl(225 75% 15% / 15%) 0px 4px 12px -2px'}}>
+      <header className="relative pb-3" style={{ background: '#fff', boxShadow: 'hsl(225 75% 25% / 25%) 0px 8px 24px -2px, hsl(225 75% 15% / 15%) 0px 4px 12px -2px'}}>
         {/* Background SVG: gradient + grid + curve + shadow */}  
         <svg viewBox="0 0 1440 220" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
           <defs>
