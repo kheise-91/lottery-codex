@@ -30,12 +30,7 @@ class GamesController
         foreach ($this->registry as $id => $class) {
             try {
                 $instance = new $class();
-                $details = $instance->getGameDetails();
-                $games[] = [
-                    'id'    => $details['id'],
-                    'name'  => $details['name'],
-                    'status' => $details['status'] ?? 'active',
-                ];
+                $games[] = $instance->getGameDetails();
             } catch (\Throwable $e) {
                 error_log("GamesController::list failed to instantiate {$class}: " . $e->getMessage());
                 // Include game with disabled status if instantiation fails
