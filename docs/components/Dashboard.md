@@ -2,11 +2,9 @@
 
 **File:** `frontend/src/pages/Dashboard.jsx`
 
-The game selection landing page. Fetches available lottery games via the `useGames` hook and displays them in a responsive card grid. Each card links to `/games/{gameId}`.
-
 ## Purpose
 
-Serves as the entry point for users to browse and select a lottery game. Replaces the previous placeholder text with a functional card grid that adapts from 1 to 3 columns based on viewport width.
+Game selection landing page. Fetches available lottery games via the `useGames` hook and displays them in a responsive 3-column card grid using the `GameCard` component. Each card links to `/games/{gameId}` for game detail navigation.
 
 ## Props
 
@@ -22,11 +20,17 @@ State is managed internally by the `useGames` hook:
 | `loading` | boolean  | `useGames()` return value         |
 | `error`   | string \| null | `useGames()` return value       |
 
+The component derives `games` from `data?.games ?? []`.
+
 ## Rendering Logic
+
+### Title and Description
+
+Renders a heading `"Choose a Game"` and an introductory paragraph explaining the page purpose.
 
 ### Loading State
 
-When `loading` is `true`, a single centered message spans the full grid column:
+When `loading` is `true`, a centered message spans the full grid column:
 
 ```
 Loading games...
@@ -38,22 +42,30 @@ When `error` is non-null, a red error message spans the full grid column showing
 
 ### Game Cards
 
-When not loading and no error exists, each game in `data.games` renders as a card:
+When not loading and no error exists, each game in `games` renders as a `<GameCard>` component wrapped in a `<div>`:
 
-- **Link wrapper** (`<a href="/games/{gameId}">`) -- navigates to the game detail page
-- **Card body** -- displays `game.name` as an `<h2>` and conditionally shows `game.description` as a smaller paragraph if present
-- Cards have hover shadow effects via Tailwind classes (`hover:shadow-lg transition-shadow`)
+- `gameId` mapped from `game.id`
+- `name` mapped from `game.name`
+- `description` falls back to empty string if missing
+- `imageSrc` constructed as `/{game.id}.svg` (expects SVG files in the public directory)
+- `status` passed through from `game.status`
+- `drawFrequency`, `oddsOfWinning`, `jackpot` use fallback values (`'N/A'`, `'—'`) when not yet provided by the backend API
+- `enabled` derived as `game.status === 'enabled'`
 
 ### Empty State
 
-If `data.games` is an empty array, the grid renders with no cards and no loading/error message. No explicit "no games" placeholder is shown.
+If `games` is an empty array, the grid renders with no cards and no loading/error message. No explicit "no games" placeholder is shown.
+
+## Layout Integration
+
+The Dashboard is rendered inside the `Layout` component's `<Outlet />`. The Layout's main content area uses `max-w-6xl` to accommodate the 3-column card grid at wide viewports.
 
 ## Side Effects
 
 - **Data fetch**: Calls `GET /api/games` via the `useGames` hook on mount
-- **Navigation**: Card links navigate to `/games/{gameId}` via client-side routing (when routing is wired)
 
 ## Dependencies
 
 - [useGames Hook](../../hooks/useGames.md) -- provides data, loading, and error states
-- Tailwind CSS v4 -- responsive grid (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`), card styling, hover effects
+- [GameCard Component](./GameCard.md) -- renders individual game selection cards
+- Tailwind CSS v4 -- responsive grid (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`), card spacing

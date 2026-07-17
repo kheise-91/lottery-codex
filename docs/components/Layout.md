@@ -53,7 +53,7 @@ The component renders three visual regions:
 
 - Flex-1 to fill remaining viewport height
 - Responsive padding: `pt-8 pb-8 px-4` (larger top padding accounts for header)
-- Centered container with `max-w-4xl mx-auto`
+- Centered container with `max-w-6xl mx-auto`
 
 ### Page background
 
@@ -72,7 +72,7 @@ All styling is via Tailwind utility classes with two inline style overrides for 
 | Logo icon container | `bg-white/20 backdrop-blur-sm rounded-lg p-2.5 shadow-inner` |
 | Title font size | inline: `fontSize: '1.75rem', lineHeight: '1.2'` |
 | Main content area | `flex-1 pt-8 pb-8 px-4` |
-| Content container | `max-w-4xl mx-auto` |
+| Content container | `max-w-6xl mx-auto` |
 
 ## Responsive Behavior
 
