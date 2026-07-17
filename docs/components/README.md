@@ -1,6 +1,6 @@
 # Components Index
 
-The frontend is in a scaffolding phase. The `App` placeholder demo, the foundational `Layout` shell component, and the `GameContext` provider exist on disk. No page components or reusable UI elements have been implemented yet.
+The frontend is in a scaffolding phase. The `App` placeholder demo, the foundational `Layout` shell component, and the `GameContext` provider exist on disk. The first page component (Dashboard) has been implemented.
 
 ## Component List
 
@@ -8,6 +8,7 @@ The frontend is in a scaffolding phase. The `App` placeholder demo, the foundati
 |-----------|------|--------|-------------|
 | [App](./App.md) | `frontend/src/App.jsx` | Placeholder | Counter demo proving the frontend stack works |
 | [Layout](./Layout.md) | `frontend/src/components/layout/Layout.jsx` | Implemented | Branded layout shell with gradient header and `<Outlet />` for nested routes (not yet wired into routing) |
+| [Dashboard](./Dashboard.md) | `frontend/src/pages/Dashboard.jsx` | Implemented | Game selection landing page with responsive card grid |
 
 ## Contexts
 
@@ -19,7 +20,7 @@ Contexts live in a separate documentation directory:
 
 The following are documented in the migration roadmap but do not exist on disk:
 
-- **Pages** -- Dashboard, Game Page, History browser
+- **Pages** -- Game Page, History browser
 - **Reusable UI components** -- Buttons, cards, tables, tabs
 
 Layout exists and is ready to wrap these pages once routing is configured.
