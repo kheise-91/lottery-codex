@@ -144,7 +144,7 @@ Build the React component hierarchy.
 
    **Done when:** Layout renders consistently across mobile and desktop viewports.
 
-- [ ] **2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)**
+- [-] **[2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/33)**
    - Giant card-like buttons for each available game (Badger 5, Superash!, Megabucks)
    - There will be 3 cards per row
    - Cards get game details and displays the following information: game name image, description, status, draw frequency, odds of winning, and current jackpot
