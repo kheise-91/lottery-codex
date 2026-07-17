@@ -109,4 +109,4 @@ const router = createBrowserRouter([
 
 ## Status
 
-Implemented but not yet wired into the application's route configuration. Currently exists on disk at `frontend/src/components/layout/Layout.jsx` awaiting integration with a route definition in `main.jsx`.
+Implemented and actively used as the layout element for all routes in `App.jsx`.

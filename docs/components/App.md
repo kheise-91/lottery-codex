@@ -4,56 +4,63 @@
 
 ## Purpose
 
-Placeholder/stub demo component. Displays a counter button to verify the frontend stack (React 18 + Vite + Tailwind CSS v4) is wired up correctly. Not an application page -- no routing paths defined yet, state management beyond local counter, or API integration exists.
+Root routed component for the Lottery Codex application. Wraps all routes in the shared `Layout` shell and defines two route paths: the Dashboard game selection page (`/`) and a stub GamePage (`/games/:gameId`).
 
 ## Props
 
-None. The component accepts no props and has no configurable behavior.
+None. The component accepts no props.
 
 ## State
 
-| State | Type | Initial Value | Description |
-|-------|------|---------------|-------------|
-| `count` | number | `0` | Incremented each time the button is clicked. Demonstrates React `useState`. |
-
-```jsx
-const [count, setCount] = useState(0)
-```
+No internal state. All application state is managed by the `GameContext` provider (wrapping this component in `main.jsx`).
 
 ## Side Effects
 
-None. No `useEffect`, no data fetching, no subscriptions.
+None. No `useEffect`, no data fetching, no subscriptions. Data fetching is delegated to child components via hooks (`useGames` on Dashboard).
 
-## Styling
+## Routing
 
-Inline styles only -- Tailwind CSS v4 is imported in `index.css` but not used by this component:
-
-- Layout: centered flexbox (`minHeight: 100vh`, `display: flex`, `alignItems: center`, `justifyContent: center`)
-- Font family: `system-ui, sans-serif`
-- Button: blue background (`#3b82f6`), white text, rounded corners (`borderRadius: 0.5rem`)
-
-## Text Content
-
+```jsx
+<Routes>
+  <Route element={<Layout />}>
+    <Route path="/" element={<Dashboard />} />
+    <Route path="/games/:gameId" element={<GamePage />} />
+  </Route>
+</Routes>
 ```
-Lottery Codex          (h1)
-Frontend is ready. Backend coming soon.  (p)
-Count: {count}         (button label)
-```
+
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/` | `Dashboard` | Game selection landing page with responsive card grid |
+| `/games/:gameId` | `GamePage` | Stub placeholder -- shows "coming soon" message |
 
 ## Children
 
-None. The component renders a self-contained div tree with no `children` prop.
+None. The component manages its own route tree and does not accept children.
+
+## Dependencies
+
+| Dependency | Purpose |
+|------------|---------|
+| `react-router-dom` (`BrowserRouter`, `Routes`, `Route`) | Client-side routing |
+| `Layout` | App shell wrapping all routes |
+| `Dashboard` | Home page component |
+| `GamePage` | Game detail stub |
 
 ## Usage
 
-App is rendered in the entry point (`frontend/src/main.jsx`) wrapped in both React StrictMode and `BrowserRouter`:
+App is rendered in the entry point (`frontend/src/main.jsx`) wrapped in React StrictMode, `GameProvider`, and `BrowserRouter`:
 
 ```jsx
 <StrictMode>
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <GameProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </GameProvider>
 </StrictMode>
 ```
 
-No route definitions exist yet -- App renders at every URL path.
+## Status
+
+Implemented. All routes are wired and functional. GamePage is a stub pending Phase 2.8.
