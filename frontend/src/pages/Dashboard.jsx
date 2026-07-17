@@ -1,4 +1,5 @@
 import { useGames } from '../hooks/useGames';
+import GameCard from '../components/games/GameCard';
 
 /**
  * Dashboard page — game selection landing.
@@ -9,24 +10,36 @@ function Dashboard() {
   const games = data?.games ?? [];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {loading && (
-        <p className="col-span-full text-center text-gray-500 py-8">Loading games...</p>
-      )}
-      {error && (
-        <p className="col-span-full text-center text-red-500 py-8">{error}</p>
-      )}
-      {!loading && !error && games.map((game) => (
-        <a key={game.id} href={`/games/${game.id}`}>
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <h2 className="text-xl font-semibold text-gray-900">{game.name}</h2>
-            {game.description && (
-              <p className="mt-1 text-sm text-gray-500">{game.description}</p>
-            )}
+    <>
+      <h2 className="text-xl font-semibold text-gray-800 mb-1">Choose a Game</h2>
+      <p className="text-sm text-gray-500 mb-8">
+        Select a lottery game below to view analysis, history, and generate optimized panels.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {loading && (
+          <p className="col-span-full text-center text-gray-500 py-8">Loading games...</p>
+        )}
+        {error && (
+          <p className="col-span-full text-center text-red-500 py-8">{error}</p>
+        )}
+        {!loading && !error && games.map((game) => (
+          <div key={game.id}>
+            <GameCard
+              gameId={game.id}
+              name={game.name}
+              description={game.description ?? ''}
+              imageSrc={`/${game.id}.svg`}
+              status={game.status}
+              drawFrequency={game.drawFrequency ?? 'N/A'}
+              oddsOfWinning={game.oddsOfWinning ?? 'N/A'}
+              jackpot={game.jackpot ?? '—'}
+              enabled={game.status === 'enabled'}
+            />
           </div>
-        </a>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
 
