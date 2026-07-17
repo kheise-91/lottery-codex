@@ -55,7 +55,7 @@ function Layout() {
 
       {/* Main content area — renders nested route children via Outlet */}
       <main className="flex-1 pt-8 pb-8 px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Outlet />
         </div>
       </main>
