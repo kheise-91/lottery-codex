@@ -17,10 +17,10 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 | **Backend API** | `api.php` missing; Nginx routes to nothing | Slim Framework router with 4 REST endpoints |
 | **BadgerFive game class** | Fully functional (scraping + panel generation) but pre-PHP-7 style, no namespace/types | Namespaced, typed, Composer-loaded |
 | **SuperCash game class** | Fatal error (missing `SuperCashPD.php`), core methods commented out | Fixed constructor, no external dependencies, analysis-only for now |
-| **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard → GamePage split-view (desktop) / tabbed (mobile) → PatternDistribution + History browser |
-| **Routing** | No router installed | React Router DOM v6, 3 routes |
+| **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard game selection with GameCard components; GamePage stub; Layout shell with branded header |
+| **Routing** | No router installed | React Router DOM v6, 2 active routes (`/`, `/games/:gameId`) |
 | **Pattern health** | No frequency analysis; all patterns treated equally | Per-pattern playability indicators based on historical frequency |
-| **State management** | Single `useState(0)` placeholder | Context API + useReducer for game data/history/tickets |
+| **State management** | Single `useState(0)` placeholder | Context API + useReducer via GameProvider for games/selectedGame/history/ticketResults; auto-fetches games on mount |
 | **Docker volume mount** | Hardcoded host path (`/home/admin/Projects/...`) that doesn't match this machine | Relative bind mount or correct absolute path |
 | **Production errors** | `display_errors = On` leaks stack traces | Errors logged only, hidden from users |
 
@@ -144,7 +144,7 @@ Build the React component hierarchy.
 
    **Done when:** Layout renders consistently across mobile and desktop viewports.
 
-- [-] **[2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/33)**
+- [x] **[2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/33)**
    - Giant card-like buttons for each available game (Badger 5, Superash!, Megabucks)
    - There will be 3 cards per row
    - Cards get game details and displays the following information: game name image, description, status, draw frequency, odds of winning, and current jackpot
@@ -200,11 +200,11 @@ Build the React component hierarchy.
 
    **Done when:** Pattern distribution renders accurate statistics from history data with correct color tiers.
 
-- [ ] **2.10 — Wire up React Router in App.jsx**
-    - Routes: `/` → Dashboard, `/games/:gameId` → GamePage, `/history/:gameId` → HistoryPage (stub)
-    - Replace placeholder counter with router outlet inside Layout
+- [x] **2.10 — Wire up React Router in App.jsx**
+    - Routes: `/` → Dashboard, `/games/:gameId` → GamePage (stub)
+    - Layout wraps all routes with `<Outlet />`
 
-   **Done when:** All three routes render without errors; navigation works.
+   **Done when:** All routes render without errors; navigation works.
 
 - [ ] **2.11 — Add loading and error states**
     - Skeleton loaders for history fetching and panel generation
@@ -523,6 +523,7 @@ backend/controllers/GamesController.php  # Route handlers for all game endpoints
 backend/vendor/                    # Composer vendor directory (gitignored)
 backend/api.php                    # Slim Framework router entry point
 backend/games/GameInterface.php    # Interface for all game classes; add getPatternHealth() method
+backend/games/Megabucks.php        # Megabucks game implementation (1-48, draw 6)
 ```
 
 ### Backend — Modified Files
@@ -540,17 +541,16 @@ docker/nginx.conf                  # Add fastcgi_split_path_info directive
 frontend/.env                      # VITE_API_BASE_URL configuration
 frontend/src/contexts/GameContext.jsx    # State management with useReducer
 frontend/src/services/api.js               # Fetch wrapper for all API endpoints
-frontend/src/hooks/useGameHistory.js       # History data hook
-frontend/src/hooks/useGenerateTickets.js   # Ticket generation hook (each ticket = group of panels)
+frontend/src/hooks/useGames.js             # Game list fetch hook with loading/error/data states
 frontend/src/components/layout/Layout.jsx  # App shell (header + main)
-frontend/src/components/common/Tabs.jsx    # Tab navigation component
-frontend/src/components/games/Ball.jsx     # Number ball display
-frontend/src/components/games/DrawingCard.jsx   # Historical drawing card
-frontend/src/components/games/PanelDisplay.jsx  # Generated panel groups
-frontend/src/components/games/PatternDistribution.jsx   # Pattern frequency bar chart
-frontend/src/pages/Dashboard.jsx           # Game selection landing page
-frontend/src/pages/GamePage.jsx            # Main game view with tabs
-frontend/src/pages/HistoryPage.jsx         # Full history browser (stub)
+frontend/src/components/common/Tabs.jsx          # Tab navigation component (mobile)
+frontend/src/components/games/Ball.jsx           # Number ball display
+frontend/src/components/games/DrawingCard.jsx    # Historical drawing card
+frontend/src/components/games/PanelDisplay.jsx   # Generated panel groups
+frontend/src/components/games/PatternDistribution.jsx  # Pattern frequency bar chart
+frontend/src/components/games/GameCard.jsx       # Reusable game selection card
+frontend/src/pages/Dashboard.jsx                 # Game selection landing page with responsive card grid
+frontend/src/pages/GamePage.jsx                  # Stub placeholder for game detail view
 ```
 
 ### Frontend — Modified Files
