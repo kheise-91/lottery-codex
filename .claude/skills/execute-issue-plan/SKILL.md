@@ -25,11 +25,6 @@ Each sub-phase is broken down into multiple tasks, with an issue created for eac
 
 # Step 1 - Spawn the engineer agents
 
-Before spawning any agents:
-- Check if a mockup file was included in the issue details
-- If a mockup file was referenced in the issue plan, check @frontend/mockups/ for the matching file
-- If a mockup exists, it will serve as a visual reference when implementing frontend/UI tasks and must be passed to the `frontend-engineer` agent
-
 Based on what the issue plan requires, spawn the appropriate agents listed below sequentially:
 - `devops-engineer` agent: Handles all work for the `docker-compose.yml` file and files inside the `docker/` directory.
 - `backend-engineer` agent: Handles all work inside the `backend/` directory.
@@ -38,7 +33,6 @@ Based on what the issue plan requires, spawn the appropriate agents listed below
 Context/instructions to pass to the engineer agents:
 - The full issue plan text - read `.claude/plans/issue-$issueNumber.md` and include its entire contents verbatim in the agent prompt (do NOT summarize or truncate)
 - The Scope Boundary (verbatim)
-- The mockup file if one exists (`frontend-engineer` only)
 - The requirement to signal completion only when all the work relevant to the agent's section has been completed and the acceptance criteria has been met
 
 Agents MUST be spawned sequentially - NEVER in parallel. Spawn only the agents the issue actually requires. A frontend-only issue skips the backend-engineer, backend-only issue skips frontend-engineer, etc.

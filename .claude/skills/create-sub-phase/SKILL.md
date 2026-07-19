@@ -31,13 +31,7 @@ If the sub-phase cannot be found, stop.
 
 # Step 2 - Plan the tasks
 
-Break the sub-phase into independently deliverable implementation tasks. Each task must be completable in a single focused session - roughly half a day to two days of work. 
-
-Derive the mockup pattern from the $subPhase number: replace `.` with `-`, prepend `phase-`, append `-*.html`. Check `frontend/mockups/` for a matching file. If a mockup file is found:
-- Treat it as the visual reference for frontend work 
-- Find which parts of the mockup file are related to the sub-phase, and use them for visual and structural reference only - do not blindly copy its class names, inline styles, or CSS from the mockup into the tasks created
-- For styling: the project's existing stylesheets and components take precedence, followed by Tailwind CSS, and finally the mockup file
-- For structure: the sub-phase description in the project roadmap takes precedence over the mockup if they conflict
+Break the sub-phase into independently deliverable implementation tasks. Each task must be completable in a single focused session - roughly half a day to two days of work.
 
 For each task, determine:
 - **title:** Short imperative phrase
@@ -130,8 +124,10 @@ Add a comment to the issue immediately after creation:
 Branch: `YYYY-MM-DD-short-task-summary`
 ```
 
-### Step 3.3.6 - Add mockup file comment to the issue (if one exists)
-If a mockup file was found in step 2, add a second comment to the issue:
+### Step 3.3.6 - Add mockup file comment to the issue (if applicable)
+Scan @frontend/mockups/ to check if there's a mockup for this sub-phase. The file naming convention is: `phase-X-Y-variant.html`.
+
+If a matching mockup file exists, add a second comment to the issue:
 ```
 Mockup: `mockup-file-path/mockup-file-name.html`
 ``` 
