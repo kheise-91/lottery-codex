@@ -39,11 +39,24 @@ Branch: `branch-name`
 
 This is the pre-created issue branch for this issue. If no branch name is found for this issue, stop and report the problem - do not create a new branch.
 
-## Step 1.4 - Check for mockup file
+## Step 1.4 - Analyze mockup file
 Read the issue's comments and check for a mockup comment in the format:
 ```
-Mockup: `mockup-file-path/mockup-file-name.html`
+Mockup: `frontend/mockups/phase-X-Y-variant.html`
 ```
+
+If a mockup path is found, **read the file** at that path and analyze it:
+- Treat it as the visual reference for frontend work 
+- Find which parts of the mockup file are related to the sub-phase, and use them for visual and structural reference only - do not blindly copy its class names, inline styles, or CSS from the mockup into the plan created
+- Identify which components/sections are relevant to this specific issue (match against acceptance criteria)
+- Note structural patterns: layout approach, interaction types (hover/click/toggle/slide), data displayed
+- Note any styling cues that differ from project conventions
+
+Apply these precedence rules in the analysis notes:
+- Components and project's `frontend/src/index.css` takes precedence for colors, variables, utilities
+- Tailwind CSS utilities take second precedence
+- Mockup is reference only for layout, hierarchy, and interaction intent
+- For structure: the sub-phase description in the project roadmap takes precedence over the mockup if they conflict
 
 ## Step 1.5 - Checkout and rebase
 Checkout the pre-created issue branch AND rebase on the sub-phase branch.
@@ -82,6 +95,9 @@ The plan MUST include the issue content and sub-phase branch name provided by th
 
 ## Instructions
 [list of files to be added/modified/removed along with detailed instructions for each file]
+
+## Mockup Analysis
+[component/section relevance, structural patterns, interaction notes, precedence guidance — only if a mockup was found]
 
 ## Verification
 [the acceptance criteria from the issue and any other verification tasks that should take place]
