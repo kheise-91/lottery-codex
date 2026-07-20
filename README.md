@@ -1,6 +1,6 @@
 # Lottery Codex
 
-Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/even and low/high distribution patterns (Lottery Codex methodology), and generates optimized number panels for Badger Five, Super Cash, and Megabucks games.
+Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/even and low/high distribution patterns (Lottery Codex methodology), and generates optimized number panels for Badger 5, SuperCash!, and Megabucks games.
 
 ## Development Process
 
@@ -25,8 +25,8 @@ For additional details on the development lifecycle and workflow used for this p
 
 | Game | Numbers | Range | Draw Days | Status |
 |------|---------|-------|-----------|--------|
-| **Badger Five** (`badger-five`) | 5 | 1-31 | Daily | Fully functional |
-| **Super Cash** (`supercash`) | 6 | 1-39 | Daily | Fully functional |
+| **Badger 5** (`badger-five`) | 5 | 1-31 | Daily | Fully functional |
+| **SuperCash!** (`supercash`) | 6 | 1-39 | Daily | Fully functional |
 | **Megabucks** (`megabucks`) | 6 | 1-49 | Wed/Sat | Fully functional |
 
 ## Architecture
@@ -109,7 +109,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 
 ## Documentation
 
-- [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented for three games (Badger Five, Super Cash, Megabucks).
+- [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented for three games (Badger 5, SuperCash!, Megabucks).
 - [Components](docs/components/README.md) -- Frontend UI component index. Includes the routed `App`, `Layout` shell, `Dashboard` page, and `GameCard` component. See [Styling](#styling) for theme color details.
   - [App Component Detail](docs/components/App.md) -- Root routed component with Layout shell, Dashboard, and GamePage routes
   - [Layout Component Detail](docs/components/Layout.md) -- Branded layout shell with emerald SVG gradient header and nested route support via `<Outlet />`
@@ -129,7 +129,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 
 The core algorithm classifies numbers into four pools and generates panels matching target odd/even and low/high distributions:
 
-| Pool | Badger Five (1-31) | Super Cash (1-39) | Megabucks (1-49) |
+| Pool | Badger 5 (1-31) | SuperCash! (1-39) | Megabucks (1-49) |
 |------|---------------------|--------------------|-------------------|
 | **Low-Odd** | 1, 3, 5, 7, 9, 11, 13, 15 | 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 | 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25 |
 | **Low-Even** | 2, 4, 6, 8, 10, 12, 14, 16 | 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 | 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 |
@@ -145,8 +145,8 @@ The frontend uses Tailwind CSS v4 with a `@theme` directive in `frontend/src/ind
 | Variable | Value | Purpose |
 |----------|-------|---------|
 | `--color-primary` | `#059669` (emerald green) | Primary brand color |
-| `--color-badger-five` | `#ed1c24` | Badger Five accent |
-| `--color-badger-five-light` | `#fecdd3` | Badger Five light background |
+| `--color-badger-five` | `#ed1c24` | Badger 5 accent |
+| `--color-badger-five-light` | `#fecdd3` | Badger 5 light background |
 | `--color-supercash` | `#0081c6` | SuperCash accent |
 | `--color-supercash-light` | `#bae6fd` | SuperCash light background |
 | `--color-megabucks` | `#ff7200` | Megabucks accent |
