@@ -163,36 +163,44 @@ Build the React component hierarchy.
    - 3d appearance
    - Accepts `number` prop
    - Support variant colors based on the game's main color in `frontend/src/index.css` AND the sub-pattern it belongs to
+   - Will be used in the future `DrawingCard.jsx` and `TicketDisplay.jsx` components
+      - There will be 5 or 6 balls in a panel, depending on the game
+      - `DrawingCard.jsx` will have one panel (historical winning draws)
+      - `TicketDisplay.jsx` will have multiple tickets, with multiple panels, depending on the game's pattern property (each sub-pattern is a panel)
 
    **Done when:** Ball renders numbers with a 3d appearance and color matching the game and sub-pattern
 
 - [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**
+   - This is the historical winning data
+   - Each card represents a winning ticket (one panel - number of balls is dependent on the game)
    - Shows: date (formatted "Monday, January 1st"), full pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High"), row of number balls
+   - Balls in this component will have no color-coding applied (just white, 3d shaped balls)
 
-   **Done when:** Historical drawings render as cards matching the OLD/ visual style.
+   **Done when:** Historical drawings render as cards with the date of the drawing, the pattern of the draw, and the exact numbers drawn.
 
-- [ ] **2.6 — Create PanelDisplay component (`src/components/games/PanelDisplay.jsx`)**
-   - Groups panels in sets per ticket (5 for BadgerFive, 6 for SuperCash) — one panel per sub-pattern
-   - Color-coded backgrounds by sub-pattern
-   - Shows sub-pattern labels above each panel
+- [ ] **2.6 — Create TicketDisplay component (`src/components/games/TicketDisplay.jsx`)**
+   - Each ticket has a card-like appearance
+   - Each ticket groups panels in sets - one panel per sub-pattern found in the game's pattern property
+   - Ball components will be color-coded based on the game and the sub-pattern the panel matches
+   - Shows sub-pattern labels above each panel OR a "legend" stating which sub-pattern the color belongs to
 
-   **Done when:** Generated panels render with correct grouping and color coding.
+   **Done when:** Generated tickets render with correct panels, sub-patterns, balls and color coding.
 
 - [ ] **2.7 — Create Tabs component (`src/components/common/Tabs.jsx`, mobile only)**
-   - Two-tab switcher: "Previous Drawings" / "Generated Panels"
+   - Two-tab switcher: "Previous Drawings" / "Generated Tickets"
    - Hidden on desktop (≥768px) where split-view is used instead
    - Use `@headlessui/react` Tab component (already installed)
 
    **Done when:** Tabs switch content without page reload; hidden on desktop breakpoint.
 
 - [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with split-view layout**
-   - Desktop (≥768px): Split-view grid — history + pattern distribution on left (5/12), generation form + panels on right (7/12)
-   - Mobile (<768px): Tabbed interface via Tabs component — "Previous Drawings" and "Generated Panels"
+   - Desktop (≥768px): Split-view grid — history + pattern distribution on left (5/12), generation form + tickets on right (7/12)
+   - Mobile (<768px): Tabbed interface via Tabs component — "Previous Drawings" and "Generated Tickets"
    - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
-   - Desktop: auto-generate panels when ticket count changes; Mobile: explicit "Generate" button
+   - Desktop: auto-generate tickets when ticket count changes; Mobile: explicit "Generate" button
    - Uses `useGameHistory` and `useGenerateTickets` hooks
 
-   **Done when:** User can view drawings, generate panels, and see results — split-view on desktop, tabs on mobile.
+   **Done when:** User can view drawings, generate tickets, and see results — split-view on desktop, tabs on mobile.
 
 - [ ] **2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)**
    - Calculates and displays pattern frequencies from historical drawings
@@ -265,17 +273,17 @@ Replace mock data with actual BadgerFive game class instances. This is where the
 
 - [ ] **4.1 — Wire BadgerFive into API endpoints**
    - Replace mock history in `GET /api/games/badger-five/history` with `$game->getHistory()`
-   - Replace mock panels in `POST /api/games/badger-five/generate` with `$game->generateTickets($tickets)`
+   - Replace mock tickets in `POST /api/games/badger-five/generate` with `$game->generateTickets($tickets)`
    - Add try-catch wrappers around game class calls
 
    **Done when:** API returns real data from BadgerFive for both history and generation.
 
 - [ ] **4.2 — Verify frontend displays real data correctly**
    - Confirm historical drawings match what the Wisconsin Lottery website shows
-   - Verify generated panels follow pattern distributions (odd/even, low/high)
+   - Verify generated tickets follow pattern distributions (odd/even, low/high)
    - Test edge cases: single ticket, max tickets, all patterns
 
-   **Done when:** End-to-end flow works: Dashboard → Game Page → Generate → Real panels displayed.
+   **Done when:** End-to-end flow works: Dashboard → Game Page → Generate → Real tickets displayed.
 
 - [ ] **4.3 — Handle API errors gracefully in frontend**
    - Network timeout handling (scraping can be slow)
@@ -327,10 +335,10 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
    - Add route handlers for `/api/games/super-cash/*` endpoints
    - Handle 6-number panel display (vs Badger Five's 5)
 
-   **Done when:** User can select Super Cash from dashboard and generate panels.
+   **Done when:** User can select Super Cash from dashboard and generate tickets.
 
 - [ ] **6.3 — Adapt frontend components for variable panel sizes**
-   - Ball/PanelDisplay components must handle both 5 and 6 numbers per panel
+   - Ball/DrawingCard/TicketDisplay components must handle both 5 and 6 numbers per panel
    - Pattern labels adjust to game-specific distributions
 
    **Done when:** Both games render correctly without code duplication.
@@ -346,9 +354,9 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
 - [ ] **6.5 — Wire MegaBucks into API and frontend**
    - Register MegaBucks in the controller's `$registry`: `'megabucks' => \LotteryCodex\Games\MegaBucks::class`
    - Dashboard card auto-appears via `GET /api/games` (no new endpoint needed)
-   - Frontend navigates to `/games/megabucks`; Ball/PanelDisplay handle 6-number panels
+   - Frontend navigates to `/games/megabucks`; Ball/DrawingCard/TicketDisplay handle 6-number panels
 
-   **Done when:** User can select MegaBucks from dashboard, view history, and generate panels alongside Super Cash.
+   **Done when:** User can select MegaBucks from dashboard, view history, and generate tickets alongside Super Cash.
 
 ---
 
@@ -405,7 +413,7 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
 ```
 ┌────────────────────────────────────┬───────────────────────────────────┐
 │                                    │                                   │
-│   Previous Drawings                │     Generated Panels              │
+│   Previous Drawings                │     Generated Tickets             │
 │   ─────────────────                │     ─────────────────             │
 │                                    │                                   │
 │  Pattern Distribution              │     Tickets: [3 ▼]                │
@@ -431,7 +439,7 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
 
 Left Panel (5/12 width)              Right Panel (7/12 width)
 - Sticky pattern stats               - Generation form at top
-- Scrollable drawings below          - Generated panels in grid below
+- Scrollable drawings below          - Generated tickets in grid below
 ``` 
 
 ### Mobile Layout (<768px) - Tabbed Interface
@@ -462,17 +470,17 @@ Tab 1 Active (Previous Drawings)
 - Scrollable drawing cards below
 ```
 
-### Mobile Layout (<768px) - Generated Panels Tab
+### Mobile Layout (<768px) - Generated Tickets Tab
 ```
 ┌─────────────────────────────────┐
-│   Previous │ Generate Panels    │ ← Tabs (toggle)
+│   Previous │ Generate Tickets   │ ← Tabs (toggle)
 ├─────────────────────────────────┤
 │                                 │
-│  Generate Optimized Panels      │
+│  Generate Optimized Tickets     │
 │                                 │
-│  Pattern Health               │
-│  ● It's okay to play.         │
-│  ○ On schedule                │
+│  Pattern Health                 │
+│  ● It's okay to play.           │
+│  ○ On schedule                  │
 │                                 │
 │  Tickets: [3 ▼]                 │
 │  [Generate Button]              │
@@ -488,9 +496,9 @@ Tab 1 Active (Previous Drawings)
 │                                 │
 └─────────────────────────────────┘
 
-Tab 2 Active (Generated Panels)
+Tab 2 Active (Generated Tickets)
 - Simple generation form (ticket count only)
-- Generated panels display below
+- Generated tickets display below
 ```
 
 ---
@@ -505,10 +513,10 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 | 2 | All 4 API endpoints return valid JSON | 1 |
 | 3 | Dashboard displays game cards and navigates to game pages | 2 |
 | 4 | Game page shows historical drawings with full pattern text and balls matching legacy UI | 2 + 3 |
-| 5 | Panel generation form works (ticket count dropdown, auto-generate on desktop) | 2 |
+| 5 | Ticket generation form works (ticket count dropdown, auto-generate on desktop) | 2 |
 | 6 | Pattern health cards display correct colors and messages based on pattern frequency analysis | 3 |
-| 7 | Generated panels display real data from BadgerFive class | 4 |
-| 8 | Tab switching between "Previous Drawings" and "Generated Panels" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
+| 7 | Generated tickets display real data from BadgerFive class | 4 |
+| 8 | Tab switching between "Previous Drawings" and "Generated Tickets" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
 | 9 | Responsive split-view layout works on mobile (<768px tabs) and desktop (≥768px split-view) | 3 |
 | 10 | Pattern distribution shows accurate pattern statistics with color-coded bars from history data | 2 + 3 |
 | 11 | No PHP errors visible to end users; errors logged only | 0 |
@@ -540,19 +548,19 @@ docker/nginx.conf                  # Add fastcgi_split_path_info directive
 
 ### Frontend — New Files
 ```
-frontend/.env                      # VITE_API_BASE_URL configuration
-frontend/src/contexts/GameContext.jsx    # State management with useReducer
-frontend/src/services/api.js               # Fetch wrapper for all API endpoints
-frontend/src/hooks/useGames.js             # Game list fetch hook with loading/error/data states
-frontend/src/components/layout/Layout.jsx  # App shell (header + main)
-frontend/src/components/common/Tabs.jsx          # Tab navigation component (mobile)
-frontend/src/components/games/Ball.jsx           # Number ball display
-frontend/src/components/games/DrawingCard.jsx    # Historical drawing card
-frontend/src/components/games/PanelDisplay.jsx   # Generated panel groups
-frontend/src/components/games/PatternDistribution.jsx  # Pattern frequency bar chart
-frontend/src/components/games/GameCard.jsx       # Reusable game selection card
-frontend/src/pages/Dashboard.jsx                 # Game selection landing page with responsive card grid
-frontend/src/pages/GamePage.jsx                  # Stub placeholder for game detail view
+frontend/.env                                            # VITE_API_BASE_URL configuration
+frontend/src/contexts/GameContext.jsx                    # State management with useReducer
+frontend/src/services/api.js                             # Fetch wrapper for all API endpoints
+frontend/src/hooks/useGames.js                           # Game list fetch hook with loading/error/data states
+frontend/src/components/layout/Layout.jsx                # App shell (header + main)
+frontend/src/components/common/Tabs.jsx                  # Tab navigation component (mobile)
+frontend/src/components/games/Ball.jsx                   # Number ball display
+frontend/src/components/games/DrawingCard.jsx            # Historical drawing card
+frontend/src/components/games/TicketDisplay.jsx          # Generated ticket cards
+frontend/src/components/games/PatternDistribution.jsx    # Pattern frequency bar chart
+frontend/src/components/games/GameCard.jsx               # Reusable game selection card
+frontend/src/pages/Dashboard.jsx                         # Game selection landing page with responsive card grid
+frontend/src/pages/GamePage.jsx                          # Stub placeholder for game detail view
 ```
 
 ### Frontend — Modified Files
