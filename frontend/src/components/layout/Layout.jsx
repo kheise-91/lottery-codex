@@ -8,14 +8,14 @@ function Layout() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header — gradient hero with branding */}
-      <header className="relative pb-3" style={{ background: '#fff', boxShadow: 'hsl(225 75% 25% / 25%) 0px 8px 24px -2px, hsl(225 75% 15% / 15%) 0px 4px 12px -2px'}}>
+      <header className="relative pb-3" style={{ background: '#fff', boxShadow: 'hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px'}}>
         {/* Background SVG: gradient + grid + curve + shadow */}  
         <svg viewBox="0 0 1440 220" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
           <defs>
             <linearGradient id="header-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#1e40af" />
-              <stop offset="50%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#60a5fa" />
+              <stop offset="0%" stopColor="#065f46" />
+              <stop offset="50%" stopColor="#059669" />
+              <stop offset="100%" stopColor="#34d399" />
             </linearGradient>
             <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
               <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
@@ -32,7 +32,7 @@ function Layout() {
         </svg>
 
         {/* Header content */}
-        <div className="relative max-w-4xl mx-auto px-4 py-6 sm:py-8">
+        <div className="relative max-w-6xl mx-auto px-4 py-6 sm:py-8">
           <div className="flex items-center gap-3">
             {/* Logo icon */}
             <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2.5 shadow-inner">
@@ -45,7 +45,7 @@ function Layout() {
               <h1 className="text-white font-semibold tracking-tight" style={{ fontSize: '1.75rem', lineHeight: '1.2' }}>
                 Lottery Codex
               </h1>
-              <p className="text-blue-100 text-sm mt-0.5">
+              <p className="text-emerald-100 text-sm mt-0.5">
                 Pattern Analysis &amp; Ticket Generation
               </p>
             </div>

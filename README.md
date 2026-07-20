@@ -1,6 +1,6 @@
 # Lottery Codex
 
-Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/even and low/high distribution patterns (Lottery Codex methodology), and generates optimized number panels for Badger Five, Super Cash, and Megabucks games.
+Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/even and low/high distribution patterns (Lottery Codex methodology), and generates optimized number panels for Badger 5, SuperCash!, and Megabucks games.
 
 ## Development Process
 
@@ -27,7 +27,7 @@ For additional details on the development lifecycle and workflow used for this p
 |------|---------|-------|-----------|--------|
 | **Badger 5** (`badger-five`) | 5 | 1-31 | Daily | Fully functional |
 | **SuperCash!** (`supercash`) | 6 | 1-39 | Daily | Fully functional |
-| **Megabucks** (`megabucks`) | 6 | 1-39 | Wed/Sat | Implemented (stub UI) |
+| **Megabucks** (`megabucks`) | 6 | 1-49 | Wed/Sat | Fully functional |
 
 ## Architecture
 
@@ -36,7 +36,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
      :5959                    Docker container                live HTTP request
 ```
 
-- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage stub). App shell (`Layout`) provides branded gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills, and CTA buttons.
+- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage stub). App shell (`Layout`) provides branded emerald gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills using CSS variable theming, and CTA buttons. Theme colors defined via Tailwind `@theme` in `frontend/src/index.css` (emerald primary, per-game accent colors).
 - **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs (`badger-five`, `supercash`, `megabucks`) to class names. Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
@@ -82,7 +82,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   ├── src/
 │   │   ├── main.jsx                # React 18 createRoot entry point (wraps App in GameProvider + BrowserRouter)
 │   │   ├── App.jsx                 # Root routed component: Layout shell with Dashboard and GamePage routes
-│   │   ├── index.css               # Tailwind v4 import; custom .card-shadow, .card-shadow-hover, .stat-pill classes
+│   │   ├── index.css               # Tailwind v4 import; @theme directive with game-themed CSS variables; custom .card-shadow, .card-shadow-hover, .stat-pill classes
 │   │   ├── components/
 │   │   │   ├── games/
 │   │   │   │   └── GameCard.jsx    # Clickable game selection card with image, stats, CTA
@@ -109,12 +109,12 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 
 ## Documentation
 
-- [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented for three games (Badger Five, Super Cash, Megabucks).
-- [Components](docs/components/README.md) -- Frontend UI component index. Includes the routed `App`, `Layout` shell, `Dashboard` page, and `GameCard` component.
+- [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented for three games (Badger 5, SuperCash!, Megabucks).
+- [Components](docs/components/README.md) -- Frontend UI component index. Includes the routed `App`, `Layout` shell, `Dashboard` page, and `GameCard` component. See [Styling](#styling) for theme color details.
   - [App Component Detail](docs/components/App.md) -- Root routed component with Layout shell, Dashboard, and GamePage routes
-  - [Layout Component Detail](docs/components/Layout.md) -- Branded layout shell with gradient header and nested route support via `<Outlet />`
+  - [Layout Component Detail](docs/components/Layout.md) -- Branded layout shell with emerald SVG gradient header and nested route support via `<Outlet />`
   - [Dashboard Component Detail](docs/components/Dashboard.md) -- Game selection landing page with responsive card grid
-  - [GameCard Component Detail](docs/components/GameCard.md) -- Clickable game card with image, status badge, stat pills, and CTA
+  - [GameCard Component Detail](docs/components/GameCard.md) -- Clickable game card with generic gradient header, status badge, CSS variable-themed stat pills, and CTA button
 - [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
   - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results; auto-fetches games list on mount
 - [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.
@@ -129,7 +129,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 
 The core algorithm classifies numbers into four pools and generates panels matching target odd/even and low/high distributions:
 
-| Pool | Badger Five (1-31) | Super Cash (1-39) | Megabucks (1-39) |
+| Pool | Badger 5 (1-31) | SuperCash! (1-39) | Megabucks (1-49) |
 |------|---------------------|--------------------|-------------------|
 | **Low-Odd** | 1, 3, 5, 7, 9, 11, 13, 15 | 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 | 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25 |
 | **Low-Even** | 2, 4, 6, 8, 10, 12, 14, 16 | 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 | 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 |
@@ -137,6 +137,22 @@ The core algorithm classifies numbers into four pools and generates panels match
 | **High-Even** | 18, 20, 22, 24, 26, 28, 30 | 22, 24, 26, 28, 30, 32, 34, 36, 38 | 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48 |
 
 Each sub-pattern specifies which pool each ball position draws from. The final panel is sorted ascending (required for lottery tickets). Uniqueness enforcement uses a linear scan across all previously generated panels -- O(n^2) in total panels.
+
+## Styling
+
+The frontend uses Tailwind CSS v4 with a `@theme` directive in `frontend/src/index.css` defining game-themed CSS custom properties:
+
+| Variable | Value | Purpose |
+|----------|-------|---------|
+| `--color-primary` | `#059669` (emerald green) | Primary brand color |
+| `--color-badger-five` | `#ed1c24` | Badger 5 accent |
+| `--color-badger-five-light` | `#fecdd3` | Badger 5 light background |
+| `--color-supercash` | `#0081c6` | SuperCash accent |
+| `--color-supercash-light` | `#bae6fd` | SuperCash light background |
+| `--color-megabucks` | `#ff7200` | Megabucks accent |
+| `--color-megabucks-light` | `#fed7aa` | Megabucks light background |
+
+Custom CSS classes (`.card-shadow`, `.card-shadow-hover`, `.stat-pill`) use emerald HSL tones for shadows and green gradient backgrounds. The Layout header uses an inline SVG gradient with emerald stops (`#065f46` -> `#059669` -> `#34d399`).
 
 ## Technologies
 
