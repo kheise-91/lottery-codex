@@ -25,9 +25,9 @@ For additional details on the development lifecycle and workflow used for this p
 
 | Game | Numbers | Range | Draw Days | Status |
 |------|---------|-------|-----------|--------|
-| **Badger 5** (`badger-five`) | 5 | 1-31 | Daily | Fully functional |
-| **SuperCash!** (`supercash`) | 6 | 1-39 | Daily | Fully functional |
-| **Megabucks** (`megabucks`) | 6 | 1-39 | Wed/Sat | Implemented (stub UI) |
+| **Badger Five** (`badger-five`) | 5 | 1-31 | Daily | Fully functional |
+| **Super Cash** (`supercash`) | 6 | 1-39 | Daily | Fully functional |
+| **Megabucks** (`megabucks`) | 6 | 1-49 | Wed/Sat | Fully functional |
 
 ## Architecture
 
@@ -129,7 +129,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 
 The core algorithm classifies numbers into four pools and generates panels matching target odd/even and low/high distributions:
 
-| Pool | Badger Five (1-31) | Super Cash (1-39) | Megabucks (1-39) |
+| Pool | Badger Five (1-31) | Super Cash (1-39) | Megabucks (1-49) |
 |------|---------------------|--------------------|-------------------|
 | **Low-Odd** | 1, 3, 5, 7, 9, 11, 13, 15 | 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 | 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25 |
 | **Low-Even** | 2, 4, 6, 8, 10, 12, 14, 16 | 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 | 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 |
