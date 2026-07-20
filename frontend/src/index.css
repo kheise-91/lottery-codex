@@ -1,15 +1,25 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #059669;
+  --color-badger-five: #ed1c24;
+  --color-badger-five-light: #fecdd3;
+  --color-supercash: #0081c6;
+  --color-supercash-light: #bae6fd;
+  --color-megabucks: #ff7200;
+  --color-megabucks-light: #fed7aa;
+}
+
 /* Card shadow — used by GameCard */
 .card-shadow {
-  box-shadow: hsl(225 75% 25% / 25%) 0px 8px 24px -2px, hsl(225 75% 15% / 15%) 0px 4px 12px -2px;
+  box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px;
 }
 .card-shadow-hover {
-  box-shadow: hsl(225 75% 25% / 35%) 0px 12px 32px -2px, hsl(225 75% 15% / 25%) 0px 8px 16px -2px;
+  box-shadow: hsl(160 75% 25% / 35%) 0px 12px 32px -2px, hsl(160 75% 15% / 25%) 0px 8px 16px -2px;
 }
 
 /* Stat pill — used by GameCard stats row */
 .stat-pill {
-  background: linear-gradient(135deg, #f0f7ff 0%, #e8f0fe 100%);
-  border: 1px solid #c7d9f2;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #a7f3d0;
 }

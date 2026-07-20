@@ -27,20 +27,6 @@ function GameCard({
   jackpot,
   enabled,
 }) {
-  /**
-   * Map game IDs to gradient backgrounds.
-   * @param {string} id - Game identifier
-   * @returns {string} Tailwind gradient class
-   */
-  const getGradient = (id) => {
-    const gradients = {
-      'badger-five': 'from-blue-50 to-indigo-100',
-      supercash: 'from-violet-50 to-purple-100',
-      megabucks: 'from-amber-50 to-orange-100',
-    };
-    return gradients[id] ?? 'from-slate-50 to-gray-100';
-  };
-
   return (
     <Link
       to={`/games/${gameId}`}
@@ -48,15 +34,13 @@ function GameCard({
     >
       {/* Image area with status badge */}
       <div
-        className={`relative h-40 bg-gradient-to-br ${getGradient(
-          gameId
-        )} flex items-center justify-center overflow-hidden rounded-t-lg`}
+        className="relative h-40 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center overflow-hidden rounded-t-lg border-b border-gray-200"
       >
         {imageSrc && (
           <img
             src={imageSrc}
             alt={name}
-            className="h-28 w-auto object-contain"
+            className="h-28 w-auto object-contain pt-6"
           />
         )}
         <span
@@ -79,27 +63,27 @@ function GameCard({
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="stat-pill rounded-md px-2 py-1.5 text-center">
+          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: `var(--color-${gameId}-light)` }}>
             <span className="block text-[10px] uppercase tracking-wide text-gray-400 font-medium">
               Draw
             </span>
-            <span className="block text-xs font-semibold text-blue-800">
-              {drawFrequency}
+            <span className="block text-xs font-semibold" style={{ color: `var(--color-${gameId})` }}>
+              {drawFrequency === 'Daily' ? 'Daily' : drawFrequency.join('|')}
             </span>
           </div>
-          <div className="stat-pill rounded-md px-2 py-1.5 text-center">
+          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: `var(--color-${gameId}-light)` }}>
             <span className="block text-[10px] uppercase tracking-wide text-gray-400 font-medium">
               Odds
             </span>
-            <span className="block text-xs font-semibold text-blue-800">
+            <span className="block text-xs font-semibold" style={{ color: `var(--color-${gameId})` }}>
               {oddsOfWinning}
             </span>
           </div>
-          <div className="stat-pill rounded-md px-2 py-1.5 text-center">
+          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: `var(--color-${gameId}-light)` }}>
             <span className="block text-[10px] uppercase tracking-wide text-gray-400 font-medium">
               Jackpot
             </span>
-            <span className="block text-xs font-semibold text-blue-800">
+            <span className="block text-xs font-semibold" style={{ color: `var(--color-${gameId})` }}>
               {jackpot}
             </span>
           </div>
@@ -109,10 +93,13 @@ function GameCard({
       {/* Footer CTA */}
       <div className="px-5 pb-5 pt-1 border-t border-gray-100">
         {enabled ? (
-          <span className="inline-flex items-center text-sm font-medium text-blue-600 group-hover:text-blue-700 transition-colors">
+          <button
+            className="inline-flex items-center px-4 py-2 rounded-md text-sm font-semibold transition-colors ml-auto"
+            style={{ backgroundColor: `var(--color-${gameId})`, color: '#ffffff' }}
+          >
             Play Now
             <ArrowRightIcon className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-          </span>
+          </button>
         ) : (
           <span className="inline-flex items-center text-sm font-medium text-gray-400 cursor-not-allowed">
             Coming Soon

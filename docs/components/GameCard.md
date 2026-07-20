@@ -30,24 +30,26 @@ The card has three visual sections rendered inside a `<Link>` wrapper:
 
 ### Image Area (header)
 
-- Fixed height `h-40` with a gradient background determined by `gameId` via the internal `getGradient()` mapping
-- Game SVG image centered within the area (`object-contain`, `h-28 w-auto`)
+- Fixed height `h-40` with a generic light gray gradient (`from-gray-50 to-gray-100`)
+- Game SVG image centered within the area (`object-contain`, `h-28 w-auto`, `pt-6` for top spacing)
+- Bottom border: `border-b border-gray-200`
 - Status badge positioned absolutely at top-right:
   - Enabled: green pill with `"Live"` text (`bg-emerald-50 text-emerald-700 border-emerald-200`)
   - Disabled: gray pill with `"Coming Soon"` text (`bg-gray-100 text-gray-500 border-gray-200`)
 
 ### Card Body
 
-- Game name rendered as `<h3>` with `text-lg font-semibold`
+- Game name rendered as `<h3>` with `text-lg font-semibold text-gray-800`
 - Description paragraph (conditionally rendered only when non-empty)
 - Three-column stat grid using the `.stat-pill` CSS class:
-  - **Draw** -- shows `drawFrequency`
+  - **Draw** -- shows `drawFrequency`; `'Daily'` displays as `"Daily"`, otherwise arrays are joined with `|` (e.g., `"Wed/Sat"`)
   - **Odds** -- shows `oddsOfWinning`
   - **Jackpot** -- shows `jackpot`
+  - Each stat pill uses CSS variables for theming: `backgroundColor: var(--color-${gameId}-light)` and `color: var(--color-${gameId})`
 
 ### Footer CTA
 
-- Enabled: `"Play Now"` text with an `<ArrowRightIcon>` that slides right on hover (`group-hover:translate-x-1`)
+- Enabled: `<button>` element with `Play Now` text and an `<ArrowRightIcon>` that slides right on hover (`group-hover:translate-x-1`); styled with game's theme color via `backgroundColor: var(--color-${gameId})` and white text
 - Disabled: `"Coming Soon"` in gray with `cursor-not-allowed`
 
 ## Side Effects
@@ -56,16 +58,9 @@ None. No `useEffect`, no data fetching, no subscriptions.
 
 ## Styling
 
-### Gradient Mapping
+### Card Header Gradient
 
-Internal `getGradient()` maps game IDs to Tailwind gradient classes:
-
-| Game ID | Gradient |
-|---------|----------|
-| `badger-five` | `from-blue-50 to-indigo-100` |
-| `supercash` | `from-violet-50 to-purple-100` |
-| `megabucks` | `from-amber-50 to-orange-100` |
-| (fallback) | `from-slate-50 to-gray-100` |
+GameCard no longer uses per-game gradient mappings. All cards share a generic light gray gradient: `bg-gradient-to-br from-gray-50 to-gray-100`.
 
 ### Hover Effect
 
@@ -76,13 +71,25 @@ The root `<Link>` applies:
 
 ### Custom CSS Classes
 
-GameCard depends on two custom CSS classes defined in `frontend/src/index.css`:
+GameCard depends on three custom CSS classes defined in `frontend/src/index.css`:
 
 | Class | Purpose | Definition |
 |-------|---------|------------|
-| `.card-shadow` | Default card shadow | `hsl(225 75% 25% / 25%) 0px 8px 24px -2px, hsl(225 75% 15% / 15%) 0px 4px 12px -2px` |
-| `.card-shadow-hover` | Hover card shadow | `hsl(225 75% 25% / 35%) 0px 12px 32px -2px, hsl(225 75% 15% / 25%) 0px 8px 16px -2px` |
-| `.stat-pill` | Stat pill background | `linear-gradient(135deg, #f0f7ff 0%, #e8f0fe 100%)` with `border: 1px solid #c7d9f2` |
+| `.card-shadow` | Default card shadow | `hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px` |
+| `.card-shadow-hover` | Hover card shadow | `hsl(160 75% 25% / 35%) 0px 12px 32px -2px, hsl(160 75% 15% / 25%) 0px 8px 16px -2px` |
+| `.stat-pill` | Stat pill background | `linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)` with `border: 1px solid #a7f3d0` |
+
+### Theme Colors (CSS Variables)
+
+GameCard uses CSS custom properties defined via Tailwind `@theme` in `frontend/src/index.css` for game-specific theming:
+
+| Variable | Badger Five | SuperCash | Megabucks |
+|----------|-------------|-----------|-----------|
+| `--color-primary` | `#059669` (emerald green, shared) | `#059669` | `#059669` |
+| `--color-badger-five` / `--color-${gameId}` | `#ed1c24` | `#0081c6` | `#ff7200` |
+| `--color-badger-five-light` / `--color-${gameId}-light` | `#fecdd3` | `#bae6fd` | `#fed7aa` |
+
+The stat pills and Play Now button use these variables to apply game-appropriate colors dynamically.
 
 ## Children
 
