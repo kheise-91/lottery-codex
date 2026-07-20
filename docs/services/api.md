@@ -25,8 +25,39 @@ Fetches the list of available games.
 ```json
 {
   "games": [
-    { "id": "badger-five", "name": "Badger 5", "status": "enabled" },
-    { "id": "supercash", "name": "SuperCash!", "status": "enabled" }
+    {
+      "id": "badger-five",
+      "name": "Badger Five",
+      "status": "enabled",
+      "description": "Pick 5 numbers from 1 to 31. Drawn daily.",
+      "oddsOfWinning": "1 in 1,829,322",
+      "drawFrequency": ["Daily"],
+      "numberRange": { "min": 1, "max": 31 },
+      "numbersPerDraw": 5,
+      "optimalPattern": "3-Odd 2-Even / 3-Low 2-High"
+    },
+    {
+      "id": "supercash",
+      "name": "SuperCash!",
+      "status": "enabled",
+      "description": "Pick 6 numbers from 1 to 39. Drawn daily.",
+      "oddsOfWinning": "1 in 3,262,623",
+      "drawFrequency": ["Daily"],
+      "numberRange": { "min": 1, "max": 39 },
+      "numbersPerDraw": 6,
+      "optimalPattern": "3-Odd 3-Even / 3-Low 3-High"
+    },
+    {
+      "id": "megabucks",
+      "name": "Megabucks",
+      "status": "enabled",
+      "description": "Pick 6 numbers from 1-49 in this twice-weekly, Wisconsin-only rolling jackpot game.",
+      "oddsOfWinning": "1 in 6,991,908",
+      "drawFrequency": ["Wednesday", "Saturday"],
+      "numberRange": { "min": 1, "max": 49 },
+      "numbersPerDraw": 6,
+      "optimalPattern": "3-Odd 3-Even / 3-Low 3-High"
+    }
   ]
 }
 ```
@@ -184,5 +215,6 @@ function GameList() {
 
 This service layer is the data-fetching foundation for:
 
-- **Hooks (Phase 1.6):** Custom hooks like `useGameHistory` and `useGenerateTickets` wrap these functions with React state management, loading states, and result handling.
-- **Components (Phase 2):** Page components and UI elements will consume either the service functions directly or the hooks built on top of them.
+- **Hooks:** Custom hook `useGames` wraps `fetchGames()` with React state management (loading, error, data). Additional hooks (`useGameHistory`, `useGenerateTickets`) are planned for Phase 2.8.
+- **Context:** `GameProvider` in `GameContext.jsx` also consumes these service functions directly via `useEffect` and dispatches actions to its reducer.
+- **Components:** Page components (Dashboard) consume hooks; future game detail pages will consume service functions or hooks as needed.
