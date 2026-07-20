@@ -21,7 +21,7 @@ Contexts live in a separate documentation directory:
 
 The following are documented in the migration roadmap but do not exist on disk:
 
-- **GamePage** -- Full split-view game detail page with history, pattern distribution, and panel generation (Phase 2.8)
+- **Full GamePage** -- Currently a stub at `/games/:gameId`; Phase 2.8 will replace it with a split-view game detail page featuring history, pattern distribution visualization, and panel generation
 - **Reusable UI components** -- Ball, DrawingCard, PanelDisplay, PatternDistribution, Tabs
 
 ## Entry Point

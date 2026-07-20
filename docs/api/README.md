@@ -67,7 +67,7 @@ List all registered games with their full detail objects (same shape as `GET /ap
       "description": "Pick 6 numbers from 1-49 in this twice-weekly, Wisconsin-only rolling jackpot game where every $1 ticket gives you two separate plays.",
       "oddsOfWinning": "1 in 6,991,908",
       "drawFrequency": ["Wednesday", "Saturday"],
-      "numberRange": { "min": 1, "max": 39 },
+      "numberRange": { "min": 1, "max": 49 },
       "numbersPerDraw": 6,
       "optimalPattern": "3-Odd 3-Even / 3-Low 3-High",
       "groups": {
@@ -297,7 +297,7 @@ Each panel is a sorted integer array of length equal to the game's `numbersPerDr
 
 ## Controller Layer
 
-All four endpoints are handled by `GamesController` in `backend/controllers/GamesController.php`. The controller uses a `$registry` array to map game IDs (`badger-five`, `supercash`) to their fully-qualified class names. Game resolution is done via the private `resolve()` method, which returns a `GameInterface` instance or `null`.
+All four endpoints are handled by `GamesController` in `backend/controllers/GamesController.php`. The controller uses a `$registry` array to map game IDs (`badger-five`, `supercash`, `megabucks`) to their fully-qualified class names. Game resolution is done via the private `resolve()` method, which returns a `GameInterface` instance or `null`.
 
 **Note:** The `history()` method currently uses static mock data (marked with `TODO` for Phase 4.1). The `generate()` method delegates to `$game->generateTickets($count)` and is fully functional.
 
