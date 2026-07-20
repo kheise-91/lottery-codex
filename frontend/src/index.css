@@ -13,13 +13,14 @@
 /* Card shadow — used by GameCard */
 .card-shadow {
   box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px;
+  transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
 }
-.card-shadow-hover {
+.card-shadow:hover {
   box-shadow: hsl(160 75% 25% / 35%) 0px 12px 32px -2px, hsl(160 75% 15% / 25%) 0px 8px 16px -2px;
+  transform: translateY(-4px);
 }
 
-/* Stat pill — used by GameCard stats row */
+/* Stat pill — used by GameCard stats row (background set via inline style) */
 .stat-pill {
-  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-  border: 1px solid #a7f3d0;
+  border: 1px solid #e5e7eb;
 }
