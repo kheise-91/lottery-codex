@@ -41,12 +41,12 @@ The component renders three visual regions:
 
 ### Header (gradient hero bar)
 
-- Full-width gradient background: `bg-gradient-to-br from-blue-800 via-blue-600 to-blue-400`
+- Full-width gradient defined via inline SVG `<linearGradient>` with emerald stops: `#065f46` (start), `#059669` (mid), `#34d399` (end)
 - Decorative SVG grid overlay at 10% opacity spanning the full header area
-- Centered branding block (max-width 4xl, responsive padding) with:
+- Centered branding block (`max-w-6xl`, responsive padding) with:
   - Logo icon -- bar chart SVG inside a translucent rounded container
   - "Lottery Codex" title in white, bold, 28px font size
-  - Subtitle "Pattern Analysis & Ticket Generation" in blue-100, small text
+  - Subtitle "Pattern Analysis & Ticket Generation" in `text-emerald-100`, small text
 - Decorative wavy bottom curve using an SVG path that transitions the header into the page background (`#f9fafb`)
 
 ### Main content area
@@ -67,7 +67,7 @@ All styling is via Tailwind utility classes with two inline style overrides for 
 | Element | Key Classes / Styles |
 |---------|---------------------|
 | Root container | `flex flex-col min-h-screen bg-gray-50` |
-| Header background | `bg-gradient-to-br from-blue-800 via-blue-600 to-blue-400 shadow-lg` |
+| Header background | Inline SVG `<linearGradient>` with emerald stops; header wrapper has white background and box-shadow fallback |
 | Grid overlay | `absolute inset-0 opacity-10` |
 | Logo icon container | `bg-white/20 backdrop-blur-sm rounded-lg p-2.5 shadow-inner` |
 | Title font size | inline: `fontSize: '1.75rem', lineHeight: '1.2'` |

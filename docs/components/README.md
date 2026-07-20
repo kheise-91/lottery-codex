@@ -46,6 +46,22 @@ Tailwind CSS v4 is imported via the `@tailwindcss/vite` plugin in `vite.config.j
 
 | Class | Purpose |
 |-------|---------|
-| `.card-shadow` | Default box shadow for GameCard |
-| `.card-shadow-hover` | Elevated box shadow on GameCard hover |
-| `.stat-pill` | Gradient background and border for stat pills inside GameCard |
+| `.card-shadow` | Default box shadow for GameCard (emerald HSL tones) |
+| `.card-shadow-hover` | Elevated box shadow on GameCard hover (emerald HSL tones) |
+| `.stat-pill` | Green gradient background and border for stat pills inside GameCard |
+
+### Theme Colors
+
+The application uses Tailwind `@theme` CSS custom properties in `frontend/src/index.css` for a game-themed color palette:
+
+| Variable | Value | Usage |
+|----------|-------|-------|
+| `--color-primary` | `#059669` (emerald green) | Primary brand color |
+| `--color-badger-five` | `#ed1c24` | Badger Five accent |
+| `--color-badger-five-light` | `#fecdd3` | Badger Five light background |
+| `--color-supercash` | `#0081c6` | SuperCash accent |
+| `--color-supercash-light` | `#bae6fd` | SuperCash light background |
+| `--color-megabucks` | `#ff7200` | Megabucks accent |
+| `--color-megabucks-light` | `#fed7aa` | Megabucks light background |
+
+GameCard uses these variables (`var(--color-${gameId})` and `var(--color-${gameId}-light)`) to apply game-specific colors to stat pills and the Play Now button.
