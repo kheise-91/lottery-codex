@@ -160,9 +160,11 @@ Build the React component hierarchy.
 
 - [ ] **2.4 — Create Ball component (`src/components/games/Ball.jsx`)**
    - Circular element (32px), centered text, bordered
-   - Accept `number` prop; support variant colors for sub-patterns
+   - 3d appearance
+   - Accepts `number` prop
+   - Support variant colors based on the game's main color in `frontend/src/index.css` AND the sub-pattern it belongs to
 
-   **Done when:** Ball renders numbers identically to the legacy UI.
+   **Done when:** Ball renders numbers with a 3d appearance and color matching the game and sub-pattern
 
 - [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**
    - Shows: date (formatted "Monday, January 1st"), full pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High"), row of number balls
