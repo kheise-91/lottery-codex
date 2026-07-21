@@ -82,9 +82,10 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   ├── src/
 │   │   ├── main.jsx                # React 18 createRoot entry point (wraps App in GameProvider + BrowserRouter)
 │   │   ├── App.jsx                 # Root routed component: Layout shell with Dashboard and GamePage routes
-│   │   ├── index.css               # Tailwind v4 import; @theme directive with game-themed CSS variables; custom .card-shadow, .card-shadow-hover, .stat-pill classes
+│   │   ├── index.css               # Tailwind v4 import; @theme directive with game-themed CSS variables; custom .card-shadow, .stat-pill, .lotto-ball, .lotto-ball--white classes
 │   │   ├── components/
 │   │   │   ├── games/
+│   │   │   │   ├── Ball.jsx        # Foundational UI primitive: single lottery number as 48px white 3D sphere
 │   │   │   │   └── GameCard.jsx    # Clickable game selection card with image, stats, CTA
 │   │   │   └── layout/
 │   │   │       └── Layout.jsx      # Branded layout shell with gradient header and Outlet for nested routes
@@ -110,11 +111,12 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 ## Documentation
 
 - [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented for three games (Badger 5, SuperCash!, Megabucks).
-- [Components](docs/components/README.md) -- Frontend UI component index. Includes the routed `App`, `Layout` shell, `Dashboard` page, and `GameCard` component. See [Styling](#styling) for theme color details.
+- [Components](docs/components/README.md) -- Frontend UI component index. Includes the routed `App`, `Layout` shell, `Dashboard` page, `GameCard` component, and foundational `Ball` primitive. See [Styling](#styling) for theme color details.
   - [App Component Detail](docs/components/App.md) -- Root routed component with Layout shell, Dashboard, and GamePage routes
   - [Layout Component Detail](docs/components/Layout.md) -- Branded layout shell with emerald SVG gradient header and nested route support via `<Outlet />`
   - [Dashboard Component Detail](docs/components/Dashboard.md) -- Game selection landing page with responsive card grid
   - [GameCard Component Detail](docs/components/GameCard.md) -- Clickable game card with generic gradient header, status badge, CSS variable-themed stat pills, and CTA button
+  - [Ball Component Detail](docs/components/Ball.md) -- Foundational UI primitive: renders a single lottery number as a 48px white 3D sphere
 - [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
   - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results; auto-fetches games list on mount
 - [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.
@@ -152,7 +154,7 @@ The frontend uses Tailwind CSS v4 with a `@theme` directive in `frontend/src/ind
 | `--color-megabucks` | `#ff7200` | Megabucks accent |
 | `--color-megabucks-light` | `#fed7aa` | Megabucks light background |
 
-Custom CSS classes (`.card-shadow`, `.card-shadow-hover`, `.stat-pill`) use emerald HSL tones for shadows and green gradient backgrounds. The Layout header uses an inline SVG gradient with emerald stops (`#065f46` -> `#059669` -> `#34d399`).
+Custom CSS classes (`.card-shadow`, `.card-shadow-hover`, `.stat-pill`) use emerald HSL tones for shadows and green gradient backgrounds. Lottery ball classes (`.lotto-ball`, `.lotto-ball--white`, `.lotto-ball--white::after`) define the 3D white sphere appearance with radial gradients, inset shadows, and a specular highlight pseudo-element. The Layout header uses an inline SVG gradient with emerald stops (`#065f46` -> `#059669` -> `#34d399`).
 
 ## Technologies
 
