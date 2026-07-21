@@ -24,3 +24,39 @@
 .stat-pill {
   border: 1px solid #e5e7eb;
 }
+
+/* Lottery Ball — base (DrawingCard / TicketDisplay) */
+.lotto-ball {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  position: relative;
+  user-select: none;
+}
+
+/* Lottery Ball — white variant (DrawingCard context) */
+.lotto-ball--white {
+  background: radial-gradient(circle at 38% 32%, #ffffff 0%, #f4f7fa 35%, #d1d9e6 70%, #a8b4c4 100%);
+  border: 1.5px solid #b0bec5;
+  color: #374151;
+  box-shadow:
+    inset -3px -3px 8px rgba(0, 0, 0, 0.12),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.9),
+    0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.lotto-ball--white::after {
+  content: '';
+  position: absolute;
+  top: 12%;
+  left: 24%;
+  width: 35%;
+  height: 28%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%);
+}

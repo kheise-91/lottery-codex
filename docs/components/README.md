@@ -10,6 +10,7 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [Layout](./Layout.md) | `frontend/src/components/layout/Layout.jsx` | Implemented | Branded layout shell with gradient header and `<Outlet />` for nested routes |
 | [Dashboard](./Dashboard.md) | `frontend/src/pages/Dashboard.jsx` | Implemented | Game selection landing page with responsive card grid |
 | [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, stat pills, and CTA |
+| [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px white 3D sphere |
 
 ## Contexts
 
@@ -22,7 +23,7 @@ Contexts live in a separate documentation directory:
 The following are documented in the migration roadmap but do not exist on disk:
 
 - **Full GamePage** -- Currently a stub at `/games/:gameId`; Phase 2.8 will replace it with a split-view game detail page featuring history, pattern distribution visualization, and panel generation
-- **Reusable UI components** -- Ball, DrawingCard, PanelDisplay, PatternDistribution, Tabs
+- **Reusable UI components** -- DrawingCard, PanelDisplay, PatternDistribution, Tabs
 
 ## Entry Point
 
@@ -49,6 +50,9 @@ Tailwind CSS v4 is imported via the `@tailwindcss/vite` plugin in `vite.config.j
 | `.card-shadow` | Default box shadow for GameCard (emerald HSL tones) |
 | `.card-shadow-hover` | Elevated box shadow on GameCard hover (emerald HSL tones) |
 | `.stat-pill` | Green gradient background and border for stat pills inside GameCard |
+| `.lotto-ball` | Base styling for lottery number balls: 48px circle, centered text, `position: relative` |
+| `.lotto-ball--white` | White sphere variant with radial gradient, inset shadows, and external drop shadow |
+| `.lotto-ball--white::after` | Specular highlight pseudo-element (glossy reflection at top-left) |
 
 ### Theme Colors
 
