@@ -1,5 +1,6 @@
 import { useGames } from '../hooks/useGames';
 import GameCard from '../components/games/GameCard';
+import Ball from '../components/games/Ball';
 
 /**
  * Dashboard page — game selection landing.
@@ -24,8 +25,29 @@ function Dashboard() {
           <p className="col-span-full text-center text-red-500 py-8">{error}</p>
         )}
         {!loading && !error && games.map((game) => (
-          <div key={game.id}>
-            <GameCard
+          <div>
+          <div key={game.id} className={`bg-${game.id}`}>T</div>
+          <div key={game.id} className={`bg-${game.id}-light`}>T</div>
+          <div key={game.id} className={`bg-${game.id}-lightest`}>T</div>
+          <Ball 
+            variant='colored'
+            number={1}
+            gameId={game.id}
+            subPatternIndex={0}
+          />
+          <Ball 
+            variant='colored'
+            number={1}
+            gameId={game.id}
+            subPatternIndex={1}
+          />
+          <Ball 
+            variant='colored'
+            number={1}
+            gameId={game.id}
+            subPatternIndex={2}
+          />
+            {/* <GameCard
               gameId={game.id}
               name={game.name}
               description={game.description ?? ''}
@@ -35,7 +57,7 @@ function Dashboard() {
               oddsOfWinning={game.oddsOfWinning ?? 'N/A'}
               jackpot={game.jackpot ?? '—'}
               enabled={game.status === 'enabled'}
-            />
+            /> */}
           </div>
         ))}
       </div>

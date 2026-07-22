@@ -3,11 +3,14 @@
 @theme {
   --color-primary: #059669;
   --color-badger-five: #ed1c24;
-  --color-badger-five-light: #fecdd3;
+  --color-badger-five-light: #fca5a5;
+  --color-badger-five-lightest: #fecdd3;
   --color-supercash: #0081c6;
-  --color-supercash-light: #bae6fd;
+  --color-supercash-light: #7dd3fc;
+  --color-supercash-lightest: #bae6fd;
   --color-megabucks: #ff7200;
-  --color-megabucks-light: #fed7aa;
+  --color-megabucks-light: #fdba74;
+  --color-megabucks-lightest: #fed7aa;
 }
 
 /* Card shadow — used by GameCard */
