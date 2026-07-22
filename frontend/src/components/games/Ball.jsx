@@ -1,28 +1,17 @@
 /**
  * Lottery number ball — renders a single number as a 3D sphere.
- * Supports a white variant (default, for historical drawings) and a colored
- * variant (for generated tickets) where the color reflects sub-pattern membership.
- *
+ * Supports a white variant and a colored variant based on the game-id.
+ * 
  * @param {Object} props
  * @param {number} props.number - The lottery number to display
- * @param {'white'|'colored'} [props.variant='white'] - The visual variant
- * @param {string|null} [props.gameId=null] - Game identifier (e.g. 'badger-five')
- * @param {number|null} [props.subPatternIndex=null] - Sub-pattern index (0, 1, or 2)
+ * @param {string|null} [props.gameId=null] - Game identifier (e.g. 'badger-five') - defaults to white ball if no game-id is passed
  */
-function Ball({ number, variant = 'white', gameId = null, subPatternIndex = null }) {
+function Ball({ number, gameId = null }) {
   const baseClasses = 'inline-flex items-center justify-center rounded-full w-12 h-12 lotto-ball';
+  const variantClasses = (gameId) ? `lotto-ball--colored lotto-ball--sp-${gameId}` : `lotto-ball--white`;
 
-  if (variant === 'colored' && subPatternIndex !== null && gameId !== null) {
-    return (
-      <div className={`${baseClasses} lotto-ball--colored lotto-ball--sp-${gameId}-${subPatternIndex}`}>
-        {number}
-      </div>
-    );
-  }
-
-  // Default white variant
   return (
-    <div className={`${baseClasses} lotto-ball--white`}>
+    <div className={`${baseClasses} ${variantClasses}`}>
       {number}
     </div>
   );

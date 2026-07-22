@@ -84,58 +84,22 @@
 }
 
 /* Sub-pattern color variants — Badger Five */
-.lotto-ball--sp-badger-five-0 {
+.lotto-ball--sp-badger-five {
   background: radial-gradient(circle at 38% 32%, var(--color-badger-five-lightest) 0%, var(--color-badger-five) 40%, #b91c1c 75%, #7f1d1d 100%);
   border-color: #991b1b;
   box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(185, 28, 28, 0.3);
 }
 
-.lotto-ball--sp-badger-five-1 {
-  background: radial-gradient(circle at 38% 32%, var(--color-badger-five) 0%, var(--color-badger-five-light) 40%, #f87171 75%, #b91c1c 100%);
-  border-color: #ef4444;
-  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(239, 68, 68, 0.3);
-}
-
-.lotto-ball--sp-badger-five-2 {
-  background: radial-gradient(circle at 38% 32%, #fef2f2 0%, var(--color-badger-five-lightest) 40%, #fca5a5 75%, #f87171 100%);
-  border-color: #fca5a5;
-  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 6px rgba(255, 255, 255, 0.2), 0 3px 8px rgba(252, 165, 165, 0.3);
-}
-
 /* Sub-pattern color variants — SuperCash */
-.lotto-ball--sp-supercash-0 {
+.lotto-ball--sp-supercash {
   background: radial-gradient(circle at 38% 32%, var(--color-supercash-lightest) 0%, var(--color-supercash) 40%, #0369a1 75%, #0c4a6e 100%);
   border-color: #0369a1;
   box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(3, 105, 161, 0.3);
 }
 
-.lotto-ball--sp-supercash-1 {
-  background: radial-gradient(circle at 38% 32%, var(--color-supercash) 0%, var(--color-supercash-light) 40%, #38bdf8 75%, #0369a1 100%);
-  border-color: #0ea5e9;
-  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(14, 165, 233, 0.3);
-}
-
-.lotto-ball--sp-supercash-2 {
-  background: radial-gradient(circle at 38% 32%, #f0f9ff 0%, var(--color-supercash-lightest) 40%, #7dd3fc 75%, #38bdf8 100%);
-  border-color: #7dd3fc;
-  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 6px rgba(255, 255, 255, 0.2), 0 3px 8px rgba(125, 211, 252, 0.3);
-}
-
 /* Sub-pattern color variants — MegaBucks */
-.lotto-ball--sp-megabucks-0 {
+.lotto-ball--sp-megabucks {
   background: radial-gradient(circle at 38% 32%, var(--color-megabucks-lightest) 0%, var(--color-megabucks) 40%, #c2410c 75%, #7c2d12 100%);
   border-color: #c2410c;
   box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(194, 65, 12, 0.3);
-}
-
-.lotto-ball--sp-megabucks-1 {
-  background: radial-gradient(circle at 38% 32%, var(--color-megabucks) 0%, var(--color-megabucks-light) 40%, #fb923c 75%, #c2410c 100%);
-  border-color: #f97316;
-  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(249, 115, 22, 0.3);
-}
-
-.lotto-ball--sp-megabucks-2 {
-  background: radial-gradient(circle at 38% 32%, #fff7ed 0%, var(--color-megabucks-lightest) 40%, #fdba74 75%, #fb923c 100%);
-  border-color: #fdba74;
-  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 6px rgba(255, 255, 255, 0.2), 0 3px 8px rgba(253, 186, 116, 0.3);
 }
