@@ -1,6 +1,5 @@
 import { useGames } from '../hooks/useGames';
 import GameCard from '../components/games/GameCard';
-import Ball from '../components/games/Ball';
 
 /**
  * Dashboard page — game selection landing.
