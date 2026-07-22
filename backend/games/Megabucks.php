@@ -48,7 +48,7 @@ class Megabucks implements GameInterface, \JsonSerializable
             'name' => 'Megabucks',
             'status' => 'enabled',
             'drawFrequency' => ['Wednesday', 'Saturday'],
-            'numberRange' => ['min' => 1, 'max' => 39],
+            'numberRange' => ['min' => 1, 'max' => 49],
             'numbersPerDraw' => 6,
             'optimalPattern' => '3-Odd 3-Even / 3-Low 3-High',
             'groups' => [

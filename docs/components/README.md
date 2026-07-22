@@ -9,8 +9,9 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [App](./App.md) | `frontend/src/App.jsx` | Implemented | Root routed component with Layout shell, Dashboard, and GamePage routes |
 | [Layout](./Layout.md) | `frontend/src/components/layout/Layout.jsx` | Implemented | Branded layout shell with gradient header and `<Outlet />` for nested routes |
 | [Dashboard](./Dashboard.md) | `frontend/src/pages/Dashboard.jsx` | Implemented | Game selection landing page with responsive card grid |
-| [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, stat pills, and CTA |
+| [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, CSS variable-themed stat pills, and CTA |
 | [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored variants |
+| [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Stub | Placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter |
 
 ## Contexts
 
@@ -23,7 +24,7 @@ Contexts live in a separate documentation directory:
 The following are documented in the migration roadmap but do not exist on disk:
 
 - **Full GamePage** -- Currently a stub at `/games/:gameId`; Phase 2.8 will replace it with a split-view game detail page featuring history, pattern distribution visualization, and panel generation
-- **Reusable UI components** -- DrawingCard, PanelDisplay, PatternDistribution, Tabs
+- **Reusable UI components** -- DrawingCard, TicketDisplay, PatternDistribution, Tabs
 
 ## Entry Point
 
@@ -53,8 +54,8 @@ Tailwind CSS v4 is imported via the `@tailwindcss/vite` plugin in `vite.config.j
 | `.lotto-ball` | Base styling for lottery number balls: 48px circle, centered text, `position: relative` |
 | `.lotto-ball--white` | White sphere variant with radial gradient, inset shadows, and external drop shadow |
 | `.lotto-ball--white::after` | Specular highlight pseudo-element (glossy reflection at top-left) |
-| `.lotto-ball--colored` | Colored base variant for ticket display: solid border, white text, text shadow |
-| `.lotto-ball--sp-{gameId}-{index}` | Sub-pattern color classes (9 total: 3 per game for badger-five, supercash, megabucks) |
+| `.lotto-ball--colored` | Colored base variant for game-colored balls: solid border, white text, text shadow |
+| `.lotto-ball--sp-{gameId}` | Game theme color classes (3 total: one per game for badger-five, supercash, megabucks) |
 
 ### Theme Colors
 
@@ -65,9 +66,12 @@ The application uses Tailwind `@theme` CSS custom properties in `frontend/src/in
 | `--color-primary` | `#059669` (emerald green) | Primary brand color |
 | `--color-badger-five` | `#ed1c24` | Badger Five accent |
 | `--color-badger-five-light` | `#fecdd3` | Badger Five light background |
+| `--color-badger-five-lightest` | `#fecdd3` | Badger Five lightest (ball gradient highlight) |
 | `--color-supercash` | `#0081c6` | SuperCash accent |
 | `--color-supercash-light` | `#bae6fd` | SuperCash light background |
+| `--color-supercash-lightest` | `#bae6fd` | SuperCash lightest (ball gradient highlight) |
 | `--color-megabucks` | `#ff7200` | Megabucks accent |
 | `--color-megabucks-light` | `#fed7aa` | Megabucks light background |
+| `--color-megabucks-lightest` | `#fed7aa` | Megabucks lightest (ball gradient highlight) |
 
 GameCard uses these variables (`var(--color-${gameId})` and `var(--color-${gameId}-light)`) to apply game-specific colors to stat pills and the Play Now button.

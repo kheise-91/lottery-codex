@@ -117,10 +117,13 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
   - [Dashboard Component Detail](docs/components/Dashboard.md) -- Game selection landing page with responsive card grid
   - [GameCard Component Detail](docs/components/GameCard.md) -- Clickable game card with generic gradient header, status badge, CSS variable-themed stat pills, and CTA button
   - [Ball Component Detail](docs/components/Ball.md) -- Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored sub-pattern variants
+  - [GamePage Component Detail](docs/components/GamePage.md) -- Stub placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter
 - [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
   - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results; auto-fetches games list on mount
 - [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.
   - [useGames Hook Detail](docs/hooks/useGames.md) -- Custom hook wrapping `fetchGames()` with loading, error handling, and data states
+  - [useGameHistory Hook Detail](docs/hooks/useGameHistory.md) -- Custom hook wrapping `fetchHistory(gameId)` with loading, error handling, and result caching by gameId
+  - [useGenerateTickets Hook Detail](docs/hooks/useGenerateTickets.md) -- Imperative hook for ticket generation; wraps `generateTickets(gameId)` with a `generate(count)` function
 - [Services](docs/services/README.md) -- Frontend API service layer. Fetch wrapper module for all backend endpoints.
   - [API Service Detail](docs/services/api.md) -- Fetch wrapper module for all backend endpoints
 - [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
