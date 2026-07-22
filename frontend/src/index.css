@@ -3,11 +3,14 @@
 @theme {
   --color-primary: #059669;
   --color-badger-five: #ed1c24;
-  --color-badger-five-light: #fecdd3;
+  --color-badger-five-light: #fca5a5;
+  --color-badger-five-lightest: #fecdd3;
   --color-supercash: #0081c6;
-  --color-supercash-light: #bae6fd;
+  --color-supercash-light: #7dd3fc;
+  --color-supercash-lightest: #bae6fd;
   --color-megabucks: #ff7200;
-  --color-megabucks-light: #fed7aa;
+  --color-megabucks-light: #fdba74;
+  --color-megabucks-lightest: #fed7aa;
 }
 
 /* Card shadow — used by GameCard */
@@ -23,4 +26,80 @@
 /* Stat pill — used by GameCard stats row (background set via inline style) */
 .stat-pill {
   border: 1px solid #e5e7eb;
+}
+
+/* Lottery Ball — base (DrawingCard / TicketDisplay) */
+.lotto-ball {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  position: relative;
+  user-select: none;
+}
+
+/* Lottery Ball — white variant (DrawingCard context) */
+.lotto-ball--white {
+  background: radial-gradient(circle at 38% 32%, #ffffff 0%, #f4f7fa 35%, #d1d9e6 70%, #a8b4c4 100%);
+  border: 1.5px solid #b0bec5;
+  color: #374151;
+  box-shadow:
+    inset -3px -3px 8px rgba(0, 0, 0, 0.12),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.9),
+    0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.lotto-ball--white::after {
+  content: '';
+  position: absolute;
+  top: 12%;
+  left: 24%;
+  width: 35%;
+  height: 28%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%);
+}
+
+/* Lottery Ball — colored base (TicketDisplay context) */
+.lotto-ball--colored {
+  border-width: 1.5px;
+  border-style: solid;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.lotto-ball--colored::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 22%;
+  width: 38%;
+  height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 65%);
+}
+
+/* Sub-pattern color variants — Badger Five */
+.lotto-ball--sp-badger-five {
+  background: radial-gradient(circle at 38% 32%, var(--color-badger-five-lightest) 0%, var(--color-badger-five) 40%, #b91c1c 75%, #7f1d1d 100%);
+  border-color: #991b1b;
+  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(185, 28, 28, 0.3);
+}
+
+/* Sub-pattern color variants — SuperCash */
+.lotto-ball--sp-supercash {
+  background: radial-gradient(circle at 38% 32%, var(--color-supercash-lightest) 0%, var(--color-supercash) 40%, #0369a1 75%, #0c4a6e 100%);
+  border-color: #0369a1;
+  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(3, 105, 161, 0.3);
+}
+
+/* Sub-pattern color variants — MegaBucks */
+.lotto-ball--sp-megabucks {
+  background: radial-gradient(circle at 38% 32%, var(--color-megabucks-lightest) 0%, var(--color-megabucks) 40%, #c2410c 75%, #7c2d12 100%);
+  border-color: #c2410c;
+  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(194, 65, 12, 0.3);
 }
