@@ -10,7 +10,7 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [Layout](./Layout.md) | `frontend/src/components/layout/Layout.jsx` | Implemented | Branded layout shell with gradient header and `<Outlet />` for nested routes |
 | [Dashboard](./Dashboard.md) | `frontend/src/pages/Dashboard.jsx` | Implemented | Game selection landing page with responsive card grid |
 | [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, stat pills, and CTA |
-| [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px white 3D sphere |
+| [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored variants |
 
 ## Contexts
 
@@ -53,6 +53,8 @@ Tailwind CSS v4 is imported via the `@tailwindcss/vite` plugin in `vite.config.j
 | `.lotto-ball` | Base styling for lottery number balls: 48px circle, centered text, `position: relative` |
 | `.lotto-ball--white` | White sphere variant with radial gradient, inset shadows, and external drop shadow |
 | `.lotto-ball--white::after` | Specular highlight pseudo-element (glossy reflection at top-left) |
+| `.lotto-ball--colored` | Colored base variant for ticket display: solid border, white text, text shadow |
+| `.lotto-ball--sp-{gameId}-{index}` | Sub-pattern color classes (9 total: 3 per game for badger-five, supercash, megabucks) |
 
 ### Theme Colors
 
