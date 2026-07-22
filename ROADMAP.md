@@ -158,7 +158,7 @@ Build the React component hierarchy.
 
    **Done when:** Card "buttons" render on the dashboard correctly and the user can select a game from the dashboard.
 
-- [ ] **2.4 — Create Ball component (`src/components/games/Ball.jsx`)**
+- [x] **[2.4 — Create Ball component (`src/components/games/Ball.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/34)**
    - Circular element (32px), centered text, bordered
    - 3d appearance
    - Accepts `number` prop
