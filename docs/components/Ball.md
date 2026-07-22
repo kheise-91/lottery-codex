@@ -4,19 +4,17 @@
 
 ## Purpose
 
-Foundational UI primitive that renders a single lottery number as a 48px 3D sphere. Supports two visual variants:
+Foundational UI primitive that renders a single lottery number as a 48px 3D sphere. Supports two visual modes:
 
-- **White** (default) -- Used for historical drawing displays in `DrawingCard` (Phase 2.5).
-- **Colored** -- Used for generated ticket displays in `TicketDisplay` (Phase 2.6), where each ball's color reflects its sub-pattern membership within the generated ticket pattern.
+- **White** (default) -- Used for all historical drawing displays and generated ticket displays.
+- **Colored** -- Used only for the most recent drawing of a game, where the ball color reflects the game's theme color.
 
 ## Props
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | `number` | number | Yes | -- | The lottery number to display centered inside the ball |
-| `variant` | `'white' \| 'colored'` | No | `'white'` | The visual variant of the ball |
-| `gameId` | string \| null | No | `null` | Game identifier (e.g. `'badger-five'`, `'supercash'`, `'megabucks'`). Required when `variant='colored'`. |
-| `subPatternIndex` | number \| null | No | `null` | Sub-pattern index (`0`, `1`, or `2`). Each game has at most 3 unique sub-patterns. Required when `variant='colored'`. |
+| `gameId` | string \| null | No | `null` | Game identifier (e.g. `'badger-five'`, `'supercash'`, `'megabucks'`). When provided, renders a colored ball matching the game's theme color. Omitted or `null` renders a white ball. |
 
 ## State
 
@@ -27,7 +25,7 @@ No internal state. The component is fully controlled by props.
 A single `<div>` element with:
 - Tailwind utility classes for layout: `inline-flex items-center justify-center rounded-full w-12 h-12`
 - Custom CSS classes for 3D visual styling: `lotto-ball` (base) plus a variant class (`lotto-ball--white` or `lotto-ball--colored`)
-- When in colored mode, an additional sub-pattern class: `lotto-ball--sp-{gameId}-{subPatternIndex}`
+- When `gameId` is provided, an additional game-color class: `lotto-ball--sp-{gameId}`
 - The `number` prop rendered as text content, centered via flexbox
 
 ## Side Effects
@@ -53,20 +51,20 @@ The component relies on custom CSS classes defined in `frontend/src/index.css`:
 | `.lotto-ball--white` | White sphere variant | Radial gradient background (off-center light source at 38% 32%), `#b0bec5` border, dual inset box shadows for depth, external drop shadow |
 | `.lotto-ball--white::after` | Specular highlight | Absolute positioned ellipse at top-left (12% top, 24% left, 35% width, 28% height) with white-to-transparent radial gradient |
 
-#### Colored Variant
+#### Colored Variant (game-colored)
 
 | Class | Purpose | Key Properties |
 |-------|---------|----------------|
-| `.lotto-ball--colored` | Colored base for ticket display | 1.5px solid border, white text color, text shadow for legibility, specular highlight `::after` pseudo-element |
-| `.lotto-ball--sp-{gameId}-{index}` | Sub-pattern color (9 classes total) | Background gradient and border color derived from game theme colors. Index `0` uses the game's main color, `1` uses `{gameId}-light`, and `2` uses `{gameId}-lightest`. |
+| `.lotto-ball--colored` | Colored base for game-colored balls | 1.5px solid border, white text color, text shadow for legibility, specular highlight `::after` pseudo-element |
+| `.lotto-ball--sp-{gameId}` | Game theme color (3 classes total) | Background gradient and border color derived from the game's theme colors. Uses `{gameId}-lightest` as the highlight stop, `{gameId}` as the mid-stop, and hardcoded darker variants at the outer stops. |
 
-The nine sub-pattern color classes are:
+The three game-color classes are:
 
-| Game | Index 0 (main) | Index 1 (light) | Index 2 (lightest) |
-|------|----------------|-----------------|-------------------|
-| Badger Five | `.lotto-ball--sp-badger-five-0` | `.lotto-ball--sp-badger-five-1` | `.lotto-ball--sp-badger-five-2` |
-| SuperCash | `.lotto-ball--sp-supercash-0` | `.lotto-ball--sp-supercash-1` | `.lotto-ball--sp-supercash-2` |
-| Megabucks | `.lotto-ball--sp-megabucks-0` | `.lotto-ball--sp-megabucks-1` | `.lotto-ball--sp-megabucks-2` |
+| Game | Class | Colors |
+|------|-------|--------|
+| Badger Five | `.lotto-ball--sp-badger-five` | `#fecdd3` -> `#ed1c24` -> `#b91c1c` -> `#7f1d1d` |
+| SuperCash | `.lotto-ball--sp-supercash` | `#bae6fd` -> `#0081c6` -> `#0369a1` -> `#0c4a6e` |
+| Megabucks | `.lotto-ball--sp-megabucks` | `#fed7aa` -> `#ff7200` -> `#c2410c` -> `#7c2d12` |
 
 ### 3D Effect Breakdown (White Variant)
 
@@ -100,18 +98,18 @@ import Ball from '../components/games/Ball';
 <Ball number={31} />
 ```
 
-Renders a 48px white 3D sphere with the number centered inside. Suitable for historical drawing displays.
+Renders a 48px white 3D sphere with the number centered inside. Suitable for historical drawing displays and generated ticket displays.
 
-### Colored variant (generated tickets)
+### Colored variant (game-colored, most recent drawing)
 
 ```jsx
-<Ball number={7} variant="colored" gameId="badger-five" subPatternIndex={0} />
-<Ball number={12} variant="colored" gameId="badger-five" subPatternIndex={1} />
-<Ball number={23} variant="colored" gameId="supercash" subPatternIndex={2} />
+<Ball number={7} gameId="badger-five" />
+<Ball number={12} gameId="supercash" />
+<Ball number={23} gameId="megabucks" />
 ```
 
-Renders colored balls where the color reflects the sub-pattern index. Index 0 uses the game's main color, index 1 uses the light variant, and index 2 uses the lightest variant.
+Renders a colored ball where the gradient reflects the game's theme color. Used for displaying the most recent drawing results.
 
 ## Status
 
-Implemented with both white and colored variants. Awaiting consumption by `DrawingCard` and `TicketDisplay`.
+Implemented with white and game-colored variants. Awaiting consumption by `DrawingCard` and `TicketDisplay`.

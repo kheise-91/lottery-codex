@@ -7,10 +7,5 @@ Custom React hooks that wrap the API service layer with state management, loadin
 | Hook | File | Status | Description |
 |------|------|--------|-------------|
 | [useGames](./useGames.md) | `frontend/src/hooks/useGames.js` | Implemented | Wraps `fetchGames()` with loading, error handling, and mount-only fetch for the game list |
-
-## Planned (Not Yet Implemented)
-
-The following hooks are documented in the migration roadmap but do not exist on disk:
-
-- **useGameHistory** -- Wraps `fetchHistory(gameId)` with loading, error handling, and result caching by gameId
-- **useGenerateTickets** -- Wraps `generateTickets(gameId)` with loading, error handling, and imperative ticket generation
+| [useGameHistory](./useGameHistory.md) | `frontend/src/hooks/useGameHistory.js` | Implemented | Wraps `fetchHistory(gameId)` with loading, error handling, and result caching by gameId |
+| [useGenerateTickets](./useGenerateTickets.md) | `frontend/src/hooks/useGenerateTickets.js` | Implemented | Imperative hook for ticket generation; wraps `generateTickets(gameId)` with loading, error handling, and a `generate(count)` function |
