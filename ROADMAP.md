@@ -170,7 +170,7 @@ Build the React component hierarchy.
 
    **Done when:** Ball renders numbers with a 3d appearance and color matching the game and sub-pattern
 
-- [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**git s
+- [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**
    - This is the historical winning data
    - Each card represents a winning ticket (one panel - number of balls is dependent on the game)
    - Shows: date (formatted "Monday, January 1st"), full pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High"), row of number balls
