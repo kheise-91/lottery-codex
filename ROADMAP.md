@@ -163,30 +163,31 @@ Build the React component hierarchy.
    - 3d appearance
    - Accepts `number` prop
    - Support variant colors based on the game's main color in `frontend/src/index.css` AND the sub-pattern it belongs to
-   - Will be used in the future `DrawingCard.jsx` and `TicketDisplay.jsx` components
+   - Will be used in the future `DrawingCard.jsx` and `TicketCard.jsx` components
       - There will be 5 or 6 balls in a panel, depending on the game
       - `DrawingCard.jsx` will have one panel (historical winning draws)
-      - `TicketDisplay.jsx` will have multiple tickets, with multiple panels, depending on the game's pattern property (each sub-pattern is a panel)
+      - `TicketCard.jsx` will have multiple tickets, with multiple panels, depending on the game's pattern property (each sub-pattern is a panel)
 
    **Done when:** Ball renders numbers with a 3d appearance and color matching the game and sub-pattern
 
-- [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**
+- [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**git s
    - This is the historical winning data
    - Each card represents a winning ticket (one panel - number of balls is dependent on the game)
    - Shows: date (formatted "Monday, January 1st"), full pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High"), row of number balls
-   - Balls in this component will have no color-coding applied (just white, 3d shaped balls)
+   - The most recent drawing will use the game id as the color variant for the `Ball.jsx` component
+   - The remaning drawings will use the white variant for the `Ball.jsx` component
 
    **Done when:** Historical drawings render as cards with the date of the drawing, the pattern of the draw, and the exact numbers drawn.
 
-- [ ] **2.6 — Create TicketDisplay component (`src/components/games/TicketDisplay.jsx`)**
+- [ ] **2.6 — Create TicketCard component (`src/components/games/TicketCard.jsx`)**
    - Each ticket has a card-like appearance
    - Each ticket groups panels in sets - one panel per sub-pattern found in the game's pattern property
-   - Ball components will be color-coded based on the game and the sub-pattern the panel matches
+   - Ball components will be white variant, with some kind of color indicator on the panel/row to indicate which sub-pattern the panel is using
    - Shows sub-pattern labels above each panel OR a "legend" stating which sub-pattern the color belongs to
 
    **Done when:** Generated tickets render with correct panels, sub-patterns, balls and color coding.
 
-- [ ] **2.7 — Create Tabs component (`src/components/common/Tabs.jsx`, mobile only)**
+- [ ] **2.7 — Create Tabs component (`src/components/layout/Tabs.jsx`, mobile only)**
    - Two-tab switcher: "Previous Drawings" / "Generated Tickets"
    - Hidden on desktop (≥768px) where split-view is used instead
    - Use `@headlessui/react` Tab component (already installed)
@@ -338,7 +339,7 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
    **Done when:** User can select Super Cash from dashboard and generate tickets.
 
 - [ ] **6.3 — Adapt frontend components for variable panel sizes**
-   - Ball/DrawingCard/TicketDisplay components must handle both 5 and 6 numbers per panel
+   - Ball/DrawingCard/TicketCard components must handle both 5 and 6 numbers per panel
    - Pattern labels adjust to game-specific distributions
 
    **Done when:** Both games render correctly without code duplication.
@@ -354,7 +355,7 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
 - [ ] **6.5 — Wire MegaBucks into API and frontend**
    - Register MegaBucks in the controller's `$registry`: `'megabucks' => \LotteryCodex\Games\MegaBucks::class`
    - Dashboard card auto-appears via `GET /api/games` (no new endpoint needed)
-   - Frontend navigates to `/games/megabucks`; Ball/DrawingCard/TicketDisplay handle 6-number panels
+   - Frontend navigates to `/games/megabucks`; Ball/DrawingCard/TicketCard handle 6-number panels
 
    **Done when:** User can select MegaBucks from dashboard, view history, and generate tickets alongside Super Cash.
 
@@ -556,7 +557,7 @@ frontend/src/components/layout/Layout.jsx                # App shell (header + m
 frontend/src/components/common/Tabs.jsx                  # Tab navigation component (mobile)
 frontend/src/components/games/Ball.jsx                   # Number ball display
 frontend/src/components/games/DrawingCard.jsx            # Historical drawing card
-frontend/src/components/games/TicketDisplay.jsx          # Generated ticket cards
+frontend/src/components/games/TicketCard.jsx          # Generated ticket cards
 frontend/src/components/games/PatternDistribution.jsx    # Pattern frequency bar chart
 frontend/src/components/games/GameCard.jsx               # Reusable game selection card
 frontend/src/pages/Dashboard.jsx                         # Game selection landing page with responsive card grid
