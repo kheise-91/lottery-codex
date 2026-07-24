@@ -112,4 +112,4 @@ Renders a colored ball where the gradient reflects the game's theme color. Used 
 
 ## Status
 
-Implemented with white and game-colored variants. Awaiting consumption by `DrawingCard` and `TicketDisplay`.
+Implemented with white and game-colored variants. Consumed by `DrawingCard` for rendering historical drawing number rows.
