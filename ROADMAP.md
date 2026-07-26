@@ -181,10 +181,16 @@ Build the React component hierarchy.
 
 - [ ] **2.6 — Create TicketCard component (`src/components/games/TicketCard.jsx`)**
    - Each ticket has a card-like appearance
-   - Each ticket groups panels in sets - one panel per sub-array of numbers found in a game's `$pattern` property
-   - Ball components will be white variant, with some kind of color indicator on the panel/row to indicate which sub-pattern the panel is using
-   - Shows sub-pattern labels above each panel OR a "legend" stating which sub-pattern the color belongs to
-   - Sub-patterns are determined by the unique/distinct sub-arrays of a game's `$pattern` property - the first unique/distinct sub-array found will be "sub pattern 1", the second unique/distinct array will be "sub pattern 2", etc.
+   - Each ticket groups panels in sets - one panel per array of numbers found in a game's `$pattern` property
+   - Each panel/row will have some type of color indicator as to which sub-pattern the panel belongs to
+      - Sub-patterns are determined by the unique/distinct sub-arrays of a game's `$pattern` property 
+      - The first unique/distinct sub-array found will be "sub pattern 1", the second will be "sub pattern 2", the thrid will be "sub pattern 3"
+      - Example: "sub pattern 1" for `BadgerFive.php` is `['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven']` (indexes 0 - 2), "sub pattern 2" is `['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd']` (index 3), and "sub pattern 3" is `['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven']` (index 4) - that's 5 panels of numbers shown on the ticket with 3 distinct sub-patterns being used
+   - Ideas for potential sub-pattern color/label indicator (choose one or brainstorm something new): 
+      - Label or badge above each panel
+      - Label or badge below each panel
+      - A "legend" stating which sub-pattern the color belongs to (shown ONCE on page, above all tickets or maybe off to the side)
+   - Ball components will be white variant, with some kind of color indicator on the panel/row for sub-pattern indication
 
    **Done when:** Generated tickets render with correct panels, sub-patterns, balls and color coding.
 
