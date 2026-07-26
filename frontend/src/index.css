@@ -23,6 +23,20 @@
   transform: translateY(-4px);
 }
 
+/* Live dot — used by DrawingCard "Latest" badge */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ed1c24;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
 /* Stat pill — used by GameCard stats row (background set via inline style) */
 .stat-pill {
   border: 1px solid #e5e7eb;
