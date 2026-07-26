@@ -181,7 +181,7 @@ Build the React component hierarchy.
 
 - [ ] **2.6 — Create TicketCard component (`src/components/games/TicketCard.jsx`)**
    - Each ticket has a card-like appearance
-   - Each ticket groups panels in sets - one panel per sub-pattern found in the game's pattern property
+   - Each ticket groups panels in sets - one panel per sub-array of numbers found in the game's `$pattern` property
    - Ball components will be white variant, with some kind of color indicator on the panel/row to indicate which sub-pattern the panel is using
    - Shows sub-pattern labels above each panel OR a "legend" stating which sub-pattern the color belongs to
 
