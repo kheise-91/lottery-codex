@@ -180,19 +180,19 @@ Build the React component hierarchy.
    **Done when:** Historical drawings render as cards with the date of the drawing, the pattern of the draw, and the exact numbers drawn.
 
 - [ ] **2.6 — Create TicketCard component (`src/components/games/TicketCard.jsx`)**
-   - Each ticket has a card-like appearance
-   - Each ticket groups panels in sets - one panel per array of numbers found in a game's `$pattern` property
-   - Each panel/row will have some type of color indicator as to which sub-pattern the panel belongs to
-      - Sub-patterns are determined by the unique/distinct sub-arrays of a game's `$pattern` property 
-      - The first unique/distinct sub-array found will be "sub pattern 1", the second will be "sub pattern 2", the thrid will be "sub pattern 3"
-      - Example: "sub pattern 1" for `BadgerFive.php` is `['lowOdd', 'lowOdd', 'lowEven', 'highOdd', 'highEven']` (indexes 0 - 2), "sub pattern 2" is `['lowOdd', 'lowEven', 'lowEven', 'highOdd', 'highOdd']` (index 3), and "sub pattern 3" is `['lowOdd', 'lowOdd', 'lowOdd', 'highEven', 'highEven']` (index 4) - that's 5 panels of numbers shown on the ticket with 3 distinct sub-patterns being used
-   - Ideas for potential sub-pattern color/label indicator (choose one or brainstorm something new): 
-      - Label or badge above each panel
-      - Label or badge below each panel
-      - A "legend" stating which sub-pattern the color belongs to (shown ONCE on page, above all tickets or maybe off to the side)
-   - Ball components will be white variant, with some kind of color indicator on the panel/row for sub-pattern indication
+   - Each ticket renders as a white card, rounded corners, border, and a hover lift effect with shadow (primary color shadow from theme in `index.css`)
+   - Ticket header area:
+      - Game name ("Badger Five") on the left
+      - Ticket ID below the game name - [gameInitials-date-ticketNumber] (Badger 5: "BF-yymmdd-01", SuperCash!: "SC-yymmdd-01", Megabucks: "MB-yymmdd-01")
+      - Decorative barcode on the right — made of vertical div bars with varying widths and heights
+   - Each panel has a dashed colored border (primary color from theme in `index.css`) on a gray translucent background with rounded corners
+   - Colored accent bar on the left edge (6px wide, full height, rounded on left corners only) — uses the game's main color from the theme in `index.css`
+   - Panel badge pill in the header row (e.g., "Panel A", "Panel B") — rounded-full, with the game's main color for text and the game's lightest color for background
+   - Row of 5 white variant Ball components
+   - Ticket footer: thin separator line, right-aligned timestamp (e.g., "July 26, 2026 · 09:41 AM")
+   - Multiple tickets are separated by a perforation zone — strip with radial gradient dots on a transparent background, indented from edges
 
-   **Done when:** Generated tickets render with correct panels, sub-patterns, balls and color coding.
+   **Done when:** Generated tickets render as physical-ticket-style cards with correct text, coloring, panels, white 3D balls, barcodes, and hover lift effects.
 
 - [ ] **2.7 — Create Tabs component (`src/components/layout/Tabs.jsx`, mobile only)**
    - Two-tab switcher: "Previous Drawings" / "Generated Tickets"
