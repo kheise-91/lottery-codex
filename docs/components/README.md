@@ -12,6 +12,7 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, CSS variable-themed stat pills, and CTA |
 | [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored variants |
 | [DrawingCard](./DrawingCard.md) | `frontend/src/components/games/DrawingCard.jsx` | Implemented | Renders a single historical lottery drawing as a card with date, pattern badge, and ball row |
+| [TicketCard](./TicketCard.md) | `frontend/src/components/games/TicketCard.jsx` | Implemented | Physical-ticket-style card for rendering generated lottery tickets with panels, barcode, and perforation zones |
 | [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Stub | Placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter |
 
 ## Contexts
@@ -25,7 +26,7 @@ Contexts live in a separate documentation directory:
 The following are documented in the migration roadmap but do not exist on disk:
 
 - **Full GamePage** -- Currently a stub at `/games/:gameId`; Phase 2.8 will replace it with a split-view game detail page featuring history, pattern distribution visualization, and panel generation
-- **Reusable UI components** -- TicketDisplay, PatternDistribution, Tabs
+- **Reusable UI components** -- PatternDistribution, Tabs
 
 ## Entry Point
 
