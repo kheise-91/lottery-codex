@@ -76,9 +76,9 @@ function Perforation() {
 }
 
 /** Single panel within a ticket. */
-function Panel({ numbers, index, color }) {
+function Panel({ numbers, index, color, lightColor }) {
   return (
-    <section className="relative rounded-lg border-2 border-dashed bg-gray-50/60 min-h-[80px] overflow-hidden">
+    <div className="relative rounded-lg border-1 border-dashed border-gray-300 border-l-0 min-h-[80px] overflow-hidden">
       {/* Accent bar on left edge */}
       <div
         className="absolute left-0 top-0 w-[6px] h-full rounded-l-md"
@@ -89,7 +89,7 @@ function Panel({ numbers, index, color }) {
       <div className="flex items-center gap-2 px-3 pt-2.5 pb-1">
         <span
           className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
-          style={{ color, backgroundColor: color + '26' /* light with ~15% opacity for Tailwind compatibility */ }}
+          style={{ color, backgroundColor: lightColor }}
         >
           Panel {panelLabel(index)}
         </span>
@@ -101,23 +101,23 @@ function Panel({ numbers, index, color }) {
           <Ball key={n} number={n} />
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 
 /** Single ticket card. */
-function Ticket({ game, ticketData, index }) {
+function TicketCard({ game, ticketData, index }) {
   const config = getGameConfig(game);
   const timestamp = formatTimestamp();
 
   return (
-    <article className="group relative rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5">
+    <article className="group ticket-card relative rounded-2xl border border-gray-200 bg-white overflow-hidden transition-all duration-200 hover:-translate-y-0.5">
       {/* Header */}
-      <div className="px-5 pt-5 pb-2">
+      <div className="px-5 pt-5 pb-3">
         <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-lg font-bold text-gray-700">{game.name}</h2>
-            <span className="text-sm text-gray-400">Ticket #{ticketId(config.initials, index)}</span>
+          <div className="flex flex-col">
+            <h2 className="text-lg font-bold text-gray-600">{game.name}</h2>
+            <span className="text-sm text-gray-600">Ticket #{ticketId(config.initials, index)}</span>
           </div>
           <Barcode />
         </div>
@@ -131,6 +131,7 @@ function Ticket({ game, ticketData, index }) {
             numbers={panelNumbers}
             index={panelIndex}
             color={config.color}
+            lightColor={config.light}
           />
         ))}
       </div>
@@ -150,12 +151,12 @@ function Ticket({ game, ticketData, index }) {
  * @param {Object} props.game - Game details object with keys: `id` (string), `name` (string)
  * @param {number[][][]} props.tickets - Nested array: [ticket][panel][number]. Each ticket is an array of panels, each panel is a number array.
  */
-function TicketCard({ game, tickets }) {
+function TicketList({ game, tickets }) {
   return (
     <div className="space-y-0">
       {tickets.map((ticketData, index) => (
         <>
-          <Ticket key={index} game={game} ticketData={ticketData} index={index} />
+          <TicketCard key={index} game={game} ticketData={ticketData} index={index} />
           {index < tickets.length - 1 && <Perforation />}
         </>
       ))}
@@ -163,4 +164,4 @@ function TicketCard({ game, tickets }) {
   );
 }
 
-export default TicketCard;
+export default TicketList;
