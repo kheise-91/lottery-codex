@@ -194,21 +194,27 @@ Build the React component hierarchy.
 
    **Done when:** Generated tickets render as physical-ticket-style cards with correct text, coloring, panels, white 3D balls, barcodes, and hover lift effects.
 
-- [ ] **2.7 — Create Tabs component (`src/components/layout/Tabs.jsx`, mobile only)**
-   - Two-tab switcher: "Previous Drawings" / "Generated Tickets"
-   - Hidden on desktop (≥768px) where split-view is used instead
-   - Use `@headlessui/react` Tab component (already installed)
+- [ ] **2.7 — Create BottomNavTabs component (`src/components/layout/BottomNavTabs.jsx`, mobile only)**
+    - Sticky bottom navigation bar with two tabs: "Previous Drawings" (clock icon) / "Generated Tickets" (ticket icon)
+    - Active tab uses emerald color (`--color-primary` / `#059669`) for both icon and label, plus a 3px top border indicator line; inactive tabs are gray
+    - Hidden on desktop (≥768px) where split-view is used instead
+    - Use `@headlessui/react` Tab component (already installed)
+    - Appears below the game header section on mobile — sits at the bottom of the viewport, above it are the tab content panels
 
-   **Done when:** Tabs switch content without page reload; hidden on desktop breakpoint.
+    **Done when:** Bottom-nav tabs switch content without page reload; hidden on desktop breakpoint.
 
-- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with split-view layout**
-   - Desktop (≥768px): Split-view grid — history + pattern distribution on left (5/12), generation form + tickets on right (7/12)
-   - Mobile (<768px): Tabbed interface via Tabs component — "Previous Drawings" and "Generated Tickets"
-   - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
-   - Desktop: auto-generate tickets when ticket count changes; Mobile: explicit "Generate" button
-   - Uses `useGameHistory` and `useGenerateTickets` hooks
+- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with game header + split-view layout**
+    - **Game header section** (visible on both desktop and mobile):
+       - Tablet+ (≥768px): Two-column layout — left side has game name as `<h1>` page title (`text-xl font-semibold text-gray-800`) with description underneath (`text-sm text-gray-500`); right side has the 3-column stat row
+       - Mobile (<768px): Single column — game name, then description, then a full-width row of 3 stat pills below
+       - Stat row: **Draw Days** | **Odds** | **Jackpot** — each pill uses the game's `light` color for background and `main` color for value text, with `[10px] uppercase tracking-wide` labels ("Draw", "Odds", "Jackpot")
+    - Desktop (≥768px): Game header above a split-view grid — history + pattern distribution on left (5/12), generation form + tickets on right (7/12)
+    - Mobile (<768px): Game header at top, scrollable tab content panels below, sticky BottomNavTabs component fixed to bottom of viewport
+    - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
+    - Desktop: auto-generate tickets when ticket count changes; Mobile: explicit "Generate" button within tab content
+    - Uses `useGameHistory` and `useGenerateTickets` hooks
 
-   **Done when:** User can view drawings, generate tickets, and see results — split-view on desktop, tabs on mobile.
+    **Done when:** User can view drawings, generate tickets, and see results — game header + split-view on desktop, game header + bottom-nav-tabs on mobile.
 
 - [ ] **2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)**
    - Calculates and displays pattern frequencies from historical drawings
@@ -561,7 +567,7 @@ frontend/src/contexts/GameContext.jsx                    # State management with
 frontend/src/services/api.js                             # Fetch wrapper for all API endpoints
 frontend/src/hooks/useGames.js                           # Game list fetch hook with loading/error/data states
 frontend/src/components/layout/Layout.jsx                # App shell (header + main)
-frontend/src/components/common/Tabs.jsx                  # Tab navigation component (mobile)
+frontend/src/components/layout/BottomNavTabs.jsx         # Bottom-nav tab switcher for mobile (hidden on desktop)
 frontend/src/components/games/Ball.jsx                   # Number ball display
 frontend/src/components/games/DrawingCard.jsx            # Historical drawing card
 frontend/src/components/games/TicketCard.jsx          # Generated ticket cards
