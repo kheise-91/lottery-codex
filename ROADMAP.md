@@ -179,7 +179,7 @@ Build the React component hierarchy.
 
    **Done when:** Historical drawings render as cards with the date of the drawing, the pattern of the draw, and the exact numbers drawn.
 
-- [-] **[2.6 — Create TicketCard component (`src/components/games/TicketCard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/36)**
+- [x] **[2.6 — Create TicketCard component (`src/components/games/TicketCard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/36)**
    - Each ticket renders as a white card, rounded corners, border, and a hover lift effect with shadow (primary color shadow from theme in `index.css`)
    - Ticket header area:
       - Game name ("Badger Five") on the left
