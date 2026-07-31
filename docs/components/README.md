@@ -14,6 +14,7 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [DrawingCard](./DrawingCard.md) | `frontend/src/components/games/DrawingCard.jsx` | Implemented | Renders a single historical lottery drawing as a card with date, pattern badge, and ball row |
 | [TicketList](./TicketList.md) | `frontend/src/components/games/TicketList.jsx` | Implemented | Physical-ticket-style card list component for rendering generated lottery tickets with panels, barcode, and perforation zones |
 | [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Stub | Placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter |
+| [BottomNavTabs](./BottomNavTabs.md) | `frontend/src/components/layout/BottomNavTabs.jsx` | Implemented | Sticky bottom navigation bar with two tabs ("Drawings" and "Tickets"); hidden on desktop (≥768px), uses @headlessui/react Tab components |
 
 ## Contexts
 
@@ -26,7 +27,7 @@ Contexts live in a separate documentation directory:
 The following are documented in the migration roadmap but do not exist on disk:
 
 - **Full GamePage** -- Currently a stub at `/games/:gameId`; Phase 2.8 will replace it with a split-view game detail page featuring history, pattern distribution visualization, and panel generation
-- **Reusable UI components** -- PatternDistribution, Tabs
+- **Reusable UI components** -- PatternDistribution
 
 ## Entry Point
 
