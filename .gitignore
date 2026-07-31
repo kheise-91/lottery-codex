@@ -1,11 +1,4 @@
 # ======================
-# QWEN FILES
-# ======================
-.qwen/settings.json
-.qwen/plans/
-memory/
-
-# ======================
 # BACKEND FILES
 # ======================
 data/
@@ -19,11 +12,16 @@ frontend/dist/
 frontend/mockups/
 
 # ======================
-# CLAUDE FILES
+# CLAUDE CODE FILES
 # ======================
 .claude/agent-memory
 .claude/plans
 .playwright-mcp/
+
+# ======================
+# OPENCODE FILES
+# ======================
+.opencode/plans/
 
 # ======================
 # MISC FILES
