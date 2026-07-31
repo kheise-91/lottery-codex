@@ -194,7 +194,7 @@ Build the React component hierarchy.
 
    **Done when:** Generated tickets render as physical-ticket-style cards with correct text, coloring, panels, white 3D balls, barcodes, and hover lift effects.
 
-- [-] **[2.7 — Create BottomNavTabs component (`src/components/layout/BottomNavTabs.jsx`, mobile only)](https://gitea.heise.home/kheise/lottery-codex/milestone/37)**
+- [x] **[2.7 — Create BottomNavTabs component (`src/components/layout/BottomNavTabs.jsx`, mobile only)](https://gitea.heise.home/kheise/lottery-codex/milestone/37)**
     - Sticky bottom navigation bar with two tabs: "Previous Drawings" (clock icon) / "Generated Tickets" (ticket icon)
     - Active tab uses emerald color (`--color-primary` / `#059669`) for both icon and label, plus a 3px top border indicator line; inactive tabs are gray
     - Hidden on desktop (≥768px) where split-view is used instead
