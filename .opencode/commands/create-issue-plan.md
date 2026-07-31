@@ -1,0 +1,129 @@
+---
+name: create-issue-plan
+description: Fetches an issue from Gitea using the `git-manager` agent, creates a plan for implementing the required work, and saves the plan in markdown format for later use.
+agent: plan
+---
+
+You are in plan mode. Do not write, modify, or delete any files unless required by these instructions or explicitly requested by the user.
+
+Your job is to spawn the `git-manager` agent to fetch a Gitea issue, create a plan for implementing the required work and save the plan as a markdown file for another agent to implement.
+
+The issue number is: $1. If no issue number was provided, stop and ask the user to provide one.
+
+**Scope Boundary**
+The implementation scope for this task is defined entirely by the contents of the issue - nothing else. Do not plan any work that falls outside the acceptance criteria of the issue. Roadmap items may describe combined outcomes spanning multiple issues - only implement the acceptance criteria of the issue being planned, not sibling tasks mentioned in the same roadmap entry.
+
+---
+
+# Step 1 - Spawn the `git-manager` agent
+
+Spawn the @git-manager agent, passing the issue number ($1) and instructions to follow the steps below.
+
+## Step 1.1 - Fetch the Gitea issue 
+Using the Gitea MCP Server, detect the repo from the current git remote. Retrieve issue #$1 and its full content: title, label, body, acceptance criteria, branch and milestone.
+
+## Step 1.2 - Determine the sub-phase branch name
+Derive the sub-phase branch from the issue's milestone:
+- Milestone `Phase 3.9` → sub-phase branch `phase-3-9`
+- Replace `.` with `-`, prepend `phase-`
+
+## Step 1.3 - Determine the issue branch name
+Use the branch field retrieved in step 1.1. 
+
+If none was found, read the issue's comments and find the branch comment in the format:
+```
+Branch: `branch-name`
+```
+
+This is the pre-created issue branch for this issue. If no branch name is found for this issue, stop and report the problem - do not create a new branch.
+
+## Step 1.4 - Analyze mockup file
+Read the issue's comments and check for a mockup comment in the format:
+```
+Mockup: `frontend/mockups/phase-X-Y-variant.html`
+```
+
+If a mockup path is found, **read the file** at that path and analyze it:
+- Treat it as the visual reference for frontend work 
+- Find which parts of the mockup file are related to the sub-phase, and use them for visual and structural reference only - do not blindly copy its class names, inline styles, or CSS from the mockup into the plan created
+- Identify which components/sections are relevant to this specific issue (match against acceptance criteria)
+- Note structural patterns: layout approach, interaction types (hover/click/toggle/slide), data displayed
+- Note any styling cues that differ from project conventions
+
+Apply these precedence rules in the analysis notes:
+- Components and project's `frontend/src/index.css` takes precedence for colors, variables, utilities
+- Tailwind CSS utilities take second precedence
+- Mockup is reference only for layout, hierarchy, and interaction intent
+- For structure: the sub-phase description in the project roadmap takes precedence over the mockup if they conflict
+
+## Step 1.5 - Checkout and rebase
+Checkout the pre-created issue branch AND rebase on the sub-phase branch.
+
+## Step 1.6 - Return details
+Return the issue's full contents, the issue branch name, and the sub-phase branch name.
+
+Wait for the `git-manager` agent to complete before proceeding.
+
+---
+
+# Step 2 - Create the implementation plan
+
+Review @ROADMAP.md and @.claude/plans/migration-to-react-and-modern-php.md - these are the two planning documents for the entire project. The migration plan has implementation guidelines/instructions/examples. The roadmap is the source of truth and used for tracking progress.
+
+If there's any conflicting information between the two, please stop and ask the user for clarifications. Do not make assumptions about what is true.
+
+Create a detailed plan for implementing the task found in the specified Gitea issue while sticking to the **scope boundary**. Use the two planning documents for reference. If more project details are required for planning the work, start by looking in the `docs/` folder for project documentation. If more information is required even after reviewing the project documentation, you may read the pertinent project files to assist in creating the issue plan.
+
+The issue should have a list of acceptance criteria. You may add verification steps to this if you feel the list is incomplete.
+
+The plan MUST include the issue content and sub-phase branch name provided by the `git-manager` agent in step 1. Follow the format below EXACTLY when creating the plan:
+```md
+## Issue Details
+**Title:** [full issue title]
+**Type:** [issue label]
+**Milestone:** [issue milestone]
+**Issue Branch:** [issue branch name]
+**Sub-phase Branch:** [sub-phase branch name]
+**Mockup:** [mockup-file-path/mockup-file-name.html]
+
+---
+
+## Task Summary
+[summary of work required and purpose for implementation]
+
+## Instructions
+[list of files to be added/modified/removed along with detailed instructions for each file]
+
+## Mockup Analysis
+[component/section relevance, structural patterns, interaction notes, precedence guidance — only if a mockup was found]
+
+## Verification
+[the acceptance criteria from the issue and any other verification tasks that should take place]
+```
+
+---
+
+# Step 3 - Save the plan
+
+Save the plan in the @.opencode/plans/ directory as `issue-$1.md`. 
+
+Do NOT work on implementing the plan. 
+
+Print a markdown summary including a table of all the work done. Example:
+```md
+# Issue Plan Creation
+
+---
+
+## Work Summary
+
+| STEP # | AGENT NAME        | TASK SUMMARY                           |
+|--------|-------------------|----------------------------------------|
+| 1      | `agent-name`/none | Checked out and rebased feature branch |
+
+---
+
+## File Saved
+
+[filepath/filename]
+```
