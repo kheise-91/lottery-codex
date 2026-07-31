@@ -1,6 +1,4 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# AGENTS.md
 
 ## Lottery Codex
 
@@ -56,6 +54,8 @@ When spawning agents, follow the rules below:
     - Available agents can be found in @.claude/agents/
 
 These are hard requirement due to local GPU memory constraints and context window sizes.
+
+
 
 ## Repository Platform
 
