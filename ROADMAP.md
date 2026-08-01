@@ -203,12 +203,12 @@ Build the React component hierarchy.
 
     **Done when:** Bottom-nav tabs switch content without page reload; hidden on desktop breakpoint.
 
-- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with game header + split-view layout**
+- [-] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with game header + split-view layout**
     - **Game header section** (visible on both desktop and mobile):
        - Tablet+ (≥768px): Two-column layout — left side has game name as `<h1>` page title (`text-xl font-semibold text-gray-800`) with description underneath (`text-sm text-gray-500`); right side has the 3-column stat row
        - Mobile (<768px): Single column — game name, then description, then a full-width row of 3 stat pills below
-       - Stat row: **Draw Days** | **Odds** | **Jackpot** — each pill uses the game's `light` color for background and `main` color for value text, with `[10px] uppercase tracking-wide` labels ("Draw", "Odds", "Jackpot")
-    - Desktop (≥768px): Game header above a split-view grid — history + pattern distribution on left (5/12), generation form + tickets on right (7/12)
+       - Stat row: **Draw Days** | **Odds** | **Jackpot** — each pill uses the game's `lightest` color for background and `main` color for value text, with `[10px] uppercase tracking-wide` labels ("Draw", "Odds", "Jackpot"), equal widths for all 3
+    - Desktop (≥768px): Game header above a split-view grid — pattern distribution + history on left (5/12), generation form + tickets on right (7/12)
     - Mobile (<768px): Game header at top, scrollable tab content panels below, sticky BottomNavTabs component fixed to bottom of viewport
     - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
     - Desktop: auto-generate tickets when ticket count changes; Mobile: explicit "Generate" button within tab content
