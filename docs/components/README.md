@@ -60,7 +60,7 @@ Tailwind CSS v4 is imported via the `@tailwindcss/vite` plugin in `vite.config.j
 | `.lotto-ball--white::after` | Specular highlight pseudo-element (glossy reflection at top-left) |
 | `.lotto-ball--colored` | Colored base variant for game-colored balls: solid border, white text, text shadow |
 | `.lotto-ball--sp-{gameId}` | Game theme color classes (3 total: one per game for badger-five, supercash, megabucks) |
-| `.live-dot` | Animated pulsing red dot used by DrawingCard "Latest" badge (8px circle, `pulse-dot` keyframe animation) |
+| `.live-dot` | Animated pulsing red dot used by DrawingItem "Latest" badge (8px circle, `pulse-dot` keyframe animation) |
 
 ### Theme Colors
 
