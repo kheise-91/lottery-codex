@@ -203,26 +203,34 @@ Build the React component hierarchy.
 
     **Done when:** Bottom-nav tabs switch content without page reload; hidden on desktop breakpoint.
 
-- [-] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with game header + split-view layout**
+- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with emerald header + flat drawing list + ticket carousel**
+    - Rename `DrawingCard` component to reflect its new role as a flat list item rather than a card (no card wrapper, shadow, or hover lift)
+    - Remove `TicketList` component entirely; promote `TicketCard` to the main export of that file — since tickets are now displayed via carousel instead of stacked with perforation dividers, the list-wrapper logic is no longer needed. Update all imports referencing `TicketList` accordingly.
+    - Create new `TicketCarousel` component: single-ticket-per-slide carousel with circular frosted-glass arrow buttons on left and right edges, horizontal slide track, and dot indicators at bottom where the active dot expands into a pill shape colored with the game's primary color
     - **Game header section** (visible on both desktop and mobile):
-       - Tablet+ (≥768px): Two-column layout — left side has game name as `<h1>` page title (`text-xl font-semibold text-gray-800`) with description underneath (`text-sm text-gray-500`); right side has the 3-column stat row
-       - Mobile (<768px): Single column — game name, then description, then a full-width row of 3 stat pills below
-       - Stat row: **Draw Days** | **Odds** | **Jackpot** — each pill uses the game's `lightest` color for background and `main` color for value text, with `[10px] uppercase tracking-wide` labels ("Draw", "Odds", "Jackpot"), equal widths for all 3
-    - Desktop (≥768px): Game header above a split-view grid — pattern distribution + history on left (5/12), generation form + tickets on right (7/12)
-    - Mobile (<768px): Game header at top, scrollable tab content panels below, sticky BottomNavTabs component fixed to bottom of viewport
+       - Tablet+ (≥768px): Single bordered container with rounded corners and subtle shadow, split into two columns — left side has game name as large bold heading with description underneath; right side is a 3-column grid divided by vertical dividers, each column containing: game-primary-colored icon (calendar / bar chart / coin), uppercase label ("Draw", "Odds", "Jackpot") in small gray tracking-wide text, and bold value text
+       - Mobile (<768px): Single column — game name, description, then the same 3-column stat row as a bordered container below with smaller icons, smaller labels, and values colored with the game's primary color
+    - Desktop (≥768px): Split-view grid in 7/5 column ratio:
+       - Left column (7/12): Flat on page background, no card wrapper — emerald gradient header bar (~48px tall) with centered clock icon and "Previous Drawings" text; below it a 2-column grid where left half shows **Pattern Distribution** (flat, placeholder for now, see sub-phase 2.9) and right half shows the latest drawing as flat content: date header with pulsing red-dot "Latest" badge pill on light red background, centered pattern pill badge with bar-chart icon on gray background, colored balls row using game's theme color
+       - Remaining drawings below as flat bordered list items separated by thin dividers with vertical padding: date header with relative time-ago text (e.g., "3 days ago") on the right, centered pattern pill badge, white variant balls row
+       - Right column (5/12): Emerald gradient header bar (~48px tall) with centered ticket icon and "Generated Tickets" text; form section below with pattern health status indicator (colored dot + message), ticket count dropdown (1-10); generated tickets displayed in the **TicketCarousel** component
+    - Mobile (<768px): Tabbed interface with separate content areas:
+       - Drawings tab: emerald gradient header bar ("Previous Drawings"), pattern distribution section, latest drawing with colored balls + Latest badge, remaining drawings as flat bordered list items
+       - Tickets tab: emerald gradient header bar ("Generated Tickets"), pattern health status (placeholder for now - not implemented until later phase), ticket count dropdown paired side-by-side with an explicit "Generate" button (emerald background, lightning bolt icon), TicketCarousel below with arrow buttons and dot indicators
+    - BottomNavTabs on mobile: two tabs labeled "Drawings" (clock icon) / "Tickets" (ticket icon), active tab uses primary color for icon and label with a 3px top border indicator pill; hidden on desktop where split-view is used instead
     - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
-    - Desktop: auto-generate tickets when ticket count changes; Mobile: explicit "Generate" button within tab content
+    - Desktop: auto-generate tickets when ticket count changes; Mobile: explicit "Generate" button triggers generation (lightning bolt hero icon or svg if no hero icon available)
     - Uses `useGameHistory` and `useGenerateTickets` hooks
 
-    **Done when:** User can view drawings, generate tickets, and see results — game header + split-view on desktop, game header + bottom-nav-tabs on mobile.
+    **Done when:** User can view drawings (flat list with latest highlighted), generate tickets, and browse results via carousel — emerald gradient header on desktop split-view and mobile tabs.
 
 - [ ] **2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)**
-   - Calculates and displays pattern frequencies from historical drawings
-   - Shows full pattern text (e.g., "3-Odd 2-Even / 3-Low 2-High") with percentage bar chart
-   - Color-coded bars: green (≥60%), yellow (40–59%), orange (20–39%), slate (<20%)
-   - Sticky positioning on desktop left panel; at top of mobile drawings tab
+   - Calculates and displays pattern frequencies from historical drawings (past 100 drawings)
+   - Shows heading "Pattern Distribution" with subtitle "Last 100 Drawings" in small gray text
+   - Each pattern entry: left-aligned pattern label (full lable, no abbreviations) in small medium-weight dark gray, right-aligned percentage value (e.g., "80%") in game's primary color, above a full-width bar track on light gray background with rounded ends and thin height — filled portion uses game's primary color where higher percentages render as solid fill and lower percentages use reduced opacity on the same color
+   - Does NOT use card-like appearance — elements render directly on page background (flat), no border or background wrapper
 
-   **Done when:** Pattern distribution renders accurate statistics from history data with correct color tiers.
+    **Done when:** Pattern distribution renders accurate statistics from history data as flat content with correct color and opacity tiers.
 
 - [x] **2.10 — Wire up React Router in App.jsx**
     - Routes: `/` → Dashboard, `/games/:gameId` → GamePage (stub)
@@ -423,96 +431,95 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
 
 ## Visual Design Reference
 
-### Desktop Layout (≥768px) - Split View with Pattern Distribution
+### Desktop Layout (≥768px) - Split View with Emerald Headers
 ```
-┌────────────────────────────────────┬───────────────────────────────────┐
-│                                    │                                   │
-│   Previous Drawings                │     Generated Tickets             │
-│   ─────────────────                │     ─────────────────             │
-│                                    │                                   │
-│  Pattern Distribution              │     Tickets: [3 ▼]                │
-│  (Last 50 Drawings)                │     ● It's okay to play.          │
-│                                    │     ○ On schedule                 │
-│                                    │     Auto-generate on change       │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━          │                                   │
-│  3O/2E, 3L/2H ████████████░░ 80%   │     ┌─────────────────────┐       │
-│  3O/2E, 2L/3H ████░░░░░░░░░░ 40%   │     │   Ticket Card 1     │       │
-│  2O/3E, 3L/2H ██░░░░░░░░░░░░ 20%   │     ├─────────────────────┤       │
-│                                    │     │  Sub-Pattern 1      │       │
-│  ────────────────────────          │     │  ● ○ ● ● ○          │       │
-│                                    │     ├─────────────────────┤       │
-│  [Monday, Jan 15th]                │     │  Sub-Pattern 2      │       │
-│  Pattern: 3L/2H                    │     │  ○ ● ● ○ ●          │       │
-│  ● ○ ● ● ○                         │     └─────────────────────┘       │
-│                                    │                                   │
-│  [Sunday, Jan 14th]                │   More tickets scroll here...     │
-│  Pattern: 2L/3H                    │                                   │
-│  ○ ● ● ● ○                         │                                   │
-│                                    │                                   │
-└────────────────────────────────────┴───────────────────────────────────┘
+[ Emerald Gradient App Header — full width, grid overlay, decorative curve ]
+  Lottery Codex logo + brand name
 
-Left Panel (5/12 width)              Right Panel (7/12 width)
-- Sticky pattern stats               - Generation form at top
-- Scrollable drawings below          - Generated tickets in grid below
-``` 
+[ Game Header — bordered container, two columns ]
+  ┌─────────────────────┬──────────────────────────┐
+  │ Badger Five         │ [Cal] Draw   [Bar] Odds  │
+  │ Pick 5 from 1-31... │        Wed | Sun    1 in │
+  │                     │                    575   │
+  └─────────────────────┴──────────────────────────┘
 
-### Mobile Layout (<768px) - Tabbed Interface
-```
-┌─────────────────────────────────┐
-│   Previous Drawings  │ Generate │ ← Tabs (toggle)
-├─────────────────────────────────┤
-│                                 │
-│  Pattern Distribution           │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━       │
-│  3O/2E, 3L/2H ████████░░ 80%    │
-│  3O/2E, 2L/3H ████░░░░░░ 40%    │
-│                                 │
-│  [Monday, Jan 15th]             │
-│  Pattern: 3L/2H                 │
-│  ● ○ ● ● ○                      │
-│                                 │
-│  [Sunday, Jan 14th]             │
-│  Pattern: 2L/3H                 │
-│  ○ ● ● ● ○                      │
-│                                 │
-│  ...more drawings scroll...     │
-│                                 │
-└─────────────────────────────────┘
+[ Split View — 7/5 ratio ]
+┌──────────────────────────────┬───────────────────────────────┐
+│ [Emerald] Previous Drawings  │ [Emerald] Generated Tickets   │
+├──────────────────────────────┤───────────────────────────────┤
+│ Pattern Dist. | Latest       │ ● It's okay to play.          │
+│ ──────────────| ┌──────────┐ │ Tickets: [3 ▼]               │
+│ 3O/2E,3L/2H ███░ 80%        │ │                    ◄  ►     │
+│ 3O/2E,2L/3H ██░░ 40%        │ │   Ticket Card 1             │
+│ 2O/3E,3L/2H █░░░ 20%        │ │  Panel A: ● ○ ● ● ○         │
+│                              │ │  Panel B: ● ○ ● ● ○         │
+│ [Mon Jan 15] Latest          │ │                    ◄  ►     │
+│ Pattern pill + colored balls │ └─────────────────────────────┘
+│ [Sun Jan 14] 3 days ago      │                               │
+│ Pattern pill + white balls   │  ...more tickets in carousel  │
+│ [Wed Jan 10] 1 week ago      │    with dot indicators below  │
+│ Pattern pill + white balls   │                               │
+└──────────────────────────────┴───────────────────────────────┘
 
-Tab 1 Active (Previous Drawings)
-- Pattern distribution at top
-- Scrollable drawing cards below
+Left Column (7/12)                    Right Column (5/12)
+- Emerald header bar                  - Emerald header bar
+- Flat pattern distribution           - Pattern health indicator
+- Flat latest drawing                 - Ticket count dropdown
+  (date + Latest badge)               - TicketCarousel component
+- Flat bordered list of older         - Arrow buttons + dot indicators
+  drawings (date, pill, white balls)
 ```
 
-### Mobile Layout (<768px) - Generated Tickets Tab
+### Mobile Layout (<768px) - Drawings Tab Active
 ```
-┌─────────────────────────────────┐
-│   Previous │ Generate Tickets   │ ← Tabs (toggle)
-├─────────────────────────────────┤
-│                                 │
-│  Generate Optimized Tickets     │
-│                                 │
-│  Pattern Health                 │
-│  ● It's okay to play.           │
-│  ○ On schedule                  │
-│                                 │
-│  Tickets: [3 ▼]                 │
-│  [Generate Button]              │
-│                                 │
-│  ┌─────────────────────┐        │
-│  │   Ticket Card 1     │        │
-│  ├─────────────────────┤        │
-│  │  Sub-Pattern 1      │        │
-│  │  ● ○ ● ● ○          │        │
-│  └─────────────────────┘        │
-│                                 │
-│  More tickets scroll here...    │
-│                                 │
-└─────────────────────────────────┘
+[ Emerald Gradient App Header ]
+[ Game Header — single column stack ]
+  Badger Five
+  Pick 5 from 1-31...
+  ┌─────────────────────────────┐
+  │ [Cal] Draw   [Bar] Odds    │
+  │        Wed | Sun     1 in  │
+  └─────────────────────────────┘
 
-Tab 2 Active (Generated Tickets)
-- Simple generation form (ticket count only)
-- Generated tickets display below
+[ Emerald ] Previous Drawings [ Generated Tickets ]  ← Tab headers
+─────────────────────────────────────────────────────
+Pattern Distribution
+Last 100 Drawings
+3O/2E,3L/2H ████████░░ 80%
+3O/2E,2L/3H ████░░░░░░ 40%
+
+[Mon Jan 15]          Latest ●───
+Pattern pill + colored balls
+
+[Sun Jan 14]          3 days ago
+Pattern pill + white balls
+
+[Wed Jan 10]          1 week ago
+Pattern pill + white balls
+...more drawings scroll...
+
+[ BottomNavTabs — Drawings (active) | Tickets ]
+```
+
+### Mobile Layout (<768px) - Tickets Tab Active
+```
+[ Emerald Gradient App Header ]
+[ Game Header ]
+
+[ Emerald ] Previous Drawings [ Generated Tickets ]  ← Tab headers
+─────────────────────────────────────────────────────
+● It's okay to play.
+
+Tickets: [3 ▼]    ⚡ Generate
+
+◄   Ticket Card 1   ►
+  Panel A: ● ○ ● ● ○
+  Panel B: ● ○ ● ● ○
+
+◄   Ticket Card 2   ►
+...
+
+[ BottomNavTabs — Drawings | Tickets (active) ]
 ```
 
 ---
@@ -569,8 +576,9 @@ frontend/src/hooks/useGames.js                           # Game list fetch hook 
 frontend/src/components/layout/Layout.jsx                # App shell (header + main)
 frontend/src/components/layout/BottomNavTabs.jsx         # Bottom-nav tab switcher for mobile (hidden on desktop)
 frontend/src/components/games/Ball.jsx                   # Number ball display
-frontend/src/components/games/DrawingCard.jsx            # Historical drawing card
-frontend/src/components/games/TicketCard.jsx          # Generated ticket cards
+frontend/src/components/games/DrawingCard.jsx            # Historical drawing row (flat list item, not a card; renamed from previous card-based design)
+frontend/src/components/games/TicketCard.jsx             # Single generated ticket card (promoted to main export after TicketList removal)
+frontend/src/components/games/TicketCarousel.jsx         # Ticket carousel with arrows and dot indicators
 frontend/src/components/games/PatternDistribution.jsx    # Pattern frequency bar chart
 frontend/src/components/games/GameCard.jsx               # Reusable game selection card
 frontend/src/pages/Dashboard.jsx                         # Game selection landing page with responsive card grid
@@ -583,4 +591,5 @@ frontend/package.json              # Add react-router-dom dependency
 frontend/src/main.jsx              # BrowserRouter wrapper + GameProvider
 frontend/src/App.jsx               # Router outlet replacing placeholder counter
 frontend/vite.config.js            # Environment variable support for API proxy
+frontend/src/components/games/TicketList.jsx    # Removed — TicketCard promoted to standalone component, carousel replaces stacked layout with perforation dividers
 ```
