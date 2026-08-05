@@ -106,16 +106,24 @@ Using the generated issue branch name, create a new branch off of the sub-phase 
 Create any missing labels via the Gitea MCP if the label doesn't already exist.
 
 ### Step 3.3.4 - Create the issue
-Create the issues via the Gitea MCP as planned in Step 2. 
+First, ensure the newly created issue branch has been pushed to origin so the issue getting created can be linked to the branch.
 
-ALL of the fields below are required when the issue gets created: 
+Second, create the issue via the Gitea MCP Server as planned in Step 2, following the critical parameter rules below.
+
+**CRITICAL PARAMETER RULES FOR `issue_write`:**
+- You MUST explicitly include ALL of the parameters listed below in your tool payload
+- NEVER omit any of the parameters below, even if the tool schema marks them as optional
+- Set the `ref` parameter to the exact string name of the branch created and pushed for this issue
+
+**REQUIRED FIELDS FOR `issue_write`:** 
 - title
 - body
 - milestone
 - labels
-- branch
+- ref (the branch name reference)
 
-Example call structure (fill ALL parameters): `gitea-mcp_issue_write(owner=..., repo=..., title="Title", body="Body", milestone="Phase X.Y", labels=["Task"], ref="YYYY-MM-DD-short-task-summary")`
+Example call structure: 
+`gitea-mcp_issue_write(owner=..., repo=..., title="Title", body="Body", milestone="Phase X.Y", labels=["Task"], ref="YYYY-MM-DD-short-task-summary")`
 
 ### Step 3.3.5 - Add branch name comment to the issue
 Add a comment to the issue immediately after creation:
