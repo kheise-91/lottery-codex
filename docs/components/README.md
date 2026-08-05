@@ -11,7 +11,7 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [Dashboard](./Dashboard.md) | `frontend/src/pages/Dashboard.jsx` | Implemented | Game selection landing page with responsive card grid |
 | [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, CSS variable-themed stat pills, and CTA |
 | [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored variants |
-| [DrawingCard](./DrawingCard.md) | `frontend/src/components/games/DrawingCard.jsx` | Implemented | Renders a single historical lottery drawing as a card with date, pattern badge, and ball row |
+| [DrawingItem](./DrawingItem.md) | `frontend/src/components/games/DrawingItem.jsx` | Implemented | Renders a single historical lottery drawing as a flat list item with centered pattern badge, date header, and centered ball row |
 | [TicketList](./TicketList.md) | `frontend/src/components/games/TicketList.jsx` | Implemented | Physical-ticket-style card list component for rendering generated lottery tickets with panels, barcode, and perforation zones |
 | [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Stub | Placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter |
 | [BottomNavTabs](./BottomNavTabs.md) | `frontend/src/components/layout/BottomNavTabs.jsx` | Implemented | Sticky bottom navigation bar with two tabs ("Drawings" and "Tickets"); hidden on desktop (≥768px), uses @headlessui/react Tab components |

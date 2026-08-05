@@ -23,7 +23,7 @@
   transform: translateY(-4px);
 }
 
-/* Live dot — used by DrawingCard "Latest" badge */
+/* Live dot — used by DrawingItem "Latest" badge */
 .live-dot {
   width: 8px;
   height: 8px;
@@ -42,7 +42,7 @@
   border: 1px solid #e5e7eb;
 }
 
-/* Lottery Ball — base (DrawingCard / TicketDisplay) */
+/* Lottery Ball — base (DrawingItem / TicketDisplay) */
 .lotto-ball {
   width: 3rem;
   height: 3rem;
@@ -56,7 +56,7 @@
   user-select: none;
 }
 
-/* Lottery Ball — white variant (DrawingCard context) */
+/* Lottery Ball — white variant (DrawingItem context) */
 .lotto-ball--white {
   background: radial-gradient(circle at 38% 32%, #ffffff 0%, #f4f7fa 35%, #d1d9e6 70%, #a8b4c4 100%);
   border: 1.5px solid #b0bec5;
