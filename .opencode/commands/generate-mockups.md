@@ -56,7 +56,7 @@ Analyze the existing codebase inside `frontend/src/` to extract visual design co
 Return a markdown summary of these visual styles to the orchestrator. Do not attempt to read files outside your permitted directories or write any mockup files.
 ```
 
-Await the agent's markdown response before moving on to Step 4. Use the agent's summary to assist with planning and generating the mockups.
+Await the agent's markdown response before proceeding. Use the agent's summary to assist with planning and generating the mockups.
 
 ---
 
@@ -72,6 +72,7 @@ Each mockup variant should:
 - Be fully interactive where appropriate
 - Include realistic placeholder content
 - Include a reference footer describing the sub-phase and design approach
+- Include the full Layout shell from `src/components/layout/Layout.jsx` as documented by the explorer — gradient SVG hero with "Lottery Codex" branding, wrapping all page content
 
 For each mockup variant, decide:
 - A short kebab-case name capturing what makes it distinct (e.g. `slide-panel`, `inline-list`, `modal-drawer`)
@@ -81,9 +82,11 @@ For each mockup variant, decide:
 
 # Step 5 - Spawn `frontend-engineer` agents to generate mockup variants
 
-For each planned mockup variant: spawn a @frontend-engineer agent to produce a complete, self-contained HTML file for each variant following the expected requirements found in the agent's definition.
+For each planned mockup variant: spawn a @frontend-engineer agent (one at a time) to produce a complete, self-contained HTML file for each variant following the expected requirements found in the agent's definition.
 
 Pass the agent the sub-phase number and variant info, extracted design requirements and project styles from steps 2 and 3, and any other information needed to create the specified variant.
+
+Instruct the agent to save the file to the @frontend/mockups/ directory, following the existing naming pattern: `phase-X-Y-variant.html` (replace `.` in `$1` with `-`).
 
 Wait for all engineer agents to complete before proceeding.
 

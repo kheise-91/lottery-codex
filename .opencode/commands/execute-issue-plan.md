@@ -35,7 +35,7 @@ If a mockup file is referenced in the issue plan, instruct the `frontend-enginee
 - Identify which components/sections are relevant to this specific issue (match against acceptance criteria)
 - Note structural patterns: layout approach, interaction types (hover/click/toggle/slide), data displayed
 - Note any styling cues that differ from project conventions
-- Apply these precedence rules in the analysis notes:
+- Apply these precedence rules:
     - Components and project's `frontend/src/index.css` takes precedence for colors, variables, utilities
     - Tailwind CSS utilities take second precedence
     - Mockup is reference only for layout, hierarchy, and interaction intent
