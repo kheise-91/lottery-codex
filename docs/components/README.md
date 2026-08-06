@@ -12,7 +12,7 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, CSS variable-themed stat pills, and CTA |
 | [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored variants |
 | [DrawingItem](./DrawingItem.md) | `frontend/src/components/games/DrawingItem.jsx` | Implemented | Renders a single historical lottery drawing as a flat list item with centered pattern badge, date header, and centered ball row |
-| [TicketList](./TicketList.md) | `frontend/src/components/games/TicketList.jsx` | Implemented | Physical-ticket-style card list component for rendering generated lottery tickets with panels, barcode, and perforation zones |
+| [TicketCard](./TicketCard.md) | `frontend/src/components/games/TicketCard.jsx` | Implemented | Physical-ticket-style card component for rendering a single generated lottery ticket with panels, barcode, and decorative elements |
 | [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Stub | Placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter |
 | [BottomNavTabs](./BottomNavTabs.md) | `frontend/src/components/layout/BottomNavTabs.jsx` | Implemented | Sticky bottom navigation bar with two tabs ("Drawings" and "Tickets"); hidden on desktop (≥768px), uses @headlessui/react Tab components |
 
@@ -52,7 +52,7 @@ Tailwind CSS v4 is imported via the `@tailwindcss/vite` plugin in `vite.config.j
 | Class | Purpose |
 |-------|---------|
 | `.card-shadow` | Default box shadow for GameCard (emerald HSL tones) |
-| `.ticket-card` | Box shadow applied to single-ticket `<article>` elements inside TicketList (shares same HSL tones as `.card-shadow`) |
+| `.ticket-card` | Box shadow applied to single-ticket `<article>` elements inside TicketCard (shares same HSL tones as `.card-shadow`) |
 | `.card-shadow-hover` | Elevated box shadow on GameCard hover (emerald HSL tones) |
 | `.stat-pill` | Green gradient background and border for stat pills inside GameCard |
 | `.lotto-ball` | Base styling for lottery number balls: 48px circle, centered text, `position: relative` |

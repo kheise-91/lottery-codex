@@ -3,7 +3,8 @@
  *
  * @param {Object} props
  * @param {Object} props.game - Game details object with keys: `id` (string), `name` (string)
- * @param {number[][][]} props.tickets - Nested array: [ticket][panel][number]. Each ticket is an array of panels, each panel is a number array.
+ * @param {number[][][]} props.ticketData - Panel data for a single ticket: [panel][number]. Each panel is an array of numbers.
+ * @param {number} props.index - Zero-based index for generating the ticket ID label.
  */
 import Ball from './Ball';
 
@@ -60,21 +61,6 @@ function Barcode() {
   );
 }
 
-/** Perforation divider between tickets. */
-function Perforation() {
-  return (
-    <div
-      className="mx-8 my-1"
-      style={{
-        backgroundImage: 'radial-gradient(circle, #d1d5db 2px, transparent 2.5px)',
-        backgroundSize: '16px 16px',
-        height: '14px',
-      }}
-      aria-hidden="true"
-    />
-  );
-}
-
 /** Single panel within a ticket. */
 function Panel({ numbers, index, color, lightColor }) {
   return (
@@ -105,8 +91,16 @@ function Panel({ numbers, index, color, lightColor }) {
   );
 }
 
-/** Single ticket card. */
-function TicketCard({ game, ticketData, index }) {
+/**
+ * TicketCard — renders a single generated lottery ticket as a physical-ticket-style card.
+ *
+ * @param {Object} props
+ * @param {Object} props.game - Game details object with keys: `id` (string), `name` (string)
+ * @param {number[][]} props.ticketData - Panel data for a single ticket: [panel][number]. Each panel is an array of numbers.
+ * @param {number} props.index - Zero-based index for generating the ticket ID label.
+ * @returns {JSX.Element}
+ */
+export default function TicketCard({ game, ticketData, index }) {
   const config = getGameConfig(game);
   const timestamp = formatTimestamp();
 
@@ -143,25 +137,3 @@ function TicketCard({ game, ticketData, index }) {
     </article>
   );
 }
-
-/**
- * TicketCard — renders generated lottery tickets as physical-ticket-style cards.
- *
- * @param {Object} props
- * @param {Object} props.game - Game details object with keys: `id` (string), `name` (string)
- * @param {number[][][]} props.tickets - Nested array: [ticket][panel][number]. Each ticket is an array of panels, each panel is a number array.
- */
-function TicketList({ game, tickets }) {
-  return (
-    <div className="space-y-0">
-      {tickets.map((ticketData, index) => (
-        <>
-          <TicketCard key={index} game={game} ticketData={ticketData} index={index} />
-          {index < tickets.length - 1 && <Perforation />}
-        </>
-      ))}
-    </div>
-  );
-}
-
-export default TicketList;
