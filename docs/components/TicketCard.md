@@ -123,4 +123,4 @@ Renders a single Badger Five ticket with 2 panels.
 
 ## Status
 
-Promoted from nested sub-component inside `TicketList` (Phase 2.6) to standalone export in Phase 2.8. Consumed by the TicketCarousel for displaying generated prediction results.
+Standalone export since Phase 2.8. Consumed by the TicketCarousel for displaying generated prediction results.

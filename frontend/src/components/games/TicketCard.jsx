@@ -3,7 +3,7 @@
  *
  * @param {Object} props
  * @param {Object} props.game - Game details object with keys: `id` (string), `name` (string)
- * @param {number[][][]} props.ticketData - Panel data for a single ticket: [panel][number]. Each panel is an array of numbers.
+ * @param {number[][]} props.ticketData - Panel data for a single ticket: [panel][number]. Each panel is an array of numbers.
  * @param {number} props.index - Zero-based index for generating the ticket ID label.
  */
 import Ball from './Ball';
