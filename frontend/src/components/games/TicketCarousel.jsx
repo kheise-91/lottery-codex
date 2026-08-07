@@ -126,7 +126,7 @@ export default function TicketCarousel({ tickets, game }) {
       </div>
 
       {/* Dot Indicators */}
-      <div className="flex items-center justify-center gap-1.5 mt-3">
+      <div className="flex items-center justify-center gap-1.5 mt-2">
         {tickets.map((_, dotIndex) => {
           const isActive = dotIndex === activeIndex;
           return (

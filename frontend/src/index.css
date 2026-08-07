@@ -14,13 +14,23 @@
 }
 
 /* Card shadow — used by GameCard */
-.card-shadow, .ticket-card {
+.card-shadow {
   box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px;
   transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
 }
-.card-shadow:hover, .ticket-card:hover {
+.card-shadow:hover {
   box-shadow: hsl(160 75% 25% / 35%) 0px 12px 32px -2px, hsl(160 75% 15% / 25%) 0px 8px 16px -2px;
   transform: translateY(-4px);
+}
+
+/* Ticket card shadow — smaller, color set via --ticket-shadow-color inline variable */
+.ticket-card {
+  box-shadow: 0px 4px 12px -2px var(--ticket-shadow-color, rgba(0, 0, 0, 0.15)), 0px 2px 6px -2px var(--ticket-shadow-muted, rgba(0, 0, 0, 0.08));
+  transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+}
+.ticket-card:hover {
+  box-shadow: 0px 6px 14px -2px var(--ticket-shadow-color, rgba(0, 0, 0, 0.2)), 0px 3px 8px -2px var(--ticket-shadow-muted, rgba(0, 0, 0, 0.12));
+  transform: translateY(-1px);
 }
 
 /* Live dot — used by DrawingItem "Latest" badge */
