@@ -86,7 +86,9 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── components/
 │   │   │   ├── games/
 │   │   │   │   ├── Ball.jsx        # Foundational UI primitive: 48px 3D sphere with white and colored sub-pattern variants
-│   │   │   │   └── GameCard.jsx    # Clickable game selection card with image, stats, CTA
+│   │   │   │   ├── GameCard.jsx    # Clickable game selection card with image, stats, CTA
+│   │   │   │   ├── TicketCard.jsx  # Physical-ticket-style card for a single generated lottery ticket
+│   │   │   │   └── TicketCarousel.jsx  # Horizontal carousel for browsing multiple generated tickets
 │   │   │   └── layout/
 │   │   │       └── Layout.jsx      # Branded layout shell with gradient header and Outlet for nested routes
 │   │   ├── contexts/
@@ -117,6 +119,8 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
   - [Dashboard Component Detail](docs/components/Dashboard.md) -- Game selection landing page with responsive card grid
   - [GameCard Component Detail](docs/components/GameCard.md) -- Clickable game card with generic gradient header, status badge, CSS variable-themed stat pills, and CTA button
   - [Ball Component Detail](docs/components/Ball.md) -- Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored sub-pattern variants
+  - [TicketCard Component Detail](docs/components/TicketCard.md) -- Physical-ticket-style card for rendering a single generated lottery ticket with panels, barcode, and decorative elements
+  - [TicketCarousel Component Detail](docs/components/TicketCarousel.md) -- Horizontal carousel for browsing multiple generated tickets with arrow navigation, dot indicators, and keyboard support
   - [GamePage Component Detail](docs/components/GamePage.md) -- Stub placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter
 - [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
   - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results; auto-fetches games list on mount
