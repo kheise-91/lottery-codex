@@ -82,7 +82,7 @@ function Panel({ numbers, index, color, lightColor }) {
       </div>
 
       {/* Balls row */}
-      <div className="flex items-center gap-2.5 px-4 py-2">
+      <div className="flex items-center justify-center gap-2.5 px-4 py-2">
         {numbers.map((n) => (
           <Ball key={n} number={n} />
         ))}

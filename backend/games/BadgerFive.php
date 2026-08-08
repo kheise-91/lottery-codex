@@ -182,7 +182,13 @@ class BadgerFive implements GameInterface, \JsonSerializable
 
         foreach ($subPattern as $p) {
             $cutoff = count($this->{$p}) - 1;
-            $panel[] = $this->{$p}[random_int(0, $cutoff)];
+            $num = $this->{$p}[random_int(0, $cutoff)];
+
+            while (in_array($num, $panel)) {
+                $num = $this->{$p}[random_int(0, $cutoff)];
+            }
+
+            $panel[] = $num;
         }
 
         sort($panel);

@@ -51,8 +51,8 @@ function GamePage() {
 
   /* ---- Transform history object → array of drawing objects ---- */
   const drawings = useMemo(() => {
-    if (!history) return []
-    return Object.entries(history).map(([date, entry]) => ({
+    if (!history?.history) return []
+    return Object.entries(history.history).map(([date, entry]) => ({
       date,
       numbers: entry.numbers || [],
       pattern: entry.pattern || '',
@@ -161,11 +161,11 @@ function GamePage() {
         </button>
       </div>
 
-      {/* Ticket Carousel */}
-      <TicketCarousel tickets={carouselTickets} game={gameDetails} />
+           {/* Ticket Carousel */}
+      {gameDetails && <TicketCarousel tickets={carouselTickets} game={gameDetails} />}
 
-      {generateError && (
-        <p className="text-red-600 text-sm mt-3">Failed to generate tickets: {generateError}</p>
+            {generateError && (
+              <p className="text-red-600 text-sm mt-3">Failed to generate tickets: {generateError}</p>
       )}
     </>
   )
@@ -273,7 +273,7 @@ function GamePage() {
             </div>
 
             {/* Ticket Carousel */}
-            <TicketCarousel tickets={carouselTickets} game={gameDetails} />
+             {gameDetails && <TicketCarousel tickets={carouselTickets} game={gameDetails} />}
 
             {generateError && (
               <p className="text-red-600 text-sm mt-3">Failed to generate tickets: {generateError}</p>

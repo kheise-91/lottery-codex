@@ -134,7 +134,7 @@ export default function TicketCarousel({ tickets, game }) {
               key={dotIndex}
               onClick={() => goTo(dotIndex)}
               aria-label={`Go to ticket ${dotIndex + 1}`}
-              className="transition-all duration-200"
+              className="transition-all duration-200 cursor-pointer"
               style={{
                 width: isActive ? '24px' : '8px',
                 height: '8px',
