@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Root routed component for the Lottery Codex application. Wraps all routes in the shared `Layout` shell and defines two route paths: the Dashboard game selection page (`/`) and a stub GamePage (`/games/:gameId`).
+Root routed component for the Lottery Codex application. Wraps all routes in the shared `Layout` shell and defines two route paths: the Dashboard game selection page (`/`) and the GamePage game detail page (`/games/:gameId`).
 
 ## Props
 
@@ -32,7 +32,7 @@ None. No `useEffect`, no data fetching, no subscriptions. Data fetching is deleg
 | Route | Component | Description |
 |-------|-----------|-------------|
 | `/` | `Dashboard` | Game selection landing page with responsive card grid |
-| `/games/:gameId` | `GamePage` | Stub placeholder -- shows "coming soon" message |
+| `/games/:gameId` | `GamePage` | Game detail page with split-view desktop layout and tabbed mobile interface
 
 ## Children
 
@@ -45,7 +45,7 @@ None. The component manages its own route tree and does not accept children.
 | `react-router-dom` (`BrowserRouter`, `Routes`, `Route`) | Client-side routing |
 | `Layout` | App shell wrapping all routes |
 | `Dashboard` | Home page component |
-| `GamePage` | Game detail stub |
+| `GamePage` | Game detail page with split-view and tabbed layouts
 
 ## Usage
 
@@ -63,4 +63,4 @@ App is rendered in the entry point (`frontend/src/main.jsx`) wrapped in React St
 
 ## Status
 
-Implemented. All routes are wired and functional. GamePage is a stub pending Phase 2.8.
+Implemented. All routes are wired and functional.

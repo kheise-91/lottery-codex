@@ -1,6 +1,6 @@
 # Components Index
 
-The frontend is a routed SPA with a Layout shell, Dashboard game selection page, GameCard reusable component, and a stub GamePage. The `GameContext` provider and `useGames` hook form the data layer.
+The frontend is a routed SPA with a Layout shell, Dashboard game selection page, GameCard reusable component, and a full-featured GamePage. The `GameContext` provider and custom hooks (`useGames`, `useGameHistory`, `useGenerateTickets`) form the data layer.
 
 ## Component List
 
@@ -14,8 +14,8 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [DrawingItem](./DrawingItem.md) | `frontend/src/components/games/DrawingItem.jsx` | Implemented | Renders a single historical lottery drawing as a flat list item with centered pattern badge, date header, and centered ball row |
 | [TicketCard](./TicketCard.md) | `frontend/src/components/games/TicketCard.jsx` | Implemented | Physical-ticket-style card component for rendering a single generated lottery ticket with panels, barcode, and decorative elements |
 | [TicketCarousel](./TicketCarousel.md) | `frontend/src/components/games/TicketCarousel.jsx` | Implemented | Horizontal carousel for browsing multiple generated tickets with left/right arrows, dot indicators, and keyboard navigation |
-| [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Stub | Placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter |
-| [BottomNavTabs](./BottomNavTabs.md) | `frontend/src/components/layout/BottomNavTabs.jsx` | Implemented | Sticky bottom navigation bar with two tabs ("Drawings" and "Tickets"); hidden on desktop (≥768px), uses @headlessui/react Tab components |
+| [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Implemented | Game detail page with desktop split-view (7/5 grid) and mobile tabbed layout; shows game metadata, historical drawings, and generated tickets |
+| [BottomNavTabs](./BottomNavTabs.md) | `frontend/src/components/layout/BottomNavTabs.jsx` | Implemented | Sticky bottom navigation bar with two tabs ("Drawings" and "Tickets"); visible on mobile (<768px), hidden on desktop (≥768px), uses @headlessui/react Tab components |
 
 ## Contexts
 
@@ -27,8 +27,7 @@ Contexts live in a separate documentation directory:
 
 The following are documented in the migration roadmap but do not exist on disk:
 
-- **Full GamePage** -- Currently a stub at `/games/:gameId`; Phase 2.8 will replace it with a split-view game detail page featuring history, pattern distribution visualization, and panel generation
-- **Reusable UI components** -- PatternDistribution
+- **Reusable UI components** -- PatternDistribution visualization component
 
 ## Entry Point
 
@@ -44,7 +43,7 @@ The following are documented in the migration roadmap but do not exist on disk:
 </StrictMode>
 ```
 
-The `GameProvider` wraps the router so all routes share state. The app has two active routes defined in `App.jsx`: `/` (Dashboard) and `/games/:gameId` (GamePage stub).
+The `GameProvider` wraps the router so all routes share state. The app has two active routes defined in `App.jsx`: `/` (Dashboard) and `/games/:gameId` (GamePage detail page).
 
 ## Styling
 
