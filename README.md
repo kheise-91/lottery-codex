@@ -36,7 +36,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
      :5959                    Docker container                live HTTP request
 ```
 
-- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage stub). App shell (`Layout`) provides branded emerald gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills using CSS variable theming, and CTA buttons. Theme colors defined via Tailwind `@theme` in `frontend/src/index.css` (emerald primary, per-game accent colors).
+- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage detail page with split-view desktop layout and tabbed mobile interface). App shell (`Layout`) provides branded emerald gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`, `useGameHistory`, `useGenerateTickets`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills using CSS variable theming, and CTA buttons. Theme colors defined via Tailwind `@theme` in `frontend/src/index.css` (emerald primary, per-game accent colors).
 - **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs (`badger-five`, `supercash`, `megabucks`) to class names. Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
@@ -86,7 +86,9 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── components/
 │   │   │   ├── games/
 │   │   │   │   ├── Ball.jsx        # Foundational UI primitive: 48px 3D sphere with white and colored sub-pattern variants
-│   │   │   │   └── GameCard.jsx    # Clickable game selection card with image, stats, CTA
+│   │   │   │   ├── GameCard.jsx    # Clickable game selection card with image, stats, CTA
+│   │   │   │   ├── TicketCard.jsx  # Physical-ticket-style card for a single generated lottery ticket
+│   │   │   │   └── TicketCarousel.jsx  # Horizontal carousel for browsing multiple generated tickets
 │   │   │   └── layout/
 │   │   │       └── Layout.jsx      # Branded layout shell with gradient header and Outlet for nested routes
 │   │   ├── contexts/
@@ -95,7 +97,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   │   └── useGames.js         # Custom hook wrapping fetchGames with loading/error/data states
 │   │   ├── pages/
 │   │   │   ├── Dashboard.jsx       # Game selection landing page with responsive card grid
-│   │   │   └── GamePage.jsx        # Stub placeholder for game detail view
+│   │   │   └── GamePage.jsx        # Game detail page with split-view desktop layout and tabbed mobile interface
 │   │   └── services/
 │   │       └── api.js              # Fetch wrapper for all backend API endpoints
 │   ├── public/                     # Static assets: SVG game logos (.env.example, vite.config.js)
@@ -117,7 +119,9 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
   - [Dashboard Component Detail](docs/components/Dashboard.md) -- Game selection landing page with responsive card grid
   - [GameCard Component Detail](docs/components/GameCard.md) -- Clickable game card with generic gradient header, status badge, CSS variable-themed stat pills, and CTA button
   - [Ball Component Detail](docs/components/Ball.md) -- Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored sub-pattern variants
-  - [GamePage Component Detail](docs/components/GamePage.md) -- Stub placeholder for game detail view; shows "coming soon" message with matched gameId from URL parameter
+  - [TicketCard Component Detail](docs/components/TicketCard.md) -- Physical-ticket-style card for rendering a single generated lottery ticket with panels, barcode, and decorative elements
+  - [TicketCarousel Component Detail](docs/components/TicketCarousel.md) -- Horizontal carousel for browsing multiple generated tickets with arrow navigation, dot indicators, and keyboard support
+  - [GamePage Component Detail](docs/components/GamePage.md) -- Game detail page with desktop split-view (7/5 grid) and mobile tabbed layout; shows game metadata, historical drawings, and generated tickets
 - [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
   - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results; auto-fetches games list on mount
 - [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.

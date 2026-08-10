@@ -1,5 +1,5 @@
 /**
- * DrawingCard — renders a single historical lottery drawing as a card.
+ * DrawingItem — renders a single historical lottery drawing as a flat list item.
  *
  * @param {Object} props
  * @param {Object} props.drawing - Single drawing object with keys: `date` (string), `numbers` (number[]), `pattern` (string)
@@ -8,15 +8,15 @@
  */
 import Ball from './Ball';
 
-function DrawingCard({ drawing, gameId = null, isRecent = false }) {
+function DrawingItem({ drawing, gameId = null, isRecent = false }) {
   const formattedDate = drawing.date || 'Unknown date';
   const pattern = drawing.pattern || '';
   const numbers = drawing.numbers || [];
 
   return (
-    <article className="card-shadow overflow-hidden cursor-pointer" tabIndex={0}>
+    <div className="border-b border-gray-100 pb-4 mb-4">
       {/* Date header strip */}
-      <div className="px-5 pt-4 pb-2 flex items-center justify-between">
+      <div className="px-2 pt-2 pb-2 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-gray-800">{formattedDate}</h2>
         {isRecent ? (
           <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
@@ -31,8 +31,8 @@ function DrawingCard({ drawing, gameId = null, isRecent = false }) {
       </div>
 
       {/* Pattern badge */}
-      <div className="px-5 pb-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold leading-relaxed tracking-tight bg-gray-100 text-gray-700 border border-gray-200">
+      <div className="mb-3 flex justify-center items-center">
+        <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold leading-relaxed tracking-tight bg-gray-100 text-gray-700 border border-gray-200 w-[20rem] justify-center">
           {/* Small chart icon */}
           <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -42,12 +42,12 @@ function DrawingCard({ drawing, gameId = null, isRecent = false }) {
       </div>
 
       {/* Number balls */}
-      <div className="px-5 pb-5 flex items-center gap-2.5">
+      <div className="flex items-center justify-center gap-2.5">
         {numbers.map((num) => (
           <Ball key={num} number={num} gameId={isRecent ? gameId : null} />
         ))}
       </div>
-    </article>
+    </div>
   );
 }
 
@@ -61,24 +61,29 @@ function timeAgo(dateString) {
   const now = new Date();
   let target;
 
-  // Attempt native parse first; fall back to manual for legacy formats like "Monday, January 1st"
+  // Strip ordinal suffixes and inject current year so JS can parse correctly
+  const cleaned = dateString.replace(/(\d+)(st|nd|rd|th)/i, '$1');
   try {
-    target = new Date(dateString);
+    target = new Date(cleaned);
   } catch {
     return '';
   }
 
   if (isNaN(target.getTime())) return '';
 
+  // If year is wrong (e.g., parsed as 2001), use current year
+  if (target.getFullYear() !== now.getFullYear()) {
+    const month = target.getMonth();
+    const day = target.getDate();
+    target = new Date(now.getFullYear(), month, day);
+  }
+
   const diffMs = now - target;
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
-  const weeks = Math.floor(diffDays / 7);
-  if (weeks === 1) return '1 week ago';
-  return `${weeks} weeks ago`;
+  return `${diffDays} days ago`;
 }
 
-export default DrawingCard;
+export default DrawingItem;

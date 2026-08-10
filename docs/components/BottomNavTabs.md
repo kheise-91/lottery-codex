@@ -1,16 +1,16 @@
 # BottomNavTabs
 
-Sticky bottom navigation bar for mobile screens that provides tab-based switching between "Drawings" (previous drawings) and "Tickets" (generated tickets) content panels. Hidden on desktop (≥768px) where a split-view layout is used instead.
+Sticky bottom navigation bar for mobile screens that provides tab-based switching between "Drawings" (previous drawings) and "Tickets" (generated tickets) content panels. Visible on mobile (<768px), hidden on desktop (≥768px) where `GamePage` uses a side-by-side split layout.
 
 ## Purpose
 
-Provides mobile-friendly navigation within a game detail page, allowing users to toggle between historical drawing data and generated ticket panels without leaving the page. On larger screens the component is invisible because `GamePage` uses a side-by-side split layout.
+Provides mobile-friendly navigation within the game detail page, allowing users to toggle between historical drawing data and generated ticket panels without leaving the page. On larger screens the component is invisible because `GamePage` displays both sections simultaneously in a split-view layout.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `onChange` | `(index: number) => void` | — | Optional callback fired when the active tab changes; receives the new tab index (0 or 1). |
+| `onChange` | `(index: number) => void` | — | Optional callback fired when the active tab changes; receives the new tab index (`0` or `1`). |
 
 ## Structure
 
@@ -20,12 +20,12 @@ import BottomNavTabs from './components/layout/BottomNavTabs';
 <BottomNavTabs onChange={(idx) => console.log('Tab changed to', idx)} />
 ```
 
-The component internally uses `@headlessui/react`'s `<Tab.Group>` with two `<Tab>` elements. Content panels are **not** rendered by this component — the consumer provides them separately and coordinates tab state via the `onChange` callback.
+The component internally uses `@headlessui/react`'s `<Tab.Group>` with two `<Tab>` elements. Content panels are **not** rendered by this component — the consumer (`GamePage`) provides them separately and coordinates tab state via the `onChange` callback.
 
 ## Behavior
 
 - **Default tab:** "Drawings" (index 0)
-- **Responsive visibility:** Hidden on screens ≥768px (`hidden md:flex`)
+- **Responsive visibility:** Visible on mobile (<768px), hidden on desktop (≥768px) via `flex md:hidden`
 - **State management:** Handled entirely by `@headlessui/react` `<Tab.Group>` — no local React state
 - **Accessibility:** Inherits keyboard navigation, ARIA roles, and focus management from headlessui Tab components
 

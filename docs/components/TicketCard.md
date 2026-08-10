@@ -1,17 +1,18 @@
-# TicketList
+# TicketCard
 
-**File:** `frontend/src/components/games/TicketList.jsx`
+**File:** `frontend/src/components/games/TicketCard.jsx`
 
 ## Purpose
 
-Renders generated lottery tickets as physical-ticket-style cards. Displays prediction results from the backend's ticket generation API with a realistic ticket aesthetic: game-themed accent bars, dashed panel borders, decorative barcodes, and perforation zones between consecutive tickets.
+Renders a single generated lottery ticket as a physical-ticket-style card. Displays prediction results from the backend's ticket generation API with a realistic ticket aesthetic: game-themed accent bars, dashed panel borders, and decorative barcodes.
 
 ## Props
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | `game` | `Object` | Yes | -- | Game details object with keys `id` (string) and `name` (string), e.g. `{ id: 'badger-five', name: 'Badger 5' }` |
-| `tickets` | `number[][][]` | Yes | -- | Nested array of ticket data. Structure: `[ticket][panel][number]`. Each ticket is an array of panels, each panel is an array of numbers (e.g., `[[[7, 14, 23, 31, 39], [2, 11, 19, 27, 35]]]` for a two-panel Badger Five ticket) |
+| `ticketData` | `number[][]` | Yes | -- | Panel data for a single ticket: `[panel][number]`. Each panel is an array of numbers (e.g., `[[7, 14, 23, 31, 39], [2, 11, 19, 27, 35]]` for a two-panel Badger Five ticket) |
+| `index` | `number` | Yes | -- | Zero-based index used to generate the ticket ID label (e.g., "Ticket #BF-260726-01") |
 
 ## State
 
@@ -19,34 +20,26 @@ No internal state. The component is fully controlled by props. All formatting (t
 
 ## Structure
 
-The component composes four internal sub-components:
+The component composes three internal sub-components:
 
-1. **TicketList** (default export) -- Top-level wrapper that maps over `tickets`, rendering a `<TicketCard>` for each and inserting a `<Perforation>` divider between consecutive tickets.
-2. **TicketCard** -- Renders a single ticket card with header, panels section, and footer strip.
-3. **Panel** -- Renders one panel within a ticket: dashed-border container, colored accent bar, badge pill, and balls row.
-4. **Barcode** / **Perforation** -- Decorative helpers (barcode in header, dot-pattern divider between tickets).
+1. **TicketCard** (default export) -- Renders a single ticket card with header, panels section, and footer strip.
+2. **Panel** -- Renders one panel within a ticket: dashed-border container, colored accent bar, badge pill, and balls row.
+3. **Barcode** -- Decorative helper rendered in the ticket header.
 
-### TicketList (default export)
+### TicketCard (default export)
 
 ```jsx
-<div className="space-y-0">
-  {tickets.map((ticketData, index) => (
-    <>
-      <TicketCard key={index} game={game} ticketData={ticketData} index={index} />
-      {index < tickets.length - 1 && <Perforation />}
-    </>
-  ))}
-</div>
+<article className="group ticket-card relative rounded-2xl border border-gray-200 bg-white overflow-hidden transition-all duration-200 hover:-translate-y-0.5">
+  {/* Header: game name, ticket ID, barcode */}
+  <div className="px-5 pt-5 pb-3">...</div>
+
+  {/* Panels: one <Panel /> per panel in ticketData */}
+  <div className="px-5 pb-5 space-y-3">...</div>
+
+  {/* Footer: timestamp */}
+  <div className="border-t border-gray-100 bg-gray-50 px-5 py-2.5 flex items-center justify-end">...</div>
+</article>
 ```
-
-### TicketCard
-
-An `<article>` element with the `ticket-card` CSS class applied:
-- **Header** (`px-5 pt-5 pb-3`): Game name (`<h2>`) and ticket ID on the left, decorative `<Barcode />` on the right.
-- **Panels** (`px-5 pb-5`): Each panel rendered by `<Panel>`, separated by `space-y-3`.
-- **Footer** (`border-t border-gray-100 bg-gray-50 px-5 py-2.5`): Right-aligned timestamp.
-
-Hover effect via `group` classes: `hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200`.
 
 ### Panel
 
@@ -104,9 +97,8 @@ Looks up `GAME_CONFIG[game.id]`. Returns the config object or gray fallback.
 All styling uses Tailwind CSS utility classes. Two inline styles are used for dynamic game-specific colors:
 - Panel accent bar: `backgroundColor` set to the game's primary color.
 - Panel badge: text color and light background derived from the game's `light` config value.
-- Perforation divider: radial gradient dot pattern via `backgroundImage`.
 
-The `.ticket-card` CSS class is added to `index.css` and provides the same box-shadow styles as `.card-shadow`, applied to the `<article>` element inside each `TicketCard`.
+The `.ticket-card` CSS class is added to `index.css` and provides a box-shadow style applied to the `<article>` element inside each `TicketCard`.
 
 ## Children
 
@@ -115,19 +107,20 @@ None. The component is self-contained.
 ## Usage
 
 ```jsx
-import TicketList from '../components/games/TicketList';
+import TicketCard from '../components/games/TicketCard';
 
-<TicketList
+<TicketCard
   game={{ id: 'badger-five', name: 'Badger 5' }}
-  tickets={[
-    [[7, 14, 23, 31, 39], [2, 11, 19, 27, 35]],
-    [[5, 16, 22, 30, 38]],
+  ticketData={[
+    [7, 14, 23, 31, 39],
+    [2, 11, 19, 27, 35],
   ]}
+  index={0}
 />
 ```
 
-Renders two Badger Five tickets (first with 2 panels, second with 1 panel) separated by a perforation zone.
+Renders a single Badger Five ticket with 2 panels.
 
 ## Status
 
-Implemented as part of Phase 2.6. Consumed by the ticket display layer for generated prediction results.
+Standalone export since Phase 2.8. Consumed by the TicketCarousel for displaying generated prediction results.
