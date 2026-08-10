@@ -96,41 +96,40 @@ function GamePage() {
         </div>
       </div>
 
-      {/* Pattern Distribution + Latest Drawing side-by-side */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <section>
-          <h2 className="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>
-          <p className="text-xs text-gray-400 mt-4 mb-2">Coming soon in the next update.</p>
-        </section>
+      {/* Pattern Distribution */}
+      <section className="mb-4">
+        <h2 className="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>
+        <p className="text-xs text-gray-400 mt-2 mb-2">Coming soon in the next update.</p>
+      </section>
 
-        <section className="flex flex-col">
-          {latestDrawing && (
-            <div className="border-b border-gray-100">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
-                  <span className="live-dot"></span>Latest
-                </span>
-              </div>
-
-              <div className="mb-3 flex justify-center items-center">
-                <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold leading-relaxed tracking-tight bg-gray-100 text-gray-700 border border-gray-200 w-[20rem] justify-center">
-                  <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                  <span>{latestDrawing.pattern}</span>
-                </span>
-              </div>
-
-              <div className="flex items-center justify-center gap-2.5">
-                {latestDrawing.numbers.map((num) => (
-                  <Ball key={num} number={num} gameId={gameId} />
-                ))}
-              </div>
+      {/* Latest Drawing */}
+      <section className="flex flex-col border-b border-gray-100 pb-4 mb-4">
+        {latestDrawing && (
+          <div className="border-b border-gray-100">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                <span className="live-dot"></span>Latest
+              </span>
             </div>
-          )}
-        </section>
-      </div>
+
+            <div className="mb-3 flex justify-center items-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold leading-relaxed tracking-tight bg-gray-100 text-gray-700 border border-gray-200 w-[20rem] justify-center">
+                <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>{latestDrawing.pattern}</span>
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center gap-2.5">
+              {latestDrawing.numbers.map((num) => (
+                <Ball key={num} number={num} gameId={gameId} />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
 
       {/* Older Drawings — flat list */}
       {olderDrawings.map((drawing) => (
@@ -179,10 +178,10 @@ function GamePage() {
         <button
           onClick={() => generate(ticketCount)}
           disabled={generating}
-          className="flex items-center justify-center bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed w-[42px] h-[42px]"
           style={{ width: '44px', height: '44px' }}
         >
-          <BoltIcon className="w-5 h-5" />
+          <BoltIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -250,7 +249,7 @@ function GamePage() {
               <p className="text-xs text-gray-400 mb-2">Coming soon in the next update.</p>
             </section>
 
-            <section className="flex flex-col">
+            <section className="flex flex-col border-b border-gray-100 pb-4">
               {latestDrawing && (
                 <div className="border-b border-gray-100">
                   <div className="mb-4 flex items-center justify-between">

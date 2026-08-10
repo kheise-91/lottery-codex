@@ -14,7 +14,7 @@ function DrawingItem({ drawing, gameId = null, isRecent = false }) {
   const numbers = drawing.numbers || [];
 
   return (
-    <div className="border-b border-gray-200 pb-4 mb-2">
+    <div className="border-b border-gray-100 pb-4 mb-4">
       {/* Date header strip */}
       <div className="px-2 pt-2 pb-2 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-gray-800">{formattedDate}</h2>
