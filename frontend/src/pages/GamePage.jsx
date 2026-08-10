@@ -106,7 +106,7 @@ function GamePage() {
         <section className="flex flex-col">
           {latestDrawing && (
             <div className="border-b border-gray-100">
-              <div className=" pt-4 pb-2 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
                 <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
                   <span className="live-dot"></span>Latest

@@ -61,24 +61,29 @@ function timeAgo(dateString) {
   const now = new Date();
   let target;
 
-  // Attempt native parse first; fall back to manual for legacy formats like "Monday, January 1st"
+  // Strip ordinal suffixes and inject current year so JS can parse correctly
+  const cleaned = dateString.replace(/(\d+)(st|nd|rd|th)/i, '$1');
   try {
-    target = new Date(dateString);
+    target = new Date(cleaned);
   } catch {
     return '';
   }
 
   if (isNaN(target.getTime())) return '';
 
+  // If year is wrong (e.g., parsed as 2001), use current year
+  if (target.getFullYear() !== now.getFullYear()) {
+    const month = target.getMonth();
+    const day = target.getDate();
+    target = new Date(now.getFullYear(), month, day);
+  }
+
   const diffMs = now - target;
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
-  const weeks = Math.floor(diffDays / 7);
-  if (weeks === 1) return '1 week ago';
-  return `${weeks} weeks ago`;
+  return `${diffDays} days ago`;
 }
 
 export default DrawingItem;
