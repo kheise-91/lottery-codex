@@ -105,7 +105,7 @@ export default function TicketCard({ game, ticketData, index }) {
   const timestamp = formatTimestamp();
 
   return (
-    <article className="group ticket-card relative rounded-2xl border border-gray-200 bg-white overflow-hidden mb-3 transition-all duration-200 hover:-translate-y-0.5"
+    <article className="group ticket-card relative rounded-2xl border border-gray-200 bg-white overflow-hidden mb-3 transition-all duration-200 hover:-translate-y-0.5 max-w-full"
       style={{ '--ticket-shadow-color': `${config.color}40`, '--ticket-shadow-muted': `${config.color}26` }}>
       {/* Header */}
       <div className="px-5 pt-5 pb-3">

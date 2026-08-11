@@ -118,7 +118,7 @@ export default function TicketCarousel({ tickets, game }) {
           style={{ ...TRANSITION_STYLE, transform: `translateX(-${activeIndex * 100}%)` }}
         >
           {tickets.map((ticket, slideIndex) => (
-            <div key={slideIndex} className="carousel-slide min-w-full flex-shrink-0 px-2">
+            <div key={slideIndex} className="carousel-slide min-w-full flex-shrink-0 px-1">
               <TicketCard game={game} ticketData={ticket.ticketData} index={ticket.index} />
             </div>
           ))}
