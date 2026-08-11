@@ -66,6 +66,15 @@
   user-select: none;
 }
 
+/* Responsive ball sizing for TicketCard carousel */
+@media (max-width: 768px) {
+  .ticket-card .lotto-ball {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+  }
+}
+
 /* Lottery Ball — white variant (DrawingItem context) */
 .lotto-ball--white {
   background: radial-gradient(circle at 38% 32%, #ffffff 0%, #f4f7fa 35%, #d1d9e6 70%, #a8b4c4 100%);
