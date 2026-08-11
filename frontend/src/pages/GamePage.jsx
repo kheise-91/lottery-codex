@@ -8,6 +8,7 @@ import Ball from '../components/games/Ball'
 import DrawingItem from '../components/games/DrawingItem'
 import TicketCarousel from '../components/games/TicketCarousel'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
+import { abbreviateDrawFrequency } from '../utils/format'
 
 /**
  * GamePage — game detail view at /games/:gameId.
@@ -209,7 +210,7 @@ function GamePage() {
           </div>
           {/* Right: 3-column stat row with vertical dividers */}
           <div className="grid grid-cols-3 divide-x divide-gray-200 bg-white">
-            <StatPill gameId={gameId} icon="calendar" label="Draw" value={drawFrequency} />
+            <StatPill gameId={gameId} icon="calendar" label="Draw" value={abbreviateDrawFrequency(drawFrequency)} />
             <StatPill gameId={gameId} icon="chart" label="Odds" value={odds} />
             <StatPill gameId={gameId} icon="jackpot" label="Jackpot" value={jackpot} />
           </div>
@@ -222,7 +223,7 @@ function GamePage() {
             {gameDetails?.description || `${gameId} — Pattern analysis and ticket generation.`}
           </p>
           <div className="grid grid-cols-3 divide-x divide-gray-200 rounded-lg overflow-hidden border border-gray-200 bg-white">
-            <StatPillMobile gameId={gameId} icon="calendar" label="Draw" value={drawFrequency} />
+            <StatPillMobile gameId={gameId} icon="calendar" label="Draw" value={abbreviateDrawFrequency(drawFrequency)} />
             <StatPillMobile gameId={gameId} icon="chart" label="Odds" value={odds} />
             <StatPillMobile gameId={gameId} icon="jackpot" label="Jackpot" value={jackpot} />
           </div>
