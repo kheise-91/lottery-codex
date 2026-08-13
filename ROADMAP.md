@@ -203,7 +203,7 @@ Build the React component hierarchy.
 
     **Done when:** Bottom-nav tabs switch content without page reload; hidden on desktop breakpoint.
 
-- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with emerald header + flat drawing list + ticket carousel**
+- [x] **[2.8 — Build GamePage (`src/pages/GamePage.jsx`) with emerald header + flat drawing list + ticket carousel](https://gitea.heise.home/kheise/lottery-codex/milestone/38)**
     - Rename `DrawingCard` component to reflect its new role as a flat list item rather than a card (no card wrapper, shadow, or hover lift)
     - Remove `TicketList` component entirely; promote `TicketCard` to the main export of that file — since tickets are now displayed via carousel instead of stacked with perforation dividers, the list-wrapper logic is no longer needed. Update all imports referencing `TicketList` accordingly.
     - Create new `TicketCarousel` component: single-ticket-per-slide carousel with circular frosted-glass arrow buttons on left and right edges, horizontal slide track, and dot indicators at bottom where the active dot expands into a pill shape colored with the game's primary color
