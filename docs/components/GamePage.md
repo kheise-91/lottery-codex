@@ -45,7 +45,7 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 
 | Column | Span | Content |
 |--------|------|---------|
-| Left | `col-span-7` (≈58%) | Previous Drawings header, Pattern Distribution placeholder, latest drawing, older drawings list |
+| Left | `col-span-7` (≈58%) | Previous Drawings header, Pattern Distribution via `<PatternDistribution history={history?.history} gameId={gameId} />`, latest drawing, older drawings list |
 | Right | `col-span-5` (≈42%) | Generated Tickets header, pattern health status, ticket count dropdown, `TicketCarousel` |
 
 ### Mobile Tabbed Interface (`md:hidden`)
@@ -60,7 +60,7 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 
 **Drawings tab:**
 - Section header with clock icon ("Previous Drawings")
-- Pattern Distribution placeholder section
+- Pattern Distribution rendered via `<PatternDistribution history={history?.history} gameId={gameId} />`
 - Latest drawing rendered via `<DrawingItem isRecent={true} />`
 - Older drawings rendered as flat list via `<DrawingItem />`
 - Loading indicator when history is fetching with no results
@@ -95,6 +95,7 @@ The `gameId` is extracted via `useParams()` and used as the key for all data fet
 | `../services/api` (`fetchGameDetails`) | Fetches game metadata from the backend API |
 | `../hooks/useGameHistory` | Hook for fetching historical drawing data by gameId |
 | `../hooks/useGenerateTickets` | Imperative hook for generating tickets; provides `generate(count)` function |
+| `PatternDistribution` | Renders pattern frequency distribution for last 100 drawings in both mobile and desktop layouts |
 | `DrawingItem` | Renders individual historical drawing entries |
 | `TicketCarousel` | Horizontal carousel for browsing generated ticket panels |
 | `BottomNavTabs` | Mobile tab navigation (Drawings / Tickets) |
@@ -110,4 +111,4 @@ GamePage is rendered as a child route in `App.jsx`:
 
 ## Status
 
-Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing.
+Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders.

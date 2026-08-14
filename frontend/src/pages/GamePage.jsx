@@ -7,6 +7,7 @@ import { useGenerateTickets } from '../hooks/useGenerateTickets'
 import Ball from '../components/games/Ball'
 import DrawingItem from '../components/games/DrawingItem'
 import TicketCarousel from '../components/games/TicketCarousel'
+import PatternDistribution from '../components/games/PatternDistribution'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
 import { abbreviateDrawFrequency } from '../utils/format'
 
@@ -99,8 +100,7 @@ function GamePage() {
 
       {/* Pattern Distribution */}
       <section className="mb-4">
-        <h2 className="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>
-        <p className="text-xs text-gray-400 mt-2 mb-2">Coming soon in the next update.</p>
+        <PatternDistribution history={history?.history} gameId={gameId} />
       </section>
 
       {/* Latest Drawing */}
@@ -246,8 +246,7 @@ function GamePage() {
           {/* Pattern Distribution + Latest Drawing side-by-side */}
           <div className="grid grid-cols-2 gap-4">
             <section>
-              <h2 className="text-sm font-semibold text-gray-800 mb-4">Pattern Distribution</h2>
-              <p className="text-xs text-gray-400 mb-2">Coming soon in the next update.</p>
+              <PatternDistribution history={history?.history} gameId={gameId} />
             </section>
 
             <section className="flex flex-col border-b border-gray-100 pb-4">

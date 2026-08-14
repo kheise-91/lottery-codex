@@ -12,7 +12,7 @@ The frontend is a routed SPA with a Layout shell, Dashboard game selection page,
 | [GameCard](./GameCard.md) | `frontend/src/components/games/GameCard.jsx` | Implemented | Reusable game selection card with gradient image, status badge, CSS variable-themed stat pills, and CTA |
 | [Ball](./Ball.md) | `frontend/src/components/games/Ball.jsx` | Implemented | Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored variants |
 | [DrawingItem](./DrawingItem.md) | `frontend/src/components/games/DrawingItem.jsx` | Implemented | Renders a single historical lottery drawing as a flat list item with centered pattern badge, date header, and centered ball row |
-| [PatternDistribution](./PatternDistribution.md) | `frontend/src/components/games/PatternDistribution.jsx` | Skeleton | Visual shell for pattern frequency display with heading, subtitle "Last 100 Drawings", and placeholder container; accepts history and gamePrimaryColor props |
+| [PatternDistribution](./PatternDistribution.md) | `frontend/src/components/games/PatternDistribution.jsx` | Implemented | Calculates pattern frequencies from last 100 drawings and renders flat distribution bars with left-aligned labels, right-aligned percentages in game primary color, and full-width rounded tracks using game-themed colors |
 | [TicketCard](./TicketCard.md) | `frontend/src/components/games/TicketCard.jsx` | Implemented | Physical-ticket-style card component for rendering a single generated lottery ticket with panels, barcode, and decorative elements |
 | [TicketCarousel](./TicketCarousel.md) | `frontend/src/components/games/TicketCarousel.jsx` | Implemented | Horizontal carousel for browsing multiple generated tickets with left/right arrows, dot indicators, and keyboard navigation |
 | [GamePage](./GamePage.md) | `frontend/src/pages/GamePage.jsx` | Implemented | Game detail page with desktop split-view (7/5 grid) and mobile tabbed layout; shows game metadata, historical drawings, and generated tickets |
@@ -28,7 +28,7 @@ Contexts live in a separate documentation directory:
 
 The following are documented in the migration roadmap but do not exist on disk:
 
-_No items currently; PatternDistribution skeleton implemented in Phase 2.9._
+_No items currently._
 
 ## Entry Point
 

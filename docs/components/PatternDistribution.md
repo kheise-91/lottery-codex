@@ -4,30 +4,60 @@
 
 ## Purpose
 
-Renders the visual shell for pattern frequency display. Establishes the heading, subtitle, and placeholder container for future pattern bars. No calculation logic or bar rendering is implemented in this skeleton version.
-
-The component renders flat on page background with no card wrapper, border, or background wrapper.
+Renders pattern frequency distribution for the last 100 historical drawings using Lottery Codex methodology. Calculates occurrence counts per pattern string, derives percentages, sorts results, and displays flat bar rows with game-themed colors. The component renders flat on page background with no card wrapper, shadow, or border.
 
 ## Props
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `history` | Array \| Object | Yes | -- | Historical drawings data used for future calculations. Currently not processed; passed through as prop interface. |
-| `gamePrimaryColor` | string | Yes | -- | Game primary color (CSS color string or Tailwind reference). Reserved for future bar rendering and percentage text styling. |
+| `history` | Object | Yes | -- | Object mapping date → `{ pattern }` used for calculations. Entries are extracted via `Object.values`, last 100 taken. |
+| `gameId` | string | Yes | -- | Game identifier (e.g., `'badger-five'`) for CSS variable colors (`--color-${gameId}`, `--color-${gameId}-light`, `--color-${gameId}-lightest`). |
+| `gamePrimaryColor` | string | No | -- | Legacy fallback primary color for percentage text when `gameId` is unavailable. |
 
 ## State
 
-No internal state. The component is fully controlled by props and contains no hooks.
+No React state. Derived data computed with `useMemo`.
+
+## Derived Data
+
+The component computes distribution via `useMemo`:
+
+- Extract entries: `Object.values(history ?? {})`
+- Take last 100 entries (or fewer if history shorter)
+- Count occurrences of each `entry.pattern` string
+- Compute percentage = `Math.round(count / total * 100)`
+- Sort descending by percentage, then alphabetically for ties
+
+Result is an array of `{ pattern, count, percentage }` items.
 
 ## Structure
 
-Flat container `<div>` with three elements:
+Flat container `<div>` with heading, subtitle, and per-pattern rows:
 
-- Heading: `<h2 className="text-sm font-semibold text-gray-800">Pattern Distribution</h2>`
-- Subtitle: `<p className="text-xs text-gray-400">Last 100 Drawings</p>`
-- Placeholder container: `<div>{/* Pattern bars will be rendered here */}</div>`
+- Heading: `<h2 className="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>`
+- Subtitle: `<p className="text-xs text-gray-400 mb-2">Last 100 Drawings</p>`
+- Per row:
+  - Label container: `flex justify-between items-baseline mb-1`
+  - Label: `<span className="text-xs font-medium text-gray-700">{pattern}</span>` left-aligned
+  - Percentage: `<span className="text-xs font-semibold" style={{ color: primaryColorStyle }}>{percentage}%</span>` right-aligned, colored via `var(--color-${gameId})` or fallback
+  - Bar track: `<div className="w-full bg-gray-200 rounded-full h-2">`
+  - Filled bar: `<div className="h-2 rounded-full" style={{ width: `${percentage}%`, ...barStyle }} />`
 
-No card wrapper, border, or background wrapper is used.
+No card wrapper, border, background or shadow is used.
+
+## Color Mapping
+
+Bar fill colors by rank:
+
+- Rank 0 (most frequent): `background-color: var(--color-${gameId})` (primary)
+- Rank 1: `background-color: var(--color-${gameId}-light)`
+- Rank 2: `background-color: var(--color-${gameId}-lightest}`
+- Rank >2: primary color with opacity scaled by `Math.max(0.2, percentage / 100)`
+
+Fallbacks:
+
+- If `gameId` is unmapped, component uses internal `GAME_BAR_COLORS` map for `badger-five`, `supercash`/`super-cash`, `megabucks`/`mega-bucks`.
+- If `gameId` absent and legacy `gamePrimaryColor` provided, that color is used with opacity fallback.
 
 ## Side Effects
 
@@ -39,7 +69,9 @@ None. The component does not accept or render children.
 
 ## Dependencies
 
-No external dependencies. Pure React functional component with Tailwind utility classes.
+- `react` (`useMemo`)
+
+Pure React functional component with Tailwind utility classes and CSS custom properties.
 
 ## Usage
 
@@ -47,13 +79,13 @@ No external dependencies. Pure React functional component with Tailwind utility 
 import PatternDistribution from '../components/games/PatternDistribution';
 
 <PatternDistribution
-  history={historyData}
-  gamePrimaryColor="#059669"
+  history={history?.history}
+  gameId={gameId}
 />;
 ```
 
-Renders heading and subtitle with empty placeholder container. Safe to render with empty props without crashing.
+Renders heading, subtitle and frequency bars for the last 100 drawings. Safe to render with empty or undefined `history` (renders heading/subtitle only).
 
 ## Status
 
-Implemented as skeleton for Phase 2.9. Calculation logic, frequency counting, and bar rendering are pending in later issues.
+Implemented in Phase 2.9. Pattern frequency calculation from last 100 drawings and flat bar rendering with game-themed colors is complete.
