@@ -99,7 +99,7 @@ function GamePage() {
       </div>
 
       {/* Pattern Distribution */}
-      <section className="mb-4">
+      <section className="mb-8">
         <PatternDistribution history={history?.history} gameId={gameId} />
       </section>
 
@@ -107,7 +107,7 @@ function GamePage() {
       <section className="flex flex-col border-b border-gray-100 pb-4 mb-4">
         {latestDrawing && (
           <div className="border-b border-gray-100">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
               <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
                 <span className="live-dot"></span>Latest
@@ -252,7 +252,7 @@ function GamePage() {
             <section className="flex flex-col border-b border-gray-100 pb-4">
               {latestDrawing && (
                 <div className="border-b border-gray-100">
-                  <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-2">
                     <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
                     <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
                       <span className="live-dot"></span>Latest
