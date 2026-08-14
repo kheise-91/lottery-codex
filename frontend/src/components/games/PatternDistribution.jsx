@@ -9,8 +9,8 @@
 function PatternDistribution({ history, gamePrimaryColor }) {
   return (
     <div>
-      <h2 className="text-sm font-semibold text-gray-800">Pattern Distribution</h2>
-      <p className="text-xs text-gray-400">Last 100 Drawings</p>
+      <h2 className="text-sm font-semibold text-gray-800 mb-4">Pattern Distribution</h2>
+      <p className="text-xs text-gray-400 mb-2">Last 100 Drawings</p>
       <div>
         {/* Pattern bars will be rendered here */}
       </div>
