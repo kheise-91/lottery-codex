@@ -224,7 +224,7 @@ Build the React component hierarchy.
 
     **Done when:** User can view drawings (flat list with latest highlighted), generate tickets, and browse results via carousel — emerald gradient header on desktop split-view and mobile tabs.
 
-- [ ] **2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)**
+- [-] **[2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/39)**
    - Calculates and displays pattern frequencies from historical drawings (past 100 drawings)
    - Shows heading "Pattern Distribution" with subtitle "Last 100 Drawings" in small gray text
    - Each pattern entry: left-aligned pattern label (full lable, no abbreviations) in small medium-weight dark gray, right-aligned percentage value (e.g., "80%") in game's primary color, above a full-width bar track on light gray background with rounded ends and thin height — filled portion uses game's primary color where higher percentages render as solid fill and lower percentages use reduced opacity on the same color
