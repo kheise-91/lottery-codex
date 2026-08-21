@@ -244,7 +244,17 @@ Build the React component hierarchy.
     - Disabled button state during in-flight requests
     - Pattern distribution shows "No data" message when history is empty
 
-   **Done when:** User sees meaningful feedback during all async operations.
+    **Done when:** User sees meaningful feedback during all async operations.
+
+- [ ] **2.12 — Add contextual back button to GamePage**
+    - A single "Back to Dashboard" button at the top of the GamePage (detail view only), positioned below the app header and above the game header section — the Dashboard page is left unchanged
+    - Button layout: left chevron icon followed by a "Back to Dashboard" text label, rendered as an inline pill with white background, light gray border, rounded corners, and a subtle shadow
+    - Label is small (0.875rem) semibold text in medium-dark gray; on hover the background lightens to off-white, the text and border shift to the primary emerald color with a slightly deeper shadow, and on press the button scales down slightly
+    - Clicking the button routes the user back to the Dashboard (`/`)
+    - Visible on both mobile and desktop breakpoints
+    - No global navigation chrome is added — this is the only navigation element introduced by this sub-phase
+
+    **Done when:** User can return to the Dashboard from the GamePage via the back button on both mobile and desktop.
 
 ---
 
