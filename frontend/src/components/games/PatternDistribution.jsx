@@ -42,6 +42,11 @@ function PatternDistribution({ history, gameId, gamePrimaryColor }) {
       return a.pattern.localeCompare(b.pattern)
     })
 
+    if (items.length > 3) {
+      const thirdPct = items[2].percentage
+      return items.filter(item => item.percentage >= thirdPct)
+    }
+
     return items
   }, [history])
 

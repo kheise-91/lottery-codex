@@ -72,8 +72,8 @@ function GamePage() {
   const olderDrawings = drawings.length > 1 ? drawings.slice(1) : []
 
   /* ---- Stat values from game details (with fallbacks) ---- */
-  const drawFrequency = gameDetails?.drawFrequency || 'Wed | Sun'
-  const odds = gameDetails?.odds || '1 in 575'
+  const drawFrequency = gameDetails?.drawFrequency || '- - -'
+  const odds = gameDetails?.oddsOfWinning || '- - -'
   const jackpot = '$10,000' // placeholder per issue spec
 
   /* ---- Loading / error states ---- */
