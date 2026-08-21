@@ -7,6 +7,7 @@ import { useGenerateTickets } from '../hooks/useGenerateTickets'
 import Ball from '../components/games/Ball'
 import DrawingItem from '../components/games/DrawingItem'
 import TicketCarousel from '../components/games/TicketCarousel'
+import PatternDistribution from '../components/games/PatternDistribution'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
 import { abbreviateDrawFrequency } from '../utils/format'
 
@@ -71,8 +72,8 @@ function GamePage() {
   const olderDrawings = drawings.length > 1 ? drawings.slice(1) : []
 
   /* ---- Stat values from game details (with fallbacks) ---- */
-  const drawFrequency = gameDetails?.drawFrequency || 'Wed | Sun'
-  const odds = gameDetails?.odds || '1 in 575'
+  const drawFrequency = gameDetails?.drawFrequency || '- - -'
+  const odds = gameDetails?.oddsOfWinning || '- - -'
   const jackpot = '$10,000' // placeholder per issue spec
 
   /* ---- Loading / error states ---- */
@@ -98,16 +99,15 @@ function GamePage() {
       </div>
 
       {/* Pattern Distribution */}
-      <section className="mb-4">
-        <h2 className="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>
-        <p className="text-xs text-gray-400 mt-2 mb-2">Coming soon in the next update.</p>
+      <section className="mb-8">
+        <PatternDistribution history={history?.history} gameId={gameId} />
       </section>
 
       {/* Latest Drawing */}
       <section className="flex flex-col border-b border-gray-100 pb-4 mb-4">
         {latestDrawing && (
           <div className="border-b border-gray-100">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
               <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
                 <span className="live-dot"></span>Latest
@@ -246,14 +246,13 @@ function GamePage() {
           {/* Pattern Distribution + Latest Drawing side-by-side */}
           <div className="grid grid-cols-2 gap-4">
             <section>
-              <h2 className="text-sm font-semibold text-gray-800 mb-4">Pattern Distribution</h2>
-              <p className="text-xs text-gray-400 mb-2">Coming soon in the next update.</p>
+              <PatternDistribution history={history?.history} gameId={gameId} />
             </section>
 
             <section className="flex flex-col border-b border-gray-100 pb-4">
               {latestDrawing && (
                 <div className="border-b border-gray-100">
-                  <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-2">
                     <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
                     <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
                       <span className="live-dot"></span>Latest
