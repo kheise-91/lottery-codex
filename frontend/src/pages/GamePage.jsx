@@ -14,7 +14,7 @@ import BottomNavTabs from '../components/layout/BottomNavTabs'
 import { abbreviateDrawFrequency } from '../utils/format'
 
 /** Minimum visible duration (ms) for skeleton loaders on this page. */
-const MIN_SKELETON_MS = 1000
+const MIN_SKELETON_MS = 600
 
 /**
  * GamePage — game detail view at /games/:gameId.
@@ -36,7 +36,7 @@ function GamePage() {
   const { data: history, loading: historyLoading, error: historyError } = useGameHistory(gameId)
   const { tickets, loading: generating, error: generateError, generate } = useGenerateTickets(gameId)
 
-  /* ---- Minimum-duration skeleton gates (synchronized 2s window) ---- */
+  /* ---- Minimum-duration skeleton gates (synchronized 600ms window) ---- */
   const showHistorySkeleton = useMinLoading(historyLoading, MIN_SKELETON_MS)
   const showTicketSkeleton = useMinLoading(generating, MIN_SKELETON_MS)
   const showHeaderSkeleton = useMinLoading(gameDetailsLoading, MIN_SKELETON_MS)
@@ -137,7 +137,22 @@ function GamePage() {
 
       {/* Latest Drawing */}
       <section className="flex flex-col border-b border-gray-100 pb-4 mb-4">
-        {latestDrawing && (
+        {showHistorySkeleton ? (
+          <div className="border-b border-gray-100">
+            <div className="flex items-center justify-between mb-2">
+              <SkeletonLoader width="100px" height="16px" />
+              <SkeletonLoader width="50px" height="18px" />
+            </div>
+            <div className="mb-3 flex justify-center items-center">
+              <SkeletonLoader width="180px" height="24px" variant="block" />
+            </div>
+            <div className="flex items-center justify-center gap-2.5">
+              {Array.from({ length: 5 }).map((_, j) => (
+                <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
+              ))}
+            </div>
+          </div>
+        ) : latestDrawing ? (
           <div className="border-b border-gray-100">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
@@ -161,15 +176,15 @@ function GamePage() {
               ))}
             </div>
           </div>
-        )}
+        ) : null}
       </section>
 
-      {/* Older Drawings — flat list */}
-      {olderDrawings.map((drawing) => (
+      {/* Older Drawings — flat list (real items only after skeleton window) */}
+      {!showHistorySkeleton && olderDrawings.map((drawing) => (
         <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
       ))}
 
-      {showHistorySkeleton || !drawings.length && (
+      {(showHistorySkeleton || !drawings.length) && (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="border-b border-gray-100 pb-4">
@@ -390,7 +405,22 @@ function GamePage() {
             </section>
 
             <section className="flex flex-col border-b border-gray-100 pb-4">
-              {latestDrawing && (
+              {showHistorySkeleton ? (
+                <div className="border-b border-gray-100">
+                  <div className="flex items-center justify-between mb-2">
+                    <SkeletonLoader width="100px" height="16px" />
+                    <SkeletonLoader width="50px" height="18px" />
+                  </div>
+                  <div className="mb-3 flex justify-center items-center">
+                    <SkeletonLoader width="180px" height="24px" variant="block" />
+                  </div>
+                  <div className="flex items-center justify-center gap-2.5">
+                    {Array.from({ length: 5 }).map((_, j) => (
+                      <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
+                    ))}
+                  </div>
+                </div>
+              ) : latestDrawing ? (
                 <div className="border-b border-gray-100">
                   <div className="flex items-center justify-between mb-2">
                     <h2 className="text-sm font-semibold text-gray-800">{latestDrawing.date}</h2>
@@ -414,16 +444,16 @@ function GamePage() {
                     ))}
                   </div>
                 </div>
-              )}
+              ) : null}
             </section>
           </div>
 
-          {/* Older Drawings — flat list */}
-          {olderDrawings.map((drawing) => (
+          {/* Older Drawings — flat list (real items only after skeleton window) */}
+          {!showHistorySkeleton && olderDrawings.map((drawing) => (
             <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
           ))}
 
-          {showHistorySkeleton || !drawings.length && (
+          {(showHistorySkeleton || !drawings.length) && (
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="border-b border-gray-100 pb-4">
