@@ -14,7 +14,7 @@ import BottomNavTabs from '../components/layout/BottomNavTabs'
 import { abbreviateDrawFrequency } from '../utils/format'
 
 /** Minimum visible duration (ms) for skeleton loaders on this page. */
-const MIN_SKELETON_MS = 2000
+const MIN_SKELETON_MS = 1000
 
 /**
  * GamePage — game detail view at /games/:gameId.
@@ -114,7 +114,7 @@ function GamePage() {
 
       {/* Pattern Distribution */}
       <section className="mb-8">
-        {showHistorySkeleton && !drawings.length ? (
+        {showHistorySkeleton || !drawings.length ? (
           <div>
             <SkeletonLoader width="140px" height="16px" />
             <SkeletonLoader width="90px" height="12px" />
@@ -169,7 +169,7 @@ function GamePage() {
         <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
       ))}
 
-      {showHistorySkeleton && !drawings.length && (
+      {showHistorySkeleton || !drawings.length && (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="border-b border-gray-100 pb-4">
@@ -368,7 +368,7 @@ function GamePage() {
           {/* Pattern Distribution + Latest Drawing side-by-side */}
           <div className="grid grid-cols-2 gap-4">
             <section>
-              {showHistorySkeleton && !drawings.length ? (
+              {showHistorySkeleton || !drawings.length ? (
                 <div>
                   <SkeletonLoader width="140px" height="16px" />
                   <SkeletonLoader width="90px" height="12px" />
@@ -423,7 +423,7 @@ function GamePage() {
             <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
           ))}
 
-          {showHistorySkeleton && !drawings.length && (
+          {showHistorySkeleton || !drawings.length && (
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="border-b border-gray-100 pb-4">
