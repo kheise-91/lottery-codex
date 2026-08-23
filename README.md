@@ -84,6 +84,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── App.jsx                 # Root routed component: Layout shell with Dashboard and GamePage routes
 │   │   ├── index.css               # Tailwind v4 import; @theme directive with game-themed CSS variables; custom .card-shadow, .stat-pill, .lotto-ball, .lotto-ball--white, .lotto-ball--colored, and sub-pattern color classes
 │   │   ├── components/
+│   │   │   ├── SkeletonLoader.jsx  # Reusable pulsing gray placeholder block (block/circle variants) for loading states
 │   │   │   ├── games/
 │   │   │   │   ├── Ball.jsx        # Foundational UI primitive: 48px 3D sphere with white and colored sub-pattern variants
 │   │   │   │   ├── GameCard.jsx    # Clickable game selection card with image, stats, CTA
@@ -121,6 +122,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
   - [Ball Component Detail](docs/components/Ball.md) -- Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored sub-pattern variants
   - [TicketCard Component Detail](docs/components/TicketCard.md) -- Physical-ticket-style card for rendering a single generated lottery ticket with panels, barcode, and decorative elements
   - [TicketCarousel Component Detail](docs/components/TicketCarousel.md) -- Horizontal carousel for browsing multiple generated tickets with arrow navigation, dot indicators, and keyboard support
+  - [SkeletonLoader Component Detail](docs/components/SkeletonLoader.md) -- Reusable pulsing gray placeholder block (rounded rectangle or circle) used by GamePage for loading states
   - [GamePage Component Detail](docs/components/GamePage.md) -- Game detail page with desktop split-view (7/5 grid) and mobile tabbed layout; shows game metadata, historical drawings, and generated tickets
 - [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
   - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results; auto-fetches games list on mount
