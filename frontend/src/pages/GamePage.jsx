@@ -4,6 +4,7 @@ import { BoltIcon } from '@heroicons/react/24/outline'
 import { fetchGameDetails } from '../services/api'
 import { useGameHistory } from '../hooks/useGameHistory'
 import { useGenerateTickets } from '../hooks/useGenerateTickets'
+import { useMinLoading } from '../hooks/useMinLoading'
 import Ball from '../components/games/Ball'
 import DrawingItem from '../components/games/DrawingItem'
 import TicketCarousel from '../components/games/TicketCarousel'
@@ -11,6 +12,9 @@ import PatternDistribution from '../components/games/PatternDistribution'
 import SkeletonLoader from '../components/SkeletonLoader'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
 import { abbreviateDrawFrequency } from '../utils/format'
+
+/** Minimum visible duration (ms) for skeleton loaders on this page. */
+const MIN_SKELETON_MS = 2000
 
 /**
  * GamePage — game detail view at /games/:gameId.
@@ -25,21 +29,30 @@ function GamePage() {
   const { gameId } = useParams()
 
   const [gameDetails, setGameDetails] = useState(null)
+  const [gameDetailsLoading, setGameDetailsLoading] = useState(true)
   const [ticketCount, setTicketCount] = useState(3)
   const [activeTab, setActiveTab] = useState(0) // 0=Drawings, 1=Tickets
 
   const { data: history, loading: historyLoading, error: historyError } = useGameHistory(gameId)
   const { tickets, loading: generating, error: generateError, generate } = useGenerateTickets(gameId)
 
+  /* ---- Minimum-duration skeleton gates (synchronized 2s window) ---- */
+  const showHistorySkeleton = useMinLoading(historyLoading, MIN_SKELETON_MS)
+  const showTicketSkeleton = useMinLoading(generating, MIN_SKELETON_MS)
+  const showHeaderSkeleton = useMinLoading(gameDetailsLoading, MIN_SKELETON_MS)
+
   /* ---- Fetch game details on mount / gameId change ---- */
   useEffect(() => {
     let cancelled = false
+    setGameDetailsLoading(true)
     ;(async () => {
       try {
         const details = await fetchGameDetails(gameId)
         if (!cancelled) setGameDetails(details)
       } catch (err) {
         console.error('Failed to fetch game details:', err)
+      } finally {
+        if (!cancelled) setGameDetailsLoading(false)
       }
     })()
     return () => { cancelled = true }
@@ -101,7 +114,7 @@ function GamePage() {
 
       {/* Pattern Distribution */}
       <section className="mb-8">
-        {historyLoading && !drawings.length ? (
+        {showHistorySkeleton && !drawings.length ? (
           <div>
             <SkeletonLoader width="140px" height="16px" />
             <SkeletonLoader width="90px" height="12px" />
@@ -156,7 +169,7 @@ function GamePage() {
         <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
       ))}
 
-      {historyLoading && !drawings.length && (
+      {showHistorySkeleton && !drawings.length && (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="border-b border-gray-100 pb-4">
@@ -227,7 +240,7 @@ function GamePage() {
 
       {/* Ticket Carousel */}
       {gameDetails && (
-        generating ? (
+        showTicketSkeleton ? (
           <div className="rounded-xl border border-gray-200 bg-white p-4">
             {/* Ticket header */}
             <div className="flex items-center justify-between mb-3">
@@ -268,35 +281,75 @@ function GamePage() {
     <>
       {/* ---- Game Header Section (visible on both desktop and mobile) ---- */}
       <section className="mb-4 md:mb-8">
-        {/* Desktop: two-column layout */}
-        <div className="hidden md:grid md:grid-cols-2 gap-0 rounded-xl overflow-hidden border border-gray-200 bg-white">
-          {/* Left: game name + description */}
-          <div className="p-5 flex flex-col justify-center">
-            <h1 className="text-2xl font-bold text-gray-800">{gameDetails?.name || gameId}</h1>
-            <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-              {gameDetails?.description || `${gameId} — Pattern analysis and ticket generation.`}
-            </p>
-          </div>
-          {/* Right: 3-column stat row with vertical dividers */}
-          <div className="grid grid-cols-3 divide-x divide-gray-200 bg-white">
-            <StatPill gameId={gameId} icon="calendar" label="Draw" value={abbreviateDrawFrequency(drawFrequency)} />
-            <StatPill gameId={gameId} icon="chart" label="Odds" value={odds} />
-            <StatPill gameId={gameId} icon="jackpot" label="Jackpot" value={jackpot} />
-          </div>
-        </div>
+        {showHeaderSkeleton ? (
+          <>
+            {/* Desktop skeleton: two-column layout */}
+            <div className="hidden md:grid md:grid-cols-2 gap-0 rounded-xl overflow-hidden border border-gray-200 bg-white">
+              {/* Left: game name + description */}
+              <div className="p-5 flex flex-col justify-center">
+                <SkeletonLoader width="160px" height="24px" />
+                <div className="mt-2">
+                  <SkeletonLoader height="14px" />
+                </div>
+              </div>
+              {/* Right: 3-column stat placeholders */}
+              <div className="grid grid-cols-3 divide-x divide-gray-200 bg-white">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="p-4 flex flex-col items-center justify-center">
+                    <SkeletonLoader variant="circle" width="48px" height="48px" />
+                  </div>
+                ))}
+              </div>
+            </div>
 
-        {/* Mobile: single-column stacked */}
-        <div className="md:hidden">
-          <h1 className="text-2xl font-bold text-gray-800">{gameDetails?.name || gameId}</h1>
-          <p className="text-sm text-gray-500 mt-1 mb-2 leading-relaxed">
-            {gameDetails?.description || `${gameId} — Pattern analysis and ticket generation.`}
-          </p>
-          <div className="grid grid-cols-3 divide-x divide-gray-200 rounded-lg overflow-hidden border border-gray-200 bg-white">
-            <StatPillMobile gameId={gameId} icon="calendar" label="Draw" value={abbreviateDrawFrequency(drawFrequency)} />
-            <StatPillMobile gameId={gameId} icon="chart" label="Odds" value={odds} />
-            <StatPillMobile gameId={gameId} icon="jackpot" label="Jackpot" value={jackpot} />
-          </div>
-        </div>
+            {/* Mobile skeleton: single-column stacked */}
+            <div className="md:hidden">
+              <SkeletonLoader width="160px" height="24px" />
+              <div className="mt-2 mb-2">
+                <SkeletonLoader height="14px" />
+              </div>
+              <div className="grid grid-cols-3 divide-x divide-gray-200 rounded-lg overflow-hidden border border-gray-200 bg-white">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="p-3 flex items-center justify-center">
+                    <SkeletonLoader variant="circle" width="48px" height="48px" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Desktop: two-column layout */}
+            <div className="hidden md:grid md:grid-cols-2 gap-0 rounded-xl overflow-hidden border border-gray-200 bg-white">
+              {/* Left: game name + description */}
+              <div className="p-5 flex flex-col justify-center">
+                <h1 className="text-2xl font-bold text-gray-800">{gameDetails?.name || gameId}</h1>
+                <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+                  {gameDetails?.description || `${gameId} — Pattern analysis and ticket generation.`}
+                </p>
+              </div>
+              {/* Right: 3-column stat row with vertical dividers */}
+              <div className="grid grid-cols-3 divide-x divide-gray-200 bg-white">
+                <StatPill gameId={gameId} icon="calendar" label="Draw" value={abbreviateDrawFrequency(drawFrequency)} />
+                <StatPill gameId={gameId} icon="chart" label="Odds" value={odds} />
+                <StatPill gameId={gameId} icon="jackpot" label="Jackpot" value={jackpot} />
+              </div>
+            </div>
+
+            {/* Mobile: single-column stacked */}
+            <div className="md:hidden">
+              <h1 className="text-2xl font-bold text-gray-800">{gameDetails?.name || gameId}</h1>
+              <p className="text-sm text-gray-500 mt-1 mb-2 leading-relaxed">
+                {gameDetails?.description || `${gameId} — Pattern analysis and ticket generation.`}
+              </p>
+              <div className="grid grid-cols-3 divide-x divide-gray-200 rounded-lg overflow-hidden border border-gray-200 bg-white">
+                <StatPillMobile gameId={gameId} icon="calendar" label="Draw" value={abbreviateDrawFrequency(drawFrequency)} />
+                <StatPillMobile gameId={gameId} icon="chart" label="Odds" value={odds} />
+                <StatPillMobile gameId={gameId} icon="jackpot" label="Jackpot" value={jackpot} />
+              </div>
+            </div>
+          </>
+        )}
       </section>
 
       {/* ---- Desktop Split-View (hidden on mobile, ≥768px) ---- */}
@@ -315,7 +368,7 @@ function GamePage() {
           {/* Pattern Distribution + Latest Drawing side-by-side */}
           <div className="grid grid-cols-2 gap-4">
             <section>
-              {historyLoading && !drawings.length ? (
+              {showHistorySkeleton && !drawings.length ? (
                 <div>
                   <SkeletonLoader width="140px" height="16px" />
                   <SkeletonLoader width="90px" height="12px" />
@@ -370,7 +423,7 @@ function GamePage() {
             <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
           ))}
 
-          {historyLoading && !drawings.length && (
+          {showHistorySkeleton && !drawings.length && (
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="border-b border-gray-100 pb-4">
@@ -430,7 +483,7 @@ function GamePage() {
 
              {/* Ticket Carousel */}
              {gameDetails && (
-               generating ? (
+               showTicketSkeleton ? (
                  <div className="rounded-xl border border-gray-200 bg-white p-4">
                    {/* Ticket header */}
                    <div className="flex items-center justify-between mb-3">
