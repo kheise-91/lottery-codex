@@ -45,8 +45,8 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 
 | Column | Span | Content |
 |--------|------|---------|
-| Left | `col-span-7` (≈58%) | Previous Drawings header, Pattern Distribution via `<PatternDistribution history={history?.history} gameId={gameId} />`, latest drawing, older drawings list |
-| Right | `col-span-5` (≈42%) | Generated Tickets header, pattern health status, ticket count dropdown, `TicketCarousel` |
+| Left | `col-span-7` (≈58%) | Previous Drawings header, Pattern Distribution (skeleton while loading), latest drawing, older drawings list (skeleton rows while loading) |
+| Right | `col-span-5` (≈42%) | Generated Tickets header, pattern health status, ticket count dropdown, `TicketCarousel` (skeleton ticket placeholder while generating) |
 
 ### Mobile Tabbed Interface (`md:hidden`)
 
@@ -60,16 +60,16 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 
 **Drawings tab:**
 - Section header with clock icon ("Previous Drawings")
-- Pattern Distribution rendered via `<PatternDistribution history={history?.history} gameId={gameId} />`
+- Pattern Distribution rendered via `<PatternDistribution history={history?.history} gameId={gameId} />`, or a skeleton placeholder (heading + 3 bar rows) while `historyLoading` is true and no drawings exist yet
 - Latest drawing rendered via `<DrawingItem isRecent={true} />`
 - Older drawings rendered as flat list via `<DrawingItem />`
-- Loading indicator when history is fetching with no results
+- Skeleton drawing rows (4 × date strip + pattern pill + 5 ball circles) when history is fetching with no results
 
 **Tickets tab:**
 - Section header with ticket icon ("Generated Tickets")
 - Pattern health status placeholder (green dot + "It's okay to play.")
 - Ticket count dropdown (1–10) with "Generate" button (side-by-side layout)
-- `TicketCarousel` for browsing generated tickets
+- `TicketCarousel` for browsing generated tickets, or a skeleton ticket placeholder (header + 3 panel rows with 5 ball circles each + footer) while `generating` is true
 - Error message if ticket generation fails
 
 ### Internal Components
@@ -98,6 +98,7 @@ The `gameId` is extracted via `useParams()` and used as the key for all data fet
 | `PatternDistribution` | Renders pattern frequency distribution for last 100 drawings in both mobile and desktop layouts |
 | `DrawingItem` | Renders individual historical drawing entries |
 | `TicketCarousel` | Horizontal carousel for browsing generated ticket panels |
+| `SkeletonLoader` | Pulsing gray placeholder block; rendered as skeleton loaders while history is loading or tickets are generating |
 | `BottomNavTabs` | Mobile tab navigation (Drawings / Tickets) |
 | `@heroicons/react/24/outline` (`BoltIcon`) | Lightning bolt icon on the Generate button |
 
@@ -109,6 +110,18 @@ GamePage is rendered as a child route in `App.jsx`:
 <Route path="/games/:gameId" element={<GamePage />} />
 ```
 
+## Loading States
+
+While data is in flight, `GamePage` renders skeleton placeholders (via `SkeletonLoader`) in place of real content:
+
+| Area | Condition | Skeleton Shape |
+|------|-----------|----------------|
+| Pattern Distribution (mobile + desktop) | `historyLoading && !drawings.length` | Heading bar + subtitle bar + 3 rows of (label bar, percentage bar, full-width track bar) |
+| Drawings list (mobile + desktop) | `historyLoading && !drawings.length` | 4 rows, each: date strip (2 bars), centered pattern pill, row of 5 circle placeholders (48px) |
+| Ticket carousel (mobile + desktop) | `generating` | Ticket-shaped card: header (name/ID bars + barcode bar), 3 panel rows (label bar + 5 circle placeholders 32px each), footer bar |
+
+All skeletons are driven purely by the existing `historyLoading` / `generating` flags from `useGameHistory` / `useGenerateTickets`; no additional state is introduced. Skeletons disappear automatically when data arrives or an error occurs, since both hooks set their loading flag to `false` in their `finally` blocks.
+
 ## Status
 
-Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders.
+Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, and ticket carousel area (both mobile and desktop layouts).

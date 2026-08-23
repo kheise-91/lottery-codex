@@ -8,6 +8,7 @@ import Ball from '../components/games/Ball'
 import DrawingItem from '../components/games/DrawingItem'
 import TicketCarousel from '../components/games/TicketCarousel'
 import PatternDistribution from '../components/games/PatternDistribution'
+import SkeletonLoader from '../components/SkeletonLoader'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
 import { abbreviateDrawFrequency } from '../utils/format'
 
@@ -100,7 +101,25 @@ function GamePage() {
 
       {/* Pattern Distribution */}
       <section className="mb-8">
-        <PatternDistribution history={history?.history} gameId={gameId} />
+        {historyLoading && !drawings.length ? (
+          <div>
+            <SkeletonLoader width="140px" height="16px" />
+            <SkeletonLoader width="90px" height="12px" />
+            <div className="mt-3 space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i}>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <SkeletonLoader width="150px" height="12px" />
+                    <SkeletonLoader width="28px" height="12px" />
+                  </div>
+                  <SkeletonLoader height="8px" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <PatternDistribution history={history?.history} gameId={gameId} />
+        )}
       </section>
 
       {/* Latest Drawing */}
@@ -138,7 +157,27 @@ function GamePage() {
       ))}
 
       {historyLoading && !drawings.length && (
-        <div className="flex items-center justify-center py-8 text-gray-400 text-sm">Loading drawings…</div>
+        <div className="space-y-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="border-b border-gray-100 pb-4">
+              {/* Date row */}
+              <div className="flex items-center justify-between px-2 py-1 mb-3">
+                <SkeletonLoader width="120px" height="16px" />
+                <SkeletonLoader width="70px" height="12px" />
+              </div>
+              {/* Pattern pill */}
+              <div className="flex justify-center mb-3">
+                <SkeletonLoader width="180px" height="24px" variant="block" />
+              </div>
+              {/* Balls row */}
+              <div className="flex items-center justify-center gap-2.5">
+                {Array.from({ length: 5 }).map((_, j) => (
+                  <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </>
   )
@@ -187,7 +226,37 @@ function GamePage() {
       </div>
 
       {/* Ticket Carousel */}
-      {gameDetails && <TicketCarousel tickets={carouselTickets} game={gameDetails} />}
+      {gameDetails && (
+        generating ? (
+          <div className="rounded-xl border border-gray-200 bg-white p-4">
+            {/* Ticket header */}
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <SkeletonLoader width="90px" height="18px" />
+                <SkeletonLoader width="120px" height="14px" />
+              </div>
+              <SkeletonLoader width="60px" height="28px" />
+            </div>
+            {/* Panels — mirror TicketCard's 3-panel layout */}
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-2 mb-2 rounded-lg bg-gray-50 p-2.5">
+                <SkeletonLoader width="64px" height="16px" />
+                <div className="flex items-center gap-1.5 ml-auto">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
+                  ))}
+                </div>
+              </div>
+            ))}
+            {/* Footer */}
+            <div className="flex justify-end mt-2">
+              <SkeletonLoader width="140px" height="12px" />
+            </div>
+          </div>
+        ) : (
+          <TicketCarousel tickets={carouselTickets} game={gameDetails} />
+        )
+      )}
 
       {generateError && (
         <p className="text-red-600 text-sm mt-3">Failed to generate tickets: {generateError}</p>
@@ -246,7 +315,25 @@ function GamePage() {
           {/* Pattern Distribution + Latest Drawing side-by-side */}
           <div className="grid grid-cols-2 gap-4">
             <section>
-              <PatternDistribution history={history?.history} gameId={gameId} />
+              {historyLoading && !drawings.length ? (
+                <div>
+                  <SkeletonLoader width="140px" height="16px" />
+                  <SkeletonLoader width="90px" height="12px" />
+                  <div className="mt-3 space-y-3">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <div key={i}>
+                        <div className="flex justify-between items-baseline mb-1">
+                          <SkeletonLoader width="150px" height="12px" />
+                          <SkeletonLoader width="28px" height="12px" />
+                        </div>
+                        <SkeletonLoader height="8px" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <PatternDistribution history={history?.history} gameId={gameId} />
+              )}
             </section>
 
             <section className="flex flex-col border-b border-gray-100 pb-4">
@@ -284,7 +371,27 @@ function GamePage() {
           ))}
 
           {historyLoading && !drawings.length && (
-            <div className="flex items-center justify-center py-8 text-gray-400 text-sm">Loading drawings…</div>
+            <div className="space-y-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="border-b border-gray-100 pb-4">
+                  {/* Date row */}
+                  <div className="flex items-center justify-between px-2 py-1 mb-3">
+                    <SkeletonLoader width="120px" height="16px" />
+                    <SkeletonLoader width="70px" height="12px" />
+                  </div>
+                  {/* Pattern pill */}
+                  <div className="flex justify-center mb-3">
+                    <SkeletonLoader width="180px" height="24px" variant="block" />
+                  </div>
+                  {/* Balls row */}
+                  <div className="flex items-center justify-center gap-2.5">
+                    {Array.from({ length: 5 }).map((_, j) => (
+                      <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
@@ -321,8 +428,38 @@ function GamePage() {
               </select>
             </div>
 
-            {/* Ticket Carousel */}
-             {gameDetails && <TicketCarousel tickets={carouselTickets} game={gameDetails} />}
+             {/* Ticket Carousel */}
+             {gameDetails && (
+               generating ? (
+                 <div className="rounded-xl border border-gray-200 bg-white p-4">
+                   {/* Ticket header */}
+                   <div className="flex items-center justify-between mb-3">
+                     <div>
+                       <SkeletonLoader width="90px" height="18px" />
+                       <SkeletonLoader width="120px" height="14px" />
+                     </div>
+                     <SkeletonLoader width="60px" height="28px" />
+                   </div>
+                   {/* Panels — mirror TicketCard's 3-panel layout */}
+                   {Array.from({ length: 3 }).map((_, i) => (
+                     <div key={i} className="flex items-center gap-2 mb-2 rounded-lg bg-gray-50 p-2.5">
+                       <SkeletonLoader width="64px" height="16px" />
+                       <div className="flex items-center gap-1.5 ml-auto">
+                         {Array.from({ length: 5 }).map((_, j) => (
+                           <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
+                         ))}
+                       </div>
+                     </div>
+                   ))}
+                   {/* Footer */}
+                   <div className="flex justify-end mt-2">
+                     <SkeletonLoader width="140px" height="12px" />
+                   </div>
+                 </div>
+               ) : (
+                 <TicketCarousel tickets={carouselTickets} game={gameDetails} />
+               )
+             )}
 
             {generateError && (
               <p className="text-red-600 text-sm mt-3">Failed to generate tickets: {generateError}</p>
