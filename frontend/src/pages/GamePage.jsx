@@ -10,6 +10,7 @@ import DrawingItem from '../components/games/DrawingItem'
 import TicketCarousel from '../components/games/TicketCarousel'
 import PatternDistribution from '../components/games/PatternDistribution'
 import SkeletonLoader from '../components/SkeletonLoader'
+import ErrorBanner from '../components/ErrorBanner'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
 import { abbreviateDrawFrequency } from '../utils/format'
 
@@ -90,18 +91,11 @@ function GamePage() {
   const odds = gameDetails?.oddsOfWinning || '- - -'
   const jackpot = '$10,000' // placeholder per issue spec
 
-  /* ---- Loading / error states ---- */
-  if (historyError) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <p className="text-red-600 text-lg">Failed to load game data: {historyError}</p>
-      </div>
-    )
-  }
-
   /* ---- Mobile tab content: Drawings ---- */
   const drawingsTabContent = (
     <>
+      {historyError && <ErrorBanner message="Failed to load drawing history. Please try again." />}
+
       {/* Section header */}
       <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 py-3.5 flex items-center justify-center rounded-xl text-white mb-4" style={{ height: '48px' }}>
         <div className="flex items-center gap-2">
@@ -286,9 +280,7 @@ function GamePage() {
         )
       )}
 
-      {generateError && (
-        <p className="text-red-600 text-sm mt-3">Failed to generate tickets: {generateError}</p>
-      )}
+      {generateError && <ErrorBanner message="Failed to generate tickets. Please try again." />}
     </>
   )
 
@@ -371,6 +363,8 @@ function GamePage() {
       <div className="hidden md:grid md:grid-cols-12 gap-6">
         {/* Left Column (7/12) — Drawings */}
         <div className="col-span-7 space-y-4">
+          {historyError && <ErrorBanner message="Failed to load drawing history. Please try again." />}
+
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-3.5 flex items-center justify-center rounded-xl text-white" style={{ height: '48px' }}>
             <div className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-[22px] h-[22px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -544,9 +538,7 @@ function GamePage() {
                )
              )}
 
-            {generateError && (
-              <p className="text-red-600 text-sm mt-3">Failed to generate tickets: {generateError}</p>
-            )}
+            {generateError && <ErrorBanner message="Failed to generate tickets. Please try again." />}
           </div>
         </div>
       </div>

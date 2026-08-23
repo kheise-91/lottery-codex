@@ -58,8 +58,8 @@ When `showHeaderSkeleton` is false, the real header renders:
 
 | Column | Span | Content |
 |--------|------|---------|
-| Left | `col-span-7` (≈58%) | Previous Drawings header, Pattern Distribution (skeleton while loading), latest drawing, older drawings list (skeleton rows while loading) |
-| Right | `col-span-5` (≈42%) | Generated Tickets header, pattern health status, ticket count dropdown, `TicketCarousel` (skeleton ticket placeholder while generating) |
+| Left | `col-span-7` (≈58%) | `ErrorBanner` (when `historyError`), Previous Drawings header, Pattern Distribution (skeleton while loading), latest drawing, older drawings list (skeleton rows while loading) |
+| Right | `col-span-5` (≈42%) | Generated Tickets header, pattern health status, ticket count dropdown, `TicketCarousel` (skeleton ticket placeholder while generating), `ErrorBanner` (when `generateError`) |
 
 ### Mobile Tabbed Interface (`md:hidden`)
 
@@ -72,6 +72,7 @@ When `showHeaderSkeleton` is false, the real header renders:
 ### Mobile Tab Content Details
 
 **Drawings tab:**
+- `ErrorBanner` (when `historyError`) — "Failed to load drawing history. Please try again."
 - Section header with clock icon ("Previous Drawings")
 - Pattern Distribution rendered via `<PatternDistribution history={history?.history} gameId={gameId} />`, or a skeleton placeholder (heading + 3 bar rows) while `showHistorySkeleton` is true and no drawings exist yet
 - Latest drawing rendered via `<DrawingItem isRecent={true} />`
@@ -83,7 +84,7 @@ When `showHeaderSkeleton` is false, the real header renders:
 - Pattern health status placeholder (green dot + "It's okay to play.")
 - Ticket count dropdown (1–10) with "Generate" button (side-by-side layout)
 - `TicketCarousel` for browsing generated tickets, or a skeleton ticket placeholder (header + 3 panel rows with 5 ball circles each + footer) while `showTicketSkeleton` is true
-- Error message if ticket generation fails
+- `ErrorBanner` (when `generateError`) — "Failed to generate tickets. Please try again."
 
 ### Internal Components
 
@@ -113,6 +114,7 @@ The `gameId` is extracted via `useParams()` and used as the key for all data fet
 | `DrawingItem` | Renders individual historical drawing entries |
 | `TicketCarousel` | Horizontal carousel for browsing generated ticket panels |
 | `SkeletonLoader` | Pulsing gray placeholder block; rendered as skeleton loaders while history is loading or tickets are generating |
+| `ErrorBanner` | Dismissible red error banner; rendered in the drawings area when `historyError` is set and in the ticket area when `generateError` is set |
 | `BottomNavTabs` | Mobile tab navigation (Drawings / Tickets) |
 | `@heroicons/react/24/outline` (`BoltIcon`) | Lightning bolt icon on the Generate button |
 
@@ -137,6 +139,17 @@ While data is in flight, `GamePage` renders skeleton placeholders (via `Skeleton
 
 All skeleton gates are derived via `useMinLoading(flag, MIN_SKELETON_MS)` with `MIN_SKELETON_MS = 2000`. This keeps every skeleton visible for at least 2 seconds even if the underlying request resolves instantly, so all content areas swap to real data in a single synchronized transition rather than flickering. The raw flags come from `useGameHistory` (`historyLoading`), `useGenerateTickets` (`generating`), and local `gameDetailsLoading` state (set in the details-fetch effect's `finally` block). Skeletons disappear automatically when data arrives or an error occurs, since all sources set their loading flag to `false` on completion.
 
+## Error States
+
+Error handling uses the `ErrorBanner` component (self-managed dismissal state) rather than full-page early returns or inline error paragraphs:
+
+| Area | Condition | Banner Message |
+|------|-----------|----------------|
+| Drawings (desktop left column + mobile Drawings tab) | `historyError` is truthy | "Failed to load drawing history. Please try again." |
+| Tickets (desktop right column + mobile Tickets tab) | `generateError` is truthy | "Failed to generate tickets. Please try again." |
+
+The banner messages are hardcoded user-facing strings — the raw hook errors (which contain HTTP status codes) are intentionally not passed through to the UI. Each banner instance dismisses independently via its own local state.
+
 ## Status
 
-Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, ticket carousel area, and game header (both mobile and desktop layouts). All skeleton gates are wrapped in `useMinLoading` with a 2000ms minimum duration to prevent flash-of-skeleton on fast networks.
+Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, ticket carousel area, and game header (both mobile and desktop layouts). All skeleton gates are wrapped in `useMinLoading` with a 2000ms minimum duration to prevent flash-of-skeleton on fast networks. Phase 2.11 also replaces the full-page `historyError` early return and inline `generateError` paragraphs with dismissible `ErrorBanner` components in the drawings and ticket areas.
