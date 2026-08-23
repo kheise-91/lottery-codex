@@ -15,6 +15,7 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 | State Variable | Type | Default | Description |
 |----------------|------|---------|-------------|
 | `gameDetails` | `object \| null` | `null` | Fetched game metadata (name, description, drawFrequency, odds) from the API |
+| `gameDetailsLoading` | `boolean` | `true` | Tracks whether the game details fetch is in flight; drives the header skeleton via `useMinLoading` |
 | `ticketCount` | `number` | `3` | Number of tickets to generate; drives auto-generation on desktop |
 | `activeTab` | `number` | `0` | Active mobile tab index (`0` = Drawings, `1` = Tickets) |
 
@@ -22,7 +23,7 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 
 | Effect | Trigger | Behavior |
 |--------|---------|----------|
-| Fetch game details | `gameId` changes | Calls `fetchGameDetails(gameId)` with cancellation guard; sets `gameDetails` state |
+| Fetch game details | `gameId` changes | Calls `fetchGameDetails(gameId)` with cancellation guard; sets `gameDetailsLoading: true` at start, `false` in `finally`; sets `gameDetails` on success |
 | Auto-generate tickets | `ticketCount` or `gameId` changes (desktop only) | Calls `generate(ticketCount)` when `window.innerWidth >= 768`; enables seamless ticket count adjustment on desktop |
 
 ## Derived Data
@@ -33,10 +34,22 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 | `carouselTickets` | `tickets` (from `useGenerateTickets`) | Mapped to `[{ ticketData, index }]` format expected by `TicketCarousel` |
 | `latestDrawing` | `drawings[0]` | Most recent drawing, rendered with `isRecent={true}` |
 | `olderDrawings` | `drawings.slice(1)` | Remaining drawings rendered as a flat list |
+| `showHistorySkeleton` | `useMinLoading(historyLoading, MIN_SKELETON_MS)` | Gated flag: `true` while history is loading OR for at least 2000ms after it started |
+| `showTicketSkeleton` | `useMinLoading(generating, MIN_SKELETON_MS)` | Gated flag: `true` while tickets are generating OR for at least 2000ms after it started |
+| `showHeaderSkeleton` | `useMinLoading(gameDetailsLoading, MIN_SKELETON_MS)` | Gated flag: `true` while game details are loading OR for at least 2000ms after it started |
+
+The page-level constant `MIN_SKELETON_MS = 2000` is passed to all three `useMinLoading` calls so that all skeleton areas (header, history, tickets) stay visible for a synchronized minimum duration, preventing a jarring flash when the API responds in under a second.
 
 ## Layout Structure
 
 ### Game Header (shared across breakpoints)
+
+While `showHeaderSkeleton` is true, the header renders a skeleton placeholder instead of real content:
+
+- **Desktop skeleton:** Two-column grid mirroring the real layout — name bar (160px × 24px) + description bar (full width × 14px) on the left, three 48px circle placeholders in the stat row on the right
+- **Mobile skeleton:** Stacked name bar + description bar followed by three 48px circle placeholders in a bordered grid row
+
+When `showHeaderSkeleton` is false, the real header renders:
 
 - **Desktop (≥768px):** Two-column grid (`md:grid-cols-2`) with game name/description on the left and three stat pills (Draw, Odds, Jackpot) on the right, separated by vertical dividers
 - **Mobile (<768px):** Single column with game name/description followed by three stat pills in a bordered grid row
@@ -60,7 +73,7 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 
 **Drawings tab:**
 - Section header with clock icon ("Previous Drawings")
-- Pattern Distribution rendered via `<PatternDistribution history={history?.history} gameId={gameId} />`, or a skeleton placeholder (heading + 3 bar rows) while `historyLoading` is true and no drawings exist yet
+- Pattern Distribution rendered via `<PatternDistribution history={history?.history} gameId={gameId} />`, or a skeleton placeholder (heading + 3 bar rows) while `showHistorySkeleton` is true and no drawings exist yet
 - Latest drawing rendered via `<DrawingItem isRecent={true} />`
 - Older drawings rendered as flat list via `<DrawingItem />`
 - Skeleton drawing rows (4 × date strip + pattern pill + 5 ball circles) when history is fetching with no results
@@ -69,7 +82,7 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 - Section header with ticket icon ("Generated Tickets")
 - Pattern health status placeholder (green dot + "It's okay to play.")
 - Ticket count dropdown (1–10) with "Generate" button (side-by-side layout)
-- `TicketCarousel` for browsing generated tickets, or a skeleton ticket placeholder (header + 3 panel rows with 5 ball circles each + footer) while `generating` is true
+- `TicketCarousel` for browsing generated tickets, or a skeleton ticket placeholder (header + 3 panel rows with 5 ball circles each + footer) while `showTicketSkeleton` is true
 - Error message if ticket generation fails
 
 ### Internal Components
@@ -95,6 +108,7 @@ The `gameId` is extracted via `useParams()` and used as the key for all data fet
 | `../services/api` (`fetchGameDetails`) | Fetches game metadata from the backend API |
 | `../hooks/useGameHistory` | Hook for fetching historical drawing data by gameId |
 | `../hooks/useGenerateTickets` | Imperative hook for generating tickets; provides `generate(count)` function |
+| `../hooks/useMinLoading` | Wraps loading flags with a minimum visible duration (2000ms) so skeletons don't flash on fast networks |
 | `PatternDistribution` | Renders pattern frequency distribution for last 100 drawings in both mobile and desktop layouts |
 | `DrawingItem` | Renders individual historical drawing entries |
 | `TicketCarousel` | Horizontal carousel for browsing generated ticket panels |
@@ -116,12 +130,13 @@ While data is in flight, `GamePage` renders skeleton placeholders (via `Skeleton
 
 | Area | Condition | Skeleton Shape |
 |------|-----------|----------------|
-| Pattern Distribution (mobile + desktop) | `historyLoading && !drawings.length` | Heading bar + subtitle bar + 3 rows of (label bar, percentage bar, full-width track bar) |
-| Drawings list (mobile + desktop) | `historyLoading && !drawings.length` | 4 rows, each: date strip (2 bars), centered pattern pill, row of 5 circle placeholders (48px) |
-| Ticket carousel (mobile + desktop) | `generating` | Ticket-shaped card: header (name/ID bars + barcode bar), 3 panel rows (label bar + 5 circle placeholders 32px each), footer bar |
+| Game header (mobile + desktop) | `showHeaderSkeleton` | Name bar (160px × 24px) + description bar (full width × 14px) + 3 circle placeholders (48px) in the stat row |
+| Pattern Distribution (mobile + desktop) | `showHistorySkeleton && !drawings.length` | Heading bar + subtitle bar + 3 rows of (label bar, percentage bar, full-width track bar) |
+| Drawings list (mobile + desktop) | `showHistorySkeleton && !drawings.length` | 4 rows, each: date strip (2 bars), centered pattern pill, row of 5 circle placeholders (48px) |
+| Ticket carousel (mobile + desktop) | `showTicketSkeleton` | Ticket-shaped card: header (name/ID bars + barcode bar), 3 panel rows (label bar + 5 circle placeholders 32px each), footer bar |
 
-All skeletons are driven purely by the existing `historyLoading` / `generating` flags from `useGameHistory` / `useGenerateTickets`; no additional state is introduced. Skeletons disappear automatically when data arrives or an error occurs, since both hooks set their loading flag to `false` in their `finally` blocks.
+All skeleton gates are derived via `useMinLoading(flag, MIN_SKELETON_MS)` with `MIN_SKELETON_MS = 2000`. This keeps every skeleton visible for at least 2 seconds even if the underlying request resolves instantly, so all content areas swap to real data in a single synchronized transition rather than flickering. The raw flags come from `useGameHistory` (`historyLoading`), `useGenerateTickets` (`generating`), and local `gameDetailsLoading` state (set in the details-fetch effect's `finally` block). Skeletons disappear automatically when data arrives or an error occurs, since all sources set their loading flag to `false` on completion.
 
 ## Status
 
-Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, and ticket carousel area (both mobile and desktop layouts).
+Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, ticket carousel area, and game header (both mobile and desktop layouts). All skeleton gates are wrapped in `useMinLoading` with a 2000ms minimum duration to prevent flash-of-skeleton on fast networks.

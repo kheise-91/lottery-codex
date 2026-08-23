@@ -36,7 +36,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
      :5959                    Docker container                live HTTP request
 ```
 
-- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage detail page with split-view desktop layout and tabbed mobile interface). App shell (`Layout`) provides branded emerald gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`, `useGameHistory`, `useGenerateTickets`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills using CSS variable theming, and CTA buttons. Theme colors defined via Tailwind `@theme` in `frontend/src/index.css` (emerald primary, per-game accent colors).
+- **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage detail page with split-view desktop layout and tabbed mobile interface). App shell (`Layout`) provides branded emerald gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`, `useGameHistory`, `useGenerateTickets`, `useMinLoading`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills using CSS variable theming, and CTA buttons. Theme colors defined via Tailwind `@theme` in `frontend/src/index.css` (emerald primary, per-game accent colors).
 - **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs (`badger-five`, `supercash`, `megabucks`) to class names. Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
@@ -95,7 +95,10 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── contexts/
 │   │   │   └── GameContext.jsx     # useReducer-based state: games, selectedGame, history, ticketResults
 │   │   ├── hooks/
-│   │   │   └── useGames.js         # Custom hook wrapping fetchGames with loading/error/data states
+│   │   │   ├── useGames.js         # Custom hook wrapping fetchGames with loading/error/data states
+│   │   │   ├── useGameHistory.js   # Hook for fetching game drawing history by gameId
+│   │   │   ├── useGenerateTickets.js  # Imperative hook for generating ticket panels
+│   │   │   └── useMinLoading.js    # Wraps a loading flag with a minimum visible duration (2000ms) for skeleton loaders
 │   │   ├── pages/
 │   │   │   ├── Dashboard.jsx       # Game selection landing page with responsive card grid
 │   │   │   └── GamePage.jsx        # Game detail page with split-view desktop layout and tabbed mobile interface
@@ -130,6 +133,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
   - [useGames Hook Detail](docs/hooks/useGames.md) -- Custom hook wrapping `fetchGames()` with loading, error handling, and data states
   - [useGameHistory Hook Detail](docs/hooks/useGameHistory.md) -- Custom hook wrapping `fetchHistory(gameId)` with loading, error handling, and result caching by gameId
   - [useGenerateTickets Hook Detail](docs/hooks/useGenerateTickets.md) -- Imperative hook for ticket generation; wraps `generateTickets(gameId)` with a `generate(count)` function
+  - [useMinLoading Hook Detail](docs/hooks/useMinLoading.md) -- Wraps a boolean loading flag with a minimum visible duration (default 2000ms) so skeleton loaders don't flash on fast networks
 - [Services](docs/services/README.md) -- Frontend API service layer. Fetch wrapper module for all backend endpoints.
   - [API Service Detail](docs/services/api.md) -- Fetch wrapper module for all backend endpoints
 - [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
