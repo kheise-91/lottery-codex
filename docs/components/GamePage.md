@@ -19,12 +19,19 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 | `ticketCount` | `number` | `3` | Number of tickets to generate; drives auto-generation on desktop |
 | `activeTab` | `number` | `0` | Active mobile tab index (`0` = Drawings, `1` = Tickets) |
 
+### Refs
+
+| Ref | Mirrors | Description |
+|-----|---------|-------------|
+| `generatingRef` | `generating` (from `useGenerateTickets`) | Ref mirror of the in-flight state, kept in sync via a `useEffect`. Read inside the desktop auto-generate effect so that adding `generating` to that effect's dependency array is not required (which would re-fire the effect and produce a duplicate request when `generating` flips back to `false`) |
+
 ## Side Effects
 
 | Effect | Trigger | Behavior |
 |--------|---------|----------|
 | Fetch game details | `gameId` changes | Calls `fetchGameDetails(gameId)` with cancellation guard; sets `gameDetailsLoading: true` at start, `false` in `finally`; sets `gameDetails` on success |
-| Auto-generate tickets | `ticketCount` or `gameId` changes (desktop only) | Calls `generate(ticketCount)` when `window.innerWidth >= 768`; enables seamless ticket count adjustment on desktop |
+| Sync `generatingRef` | `generating` changes | Sets `generatingRef.current = generating` so the auto-generate effect can read the in-flight state without depending on it |
+| Auto-generate tickets | `ticketCount` or `gameId` changes (desktop only) | Calls `generate(ticketCount)` when `window.innerWidth >= 768` **and** no request is already in flight (`generatingRef.current === false`); enables seamless ticket count adjustment on desktop without overlapping requests |
 
 ## Derived Data
 
@@ -59,7 +66,7 @@ When `showHeaderSkeleton` is false, the real header renders:
 | Column | Span | Content |
 |--------|------|---------|
 | Left | `col-span-7` (≈58%) | `ErrorBanner` (when `historyError`), Previous Drawings header, Pattern Distribution (skeleton while loading), latest drawing, older drawings list (skeleton rows while loading) |
-| Right | `col-span-5` (≈42%) | Generated Tickets header, pattern health status, ticket count dropdown, `TicketCarousel` (skeleton ticket placeholder while generating), `ErrorBanner` (when `generateError`) |
+| Right | `col-span-5` (≈42%) | Generated Tickets header, pattern health status, ticket count dropdown (`disabled` while `generating`), `TicketCarousel` (skeleton ticket placeholder while generating), `ErrorBanner` (when `generateError`) |
 
 ### Mobile Tabbed Interface (`md:hidden`)
 
@@ -82,7 +89,7 @@ When `showHeaderSkeleton` is false, the real header renders:
 **Tickets tab:**
 - Section header with ticket icon ("Generated Tickets")
 - Pattern health status placeholder (green dot + "It's okay to play.")
-- Ticket count dropdown (1–10) with "Generate" button (side-by-side layout)
+- Ticket count dropdown (1–10) with "Generate" button (side-by-side layout). Both the dropdown and the Generate button are `disabled` while `generating` is true, with reduced opacity and a not-allowed cursor
 - `TicketCarousel` for browsing generated tickets, or a skeleton ticket placeholder (header + 3 panel rows with 5 ball circles each + footer) while `showTicketSkeleton` is true
 - `ErrorBanner` (when `generateError`) — "Failed to generate tickets. Please try again."
 
@@ -152,4 +159,4 @@ The banner messages are hardcoded user-facing strings — the raw hook errors (w
 
 ## Status
 
-Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, ticket carousel area, and game header (both mobile and desktop layouts). All skeleton gates are wrapped in `useMinLoading` with a 2000ms minimum duration to prevent flash-of-skeleton on fast networks. Phase 2.11 also replaces the full-page `historyError` early return and inline `generateError` paragraphs with dismissible `ErrorBanner` components in the drawings and ticket areas.
+Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, ticket carousel area, and game header (both mobile and desktop layouts). All skeleton gates are wrapped in `useMinLoading` with a 2000ms minimum duration to prevent flash-of-skeleton on fast networks. Phase 2.11 also replaces the full-page `historyError` early return and inline `generateError` paragraphs with dismissible `ErrorBanner` components in the drawings and ticket areas. Phase 2.11 additionally disables both ticket count dropdowns (mobile and desktop) and guards the desktop auto-generate effect via a `generatingRef` mirror so that no additional generate requests are triggered while one is already in flight; all controls re-enable when the request completes (success or error).

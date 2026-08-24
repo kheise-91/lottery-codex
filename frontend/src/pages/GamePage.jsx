@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { BoltIcon } from '@heroicons/react/24/outline'
 import { fetchGameDetails } from '../services/api'
@@ -59,9 +59,16 @@ function GamePage() {
     return () => { cancelled = true }
   }, [gameId])
 
+  const generatingRef = useRef(false)
+
+  /* ---- Keep ref in sync with hook loading state ---- */
+  useEffect(() => {
+    generatingRef.current = generating
+  }, [generating])
+
   /* ---- Desktop auto-generate when ticketCount changes ---- */
   useEffect(() => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 768 && !generatingRef.current) {
       generate(ticketCount)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -230,7 +237,8 @@ function GamePage() {
             id="ticket-count-mobile"
             value={ticketCount}
             onChange={(e) => setTicketCount(Number(e.target.value))}
-            className="w-full p-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+            disabled={generating}
+            className="w-full p-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
               <option key={n} value={n}>{n} Ticket{n > 1 ? 's' : ''}</option>
@@ -497,7 +505,8 @@ function GamePage() {
                 id="ticket-count"
                 value={ticketCount}
                 onChange={(e) => setTicketCount(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                disabled={generating}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                   <option key={n} value={n}>{n} Ticket{n > 1 ? 's' : ''}</option>
