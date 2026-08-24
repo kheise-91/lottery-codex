@@ -32,11 +32,13 @@ Result is an array of `{ pattern, count, percentage }` items.
 
 ## Structure
 
-Flat container `<div>` with heading, subtitle, and per-pattern rows:
+Flat container `<div>` with heading, subtitle, and per-pattern rows (or an empty-state message):
 
 - Heading: `<h2 className="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>`
 - Subtitle: `<p className="text-xs text-gray-400 mb-2">Last 100 Drawings</p>`
-- Per row:
+- When `distribution.length === 0` (no history data): empty-state message instead of bar rows:
+  - `<p className="text-xs text-gray-400">No data</p>` — flat, no card/border/background, styled to match the subtitle
+- Otherwise, per row:
   - Label container: `flex justify-between items-baseline mb-1`
   - Label: `<span className="text-xs font-medium text-gray-700">{pattern}</span>` left-aligned
   - Percentage: `<span className="text-xs font-semibold" style={{ color: primaryColorStyle }}>{percentage}%</span>` right-aligned, colored via `var(--color-${gameId})` or fallback
@@ -84,8 +86,8 @@ import PatternDistribution from '../components/games/PatternDistribution';
 />;
 ```
 
-Renders heading, subtitle and frequency bars for the last 100 drawings. Safe to render with empty or undefined `history` (renders heading/subtitle only).
+Renders heading, subtitle and frequency bars for the last 100 drawings. Safe to render with empty or undefined `history` (renders heading/subtitle plus a "No data" message).
 
 ## Status
 
-Implemented in Phase 2.9. Pattern frequency calculation from last 100 drawings and flat bar rendering with game-themed colors is complete.
+Implemented in Phase 2.9. Pattern frequency calculation from last 100 drawings and flat bar rendering with game-themed colors is complete. Phase 2.11 adds a "No data" empty-state message when the history prop yields no distribution data.

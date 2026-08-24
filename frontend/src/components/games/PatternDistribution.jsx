@@ -56,7 +56,10 @@ function PatternDistribution({ history, gameId, gamePrimaryColor }) {
     <div>
       <h2 className="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>
       <p className="text-xs text-gray-400 mb-2">Last 100 Drawings</p>
-      {distribution.map((item, idx) => {
+      {distribution.length === 0 ? (
+        <p className="text-xs text-gray-400">No data</p>
+      ) : (
+      distribution.map((item, idx) => {
         let barStyle = {}
         const colors = gameId ? GAME_BAR_COLORS[gameId] : null
         if (colors) {
@@ -103,7 +106,8 @@ function PatternDistribution({ history, gameId, gamePrimaryColor }) {
             </div>
           </div>
         )
-      })}
+      })
+      )}
     </div>
   )
 }
