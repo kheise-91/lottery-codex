@@ -238,7 +238,7 @@ Build the React component hierarchy.
 
    **Done when:** All routes render without errors; navigation works.
 
-- [-] **[2.11 — Add loading and error states](https://gitea.heise.home/kheise/lottery-codex/milestone/40)**
+- [x] **[2.11 — Add loading and error states](https://gitea.heise.home/kheise/lottery-codex/milestone/40)**
     - Skeleton loaders for history fetching and panel generation
     - Error banners for API failures (network errors, invalid game)
     - Disabled button state during in-flight requests
