@@ -246,7 +246,7 @@ Build the React component hierarchy.
 
     **Done when:** User sees meaningful feedback during all async operations.
 
-- [ ] **2.12 — Add contextual back button to GamePage**
+- [x] **[2.12 — Add contextual back button to GamePage](https://gitea.heise.home/kheise/lottery-codex/milestone/41)**
     - A single "Back to Dashboard" button at the top of the GamePage (detail view only), positioned below the app header and above the game header section — the Dashboard page is left unchanged
     - Button layout: left chevron icon followed by a "Back to Dashboard" text label, rendered as an inline pill with white background, light gray border, rounded corners, and a subtle shadow
     - Label is small (0.875rem) semibold text in medium-dark gray; on hover the background lightens to off-white, the text and border shift to the primary emerald color with a slightly deeper shadow, and on press the button scales down slightly
