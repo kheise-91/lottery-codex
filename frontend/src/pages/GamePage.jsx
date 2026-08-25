@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { useParams } from 'react-router-dom'
-import { BoltIcon } from '@heroicons/react/24/outline'
+import { useParams, Link } from 'react-router-dom'
+import { BoltIcon, ChevronLeftIcon } from '@heroicons/react/24/outline'
 import { fetchGameDetails } from '../services/api'
 import { useGameHistory } from '../hooks/useGameHistory'
 import { useGenerateTickets } from '../hooks/useGenerateTickets'
@@ -294,6 +294,17 @@ function GamePage() {
 
   return (
     <>
+      {/* ---- Contextual back button (GamePage only) ---- */}
+      <div className="mb-4">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white border border-gray-200 text-sm font-semibold text-gray-700 shadow-sm transition-all duration-150 hover:bg-gray-50 hover:text-primary hover:border-primary hover:shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:scale-[0.97]"
+        >
+          <ChevronLeftIcon className="w-4 h-4" />
+          Back to Dashboard
+        </Link>
+      </div>
+
       {/* ---- Game Header Section (visible on both desktop and mobile) ---- */}
       <section className="mb-4 md:mb-8">
         {showHeaderSkeleton ? (

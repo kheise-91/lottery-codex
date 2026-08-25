@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Game detail page rendered at `/games/:gameId`. Displays game metadata (name, description, draw frequency, odds, jackpot), historical drawing data, and generated ticket panels. Uses a **desktop split-view layout** (7/5 column grid) on screens ≥768px and a **mobile tabbed interface** (Drawings / Tickets tabs) on smaller screens.
+Game detail page rendered at `/games/:gameId`. Displays game metadata (name, description, draw frequency, odds, jackpot), historical drawing data, and generated ticket panels. Uses a **desktop split-view layout** (7/5 column grid) on screens ≥768px and a **mobile tabbed interface** (Drawings / Tickets tabs) on smaller screens. A contextual **"Back to Dashboard"** button renders at the top of the page (below the app header, above the game header section) and routes back to `/` (Dashboard).
 
 ## Props
 
@@ -48,6 +48,15 @@ None. The component reads `gameId` from the URL via React Router's `useParams`.
 The page-level constant `MIN_SKELETON_MS = 2000` is passed to all three `useMinLoading` calls so that all skeleton areas (header, history, tickets) stay visible for a synchronized minimum duration, preventing a jarring flash when the API responds in under a second.
 
 ## Layout Structure
+
+### Back Button (contextual navigation)
+
+Renders as the first element of the page, below the app header (provided by `Layout`) and above the game header section. Visible at both mobile (<768px) and desktop (≥768px) breakpoints — no breakpoint-specific changes; it inherits the responsive main column:
+
+- A `<Link to="/">` pill button: white background, light gray border (`border-gray-200`), rounded corners (`rounded-lg`), subtle shadow (`shadow-sm`)
+- Contains a left chevron icon (`ChevronLeftIcon`, 16px, `w-4 h-4`, inherits `currentColor`) followed by the text label "Back to Dashboard" (0.875rem semibold, medium-dark gray via `text-gray-700`)
+- Hover: background lightens to off-white (`hover:bg-gray-50`), text and border shift to the primary emerald color (`hover:text-primary`, `hover:border-primary`), and the shadow deepens slightly; press: button scales down to 97% (`active:scale-[0.97]`)
+- Clicking routes back to the Dashboard (`/`) via React Router
 
 ### Game Header (shared across breakpoints)
 
@@ -112,7 +121,7 @@ The `gameId` is extracted via `useParams()` and used as the key for all data fet
 
 | Dependency | Purpose |
 |------------|---------|
-| `react-router-dom` (`useParams`) | Extracts `gameId` from the URL route parameter |
+| `react-router-dom` (`useParams`, `Link`) | `useParams` extracts `gameId` from the URL route parameter; `Link` renders the "Back to Dashboard" button as a router link to `/` (Dashboard) |
 | `../services/api` (`fetchGameDetails`) | Fetches game metadata from the backend API |
 | `../hooks/useGameHistory` | Hook for fetching historical drawing data by gameId |
 | `../hooks/useGenerateTickets` | Imperative hook for generating tickets; provides `generate(count)` function |
@@ -123,7 +132,7 @@ The `gameId` is extracted via `useParams()` and used as the key for all data fet
 | `SkeletonLoader` | Pulsing gray placeholder block; rendered as skeleton loaders while history is loading or tickets are generating |
 | `ErrorBanner` | Dismissible red error banner; rendered in the drawings area when `historyError` is set and in the ticket area when `generateError` is set |
 | `BottomNavTabs` | Mobile tab navigation (Drawings / Tickets) |
-| `@heroicons/react/24/outline` (`BoltIcon`) | Lightning bolt icon on the Generate button |
+| `@heroicons/react/24/outline` (`BoltIcon`, `ChevronLeftIcon`) | Lightning bolt icon on the Generate button; left chevron icon on the "Back to Dashboard" button |
 
 ## Usage
 
@@ -159,4 +168,4 @@ The banner messages are hardcoded user-facing strings — the raw hook errors (w
 
 ## Status
 
-Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, ticket carousel area, and game header (both mobile and desktop layouts). All skeleton gates are wrapped in `useMinLoading` with a 2000ms minimum duration to prevent flash-of-skeleton on fast networks. Phase 2.11 also replaces the full-page `historyError` early return and inline `generateError` paragraphs with dismissible `ErrorBanner` components in the drawings and ticket areas. Phase 2.11 additionally disables both ticket count dropdowns (mobile and desktop) and guards the desktop auto-generate effect via a `generatingRef` mirror so that no additional generate requests are triggered while one is already in flight; all controls re-enable when the request completes (success or error).
+Implemented. Phase 2.8 deliverable: split-view desktop layout and tabbed mobile interface for game detail viewing. Phase 2.9 integration adds PatternDistribution component to both mobile Drawings tab and desktop left column, replacing placeholders. Phase 2.11 integration adds `SkeletonLoader`-based loading placeholders for the Pattern Distribution section, drawings list, ticket carousel area, and game header (both mobile and desktop layouts). All skeleton gates are wrapped in `useMinLoading` with a 2000ms minimum duration to prevent flash-of-skeleton on fast networks. Phase 2.11 also replaces the full-page `historyError` early return and inline `generateError` paragraphs with dismissible `ErrorBanner` components in the drawings and ticket areas. Phase 2.11 additionally disables both ticket count dropdowns (mobile and desktop) and guards the desktop auto-generate effect via a `generatingRef` mirror so that no additional generate requests are triggered while one is already in flight; all controls re-enable when the request completes (success or error). Phase 2.12 adds a contextual "Back to Dashboard" button at the top of the page (below the app header, above the game header section), visible at both mobile and desktop breakpoints, routing back to `/` (Dashboard) via a `<Link>` from react-router-dom.
