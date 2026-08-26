@@ -7,7 +7,7 @@ namespace LotteryCodex\Games;
 require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
 
 /**
- * Badger Five game implementation using Lottery Codex pattern analysis (3-Odd 2-Even / 3-Low 2-High).
+ * Badger 5 game implementation using Lottery Codex pattern analysis (3-Odd 2-Even / 3-Low 2-High).
  */
 class BadgerFive implements GameInterface, \JsonSerializable
 {
@@ -38,7 +38,7 @@ class BadgerFive implements GameInterface, \JsonSerializable
 
     /**
      * Get Badger Five game metadata including number groups and optimal pattern.
-     * @return array Game details (id, name, status, drawFrequency, numberRange, numbersPerDraw, optimalPattern, groups)
+     * @return array Game details (id, name, status, drawFrequency, numberRange, numbersPerDraw, optimalPattern, groups, description, oddsOfWinning)
      */
     public function getGameDetails(): array
     {
@@ -54,8 +54,10 @@ class BadgerFive implements GameInterface, \JsonSerializable
                 'lowOdd'   => $this->getLowOdd(),
                 'lowEven'  => $this->getLowEven(),
                 'highOdd'  => $this->getHighOdd(),
-                'highEven' => $this->getHighEven(),
+                'highEven' => $this->getHighEven()
             ],
+            'description' => 'Pick 5 numbers from 1-31 in this daily, rolling jackpot game that offers better odds of winning than larger national lotteries.',
+            'oddsOfWinning' => '1 in 169,911'
         ];
     }
 
@@ -180,47 +182,18 @@ class BadgerFive implements GameInterface, \JsonSerializable
 
         foreach ($subPattern as $p) {
             $cutoff = count($this->{$p}) - 1;
-            $panel[] = $this->{$p}[random_int(0, $cutoff)];
+            $num = $this->{$p}[random_int(0, $cutoff)];
+
+            while (in_array($num, $panel)) {
+                $num = $this->{$p}[random_int(0, $cutoff)];
+            }
+
+            $panel[] = $num;
         }
 
         sort($panel);
         return $panel;
     }
-
-    /**
-     * The two functions below this are commented out for the time being. 
-     * I'm not sure if I will need them. 
-     * They're not being used, but just to be safe, I commented them out in case I want to use them again at a later date.
-     */
-    // public function formatPattern(int $patternNum): string
-    // {
-    //     return ($patternNum === 3)
-    //         ? "2-Odd 3-Even / 3-Low 2-High"
-    //         : ($patternNum === 2
-    //             ? "3-Odd 2-Even / 2-Low 3-High"
-    //             : "3-Odd 2-Even / 3-Low 2-High");
-    // }
-
-    // public function formatSubPattern(int $patternNum, int $subPatternNum): string
-    // {
-    //     $string = '';
-    //     $prevRange = 'Low';
-
-    //     foreach ($this->{"pattern{$patternNum}"}[$subPatternNum] as $group) {
-    //         $group = str_replace(
-    //             ['lowOdd', 'lowEven', 'highOdd', 'highEven'],
-    //             ['Low-Odd', 'Low-Even', 'High-Odd', 'High-Even'],
-    //             $group
-    //         );
-    //         $pieces = explode('-', $group);
-    //         $range = $pieces[0];
-
-    //         $string .= ($range === $prevRange) ? " {$group}" : " / {$group}";
-    //         $prevRange = $range;
-    //     }
-
-    //     return trim($string);
-    // }
 
     public function setPreviousDrawings(array $previousDrawings): self
     {

@@ -7,21 +7,21 @@ namespace LotteryCodex\Games;
 require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
 
 /**
- * SuperCash! game implementation using Lottery Codex pattern analysis (3-Odd 3-Even / 3-Low 3-High).
+ * Megabucks game implementation using Lottery Codex pattern analysis (3-Odd 3-Even / 3-Low 3-High).
  */
-class SuperCash implements GameInterface, \JsonSerializable
+class Megabucks implements GameInterface, \JsonSerializable
 {
     private array $previousDrawings = [];
 
     private array $tickets = [];
 
-    private array $lowOdd = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]; // indexes: 0-9
+    private array $lowOdd = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25]; // indexes: 0-12
 
-    private array $lowEven = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]; // indexes: 0-9
+    private array $lowEven = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]; // indexes: 0-11
 
-    private array $highOdd = [21, 23, 25, 27, 29, 31, 33, 35, 37, 39]; // indexes: 0-9
+    private array $highOdd = [27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49]; // indexes: 0-11
 
-    private array $highEven = [22, 24, 26, 28, 30, 32, 34, 36, 38]; // indexes: 0-8
+    private array $highEven = [26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48]; // indexes: 0-11
 
     private array $pattern = [
         // 3-Odd 3-Even / 3-Low 3-High //
@@ -38,17 +38,17 @@ class SuperCash implements GameInterface, \JsonSerializable
     }
 
     /**
-     * Get SuperCash game metadata including number groups and optimal pattern.
+     * Get Mebgabucks game metadata including number groups and optimal pattern.
      * @return array Game details (id, name, status, drawFrequency, numberRange, numbersPerDraw, optimalPattern, groups, description, oddsOfWinning)
      */
     public function getGameDetails(): array
     {
         return [
-            'id' => 'supercash',
-            'name' => 'SuperCash!',
+            'id' => 'megabucks',
+            'name' => 'Megabucks',
             'status' => 'enabled',
-            'drawFrequency' => ['Daily'],
-            'numberRange' => ['min' => 1, 'max' => 39],
+            'drawFrequency' => ['Wednesday', 'Saturday'],
+            'numberRange' => ['min' => 1, 'max' => 49],
             'numbersPerDraw' => 6,
             'optimalPattern' => '3-Odd 3-Even / 3-Low 3-High',
             'groups' => [
@@ -57,13 +57,13 @@ class SuperCash implements GameInterface, \JsonSerializable
                 'highOdd'  => $this->getHighOdd(),
                 'highEven' => $this->getHighEven()
             ],
-            'description' => 'Pick 6 numbers from 1-39 for a chance to win a fixed $350,000 top prize in a daily drawing that features a doubler multiplier for lower prize tiers.',
-            'oddsOfWinning' => '1 in 1,631,312'
+            'description' => 'Pick 6 numbers from 1-49 in this twice-weekly, Wisconsin-only rolling jackpot game where every $1 ticket gives you two separate plays.',
+            'oddsOfWinning' => '1 in 6,991,908'
         ];
     }
 
     /**
-     * Get historical drawing data for SuperCash.
+     * Get historical drawing data for Megabucks.
      * @return array Array of previous drawings keyed by date, each with 'numbers' and 'pattern' keys
      */
     public function getHistory(): array
@@ -72,7 +72,7 @@ class SuperCash implements GameInterface, \JsonSerializable
     }
 
     /**
-     * Generate prediction tickets for SuperCash using pattern analysis.
+     * Generate prediction tickets for Megabucks using pattern analysis.
      * @param int $count Number of tickets to generate
      * @return array Array of ticket panels, each panel being a sorted array of 6 integers
      */
@@ -140,7 +140,7 @@ class SuperCash implements GameInterface, \JsonSerializable
      */
     private function loadPreviousDrawings(): self
     {
-        $html = file_get_html('https://wilottery.com/winners/draw-history?game=supercash');
+        $html = file_get_html('https://wilottery.com/winners/draw-history?game=megabucks');
 
         foreach ($html->find('.winning-numbers-line') as $numSet) {
             $drawing = [];

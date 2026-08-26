@@ -16,7 +16,7 @@ export default defineConfig({
 
     proxy: {
       '/api': {
-        target: 'http://192.168.0.91:5959',
+        target: process.env.VITE_BACKEND_PROXY_URL || 'http://192.168.0.91:5959',
         changeOrigin: true,
         secure: false
       }

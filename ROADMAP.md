@@ -17,10 +17,10 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 | **Backend API** | `api.php` missing; Nginx routes to nothing | Slim Framework router with 4 REST endpoints |
 | **BadgerFive game class** | Fully functional (scraping + panel generation) but pre-PHP-7 style, no namespace/types | Namespaced, typed, Composer-loaded |
 | **SuperCash game class** | Fatal error (missing `SuperCashPD.php`), core methods commented out | Fixed constructor, no external dependencies, analysis-only for now |
-| **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard → GamePage split-view (desktop) / tabbed (mobile) → PatternDistribution + History browser |
-| **Routing** | No router installed | React Router DOM v6, 3 routes |
+| **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard game selection with GameCard components; GamePage stub; Layout shell with branded header |
+| **Routing** | No router installed | React Router DOM v6, 2 active routes (`/`, `/games/:gameId`) |
 | **Pattern health** | No frequency analysis; all patterns treated equally | Per-pattern playability indicators based on historical frequency |
-| **State management** | Single `useState(0)` placeholder | Context API + useReducer for game data/history/tickets |
+| **State management** | Single `useState(0)` placeholder | Context API + useReducer via GameProvider for games/selectedGame/history/ticketResults; auto-fetches games on mount |
 | **Docker volume mount** | Hardcoded host path (`/home/admin/Projects/...`) that doesn't match this machine | Relative bind mount or correct absolute path |
 | **Production errors** | `display_errors = On` leaks stack traces | Errors logged only, hidden from users |
 
@@ -128,84 +128,133 @@ Create the API front controller with mock data endpoints. This establishes front
 
 ## Phase 2 — Frontend Core Components
 
-Build the React component hierarchy based on the legacy UI patterns from `OLD/`.
+Build the React component hierarchy.
 
-- [ ] **2.1 — Set up Context + useReducer state management**
+- [x] **[2.1 — Set up Context + useReducer state management](https://gitea.heise.home/kheise/lottery-codex/milestone/31)**
    - Create `src/contexts/GameContext.jsx` with reducer for: games list, selected game, history data, ticket results
    - Actions: `SET_GAMES`, `SELECT_GAME`, `FETCH_HISTORY`, `GENERATE_TICKETS`
    - Wrap app in `<GameProvider>`
 
    **Done when:** Components can dispatch actions and read state from context.
 
-- [ ] **2.2 — Build Layout shell (`src/components/layout/Layout.jsx`)**
+- [x] **[2.2 — Build Layout shell (`src/components/layout/Layout.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/32)**
    - Header with "Lottery Codex" branding
    - Main content area for page routing
    - Mobile-first, full-height flex column layout
 
    **Done when:** Layout renders consistently across mobile and desktop viewports.
 
-- [ ] **2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)**
-   - Giant card-like buttons for each available game (Badger Five, Super Cash)
-   - Cards show: game name, number range, draw frequency
+- [x] **[2.3 — Create Dashboard page (`src/pages/Dashboard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/33)**
+   - Giant card-like buttons for each available game (Badger 5, Superash!, Megabucks)
+   - There will be 3 cards per row
+   - Cards get game details and displays the following information: game name image, description, status, draw frequency, odds of winning, and current jackpot
+      - Card header has the game image (saved as `frontend/public/[game-id].svg`)
+      - Number range and number of balls will be described in the description
+      - The current jackpot value will just be a placeholder for this phase
+      - Status appears as a badge in the top right corner
+      - Below the description is a 3 column row, with icons for each item: draw frequency | odds of winning | current jackpot
+      - Footer contains link to the game page that reads "Play Now ->" if enabled or "Coming Soon" if disabled
    - Click navigates to `/games/{gameId}`
 
-   **Done when:** User can select a game from the dashboard and navigate to its page.
+   **Done when:** Card "buttons" render on the dashboard correctly and the user can select a game from the dashboard.
 
-- [ ] **2.4 — Create Ball component (`src/components/games/Ball.jsx`)**
+- [x] **[2.4 — Create Ball component (`src/components/games/Ball.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/34)**
    - Circular element (32px), centered text, bordered
-   - Accept `number` prop; support variant colors for sub-patterns
+   - 3d appearance
+   - Accepts `number` prop
+   - Support variant colors based on the game's main color in `frontend/src/index.css` AND the sub-pattern it belongs to
+   - Will be used in the future `DrawingCard.jsx` and `TicketCard.jsx` components
+      - There will be 5 or 6 balls in a panel, depending on the game
+      - `DrawingCard.jsx` will have one panel (historical winning draws)
+      - `TicketCard.jsx` will have multiple tickets, with multiple panels, depending on the game's pattern property (each sub-pattern is a panel)
 
-   **Done when:** Ball renders numbers identically to the legacy UI.
+   **Done when:** Ball renders numbers with a 3d appearance and color matching the game and sub-pattern
 
-- [ ] **2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)**
+- [x] **[2.5 — Create DrawingCard component (`src/components/games/DrawingCard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/35)**
+   - This is the historical winning data
+   - Each card represents a winning ticket (one panel - number of balls is dependent on the game)
    - Shows: date (formatted "Monday, January 1st"), full pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High"), row of number balls
+   - The most recent drawing will use the game id as the color variant for the `Ball.jsx` component
+   - The remaning drawings will use the white variant for the `Ball.jsx` component
 
-   **Done when:** Historical drawings render as cards matching the OLD/ visual style.
+   **Done when:** Historical drawings render as cards with the date of the drawing, the pattern of the draw, and the exact numbers drawn.
 
-- [ ] **2.6 — Create PanelDisplay component (`src/components/games/PanelDisplay.jsx`)**
-   - Groups panels in sets per ticket (5 for BadgerFive, 6 for SuperCash) — one panel per sub-pattern
-   - Color-coded backgrounds by sub-pattern
-   - Shows sub-pattern labels above each panel
+- [x] **[2.6 — Create TicketCard component (`src/components/games/TicketCard.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/36)**
+   - Each ticket renders as a white card, rounded corners, border, and a hover lift effect with shadow (primary color shadow from theme in `index.css`)
+   - Ticket header area:
+      - Game name ("Badger Five") on the left
+      - Ticket ID below the game name - [gameInitials-date-ticketNumber] (Badger 5: "BF-yymmdd-01", SuperCash!: "SC-yymmdd-01", Megabucks: "MB-yymmdd-01")
+      - Decorative barcode on the right — made of vertical div bars with varying widths and heights
+   - Each panel has a dashed colored border (primary color from theme in `index.css`) on a gray translucent background with rounded corners
+   - Colored accent bar on the left edge (6px wide, full height, rounded on left corners only) — uses the game's main color from the theme in `index.css`
+   - Panel badge pill in the header row (e.g., "Panel A", "Panel B") — rounded-full, with the game's main color for text and the game's lightest color for background
+   - Row of 5 white variant Ball components
+   - Ticket footer: thin separator line, right-aligned timestamp (e.g., "July 26, 2026 · 09:41 AM")
+   - Multiple tickets are separated by a perforation zone — strip with radial gradient dots on a transparent background, indented from edges
 
-   **Done when:** Generated panels render with correct grouping and color coding.
+   **Done when:** Generated tickets render as physical-ticket-style cards with correct text, coloring, panels, white 3D balls, barcodes, and hover lift effects.
 
-- [ ] **2.7 — Create Tabs component (`src/components/common/Tabs.jsx`, mobile only)**
-   - Two-tab switcher: "Previous Drawings" / "Generated Panels"
-   - Hidden on desktop (≥768px) where split-view is used instead
-   - Use `@headlessui/react` Tab component (already installed)
+- [x] **[2.7 — Create BottomNavTabs component (`src/components/layout/BottomNavTabs.jsx`, mobile only)](https://gitea.heise.home/kheise/lottery-codex/milestone/37)**
+    - Sticky bottom navigation bar with two tabs: "Previous Drawings" (clock icon) / "Generated Tickets" (ticket icon)
+    - Active tab uses emerald color (`--color-primary` / `#059669`) for both icon and label, plus a 3px top border indicator line; inactive tabs are gray
+    - Hidden on desktop (≥768px) where split-view is used instead
+    - Use `@headlessui/react` Tab component (already installed)
+    - Appears below the game header section on mobile — sits at the bottom of the viewport, above it are the tab content panels
 
-   **Done when:** Tabs switch content without page reload; hidden on desktop breakpoint.
+    **Done when:** Bottom-nav tabs switch content without page reload; hidden on desktop breakpoint.
 
-- [ ] **2.8 — Build GamePage (`src/pages/GamePage.jsx`) with split-view layout**
-   - Desktop (≥768px): Split-view grid — history + pattern distribution on left (5/12), generation form + panels on right (7/12)
-   - Mobile (<768px): Tabbed interface via Tabs component — "Previous Drawings" and "Generated Panels"
-   - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
-   - Desktop: auto-generate panels when ticket count changes; Mobile: explicit "Generate" button
-   - Uses `useGameHistory` and `useGenerateTickets` hooks
+- [x] **[2.8 — Build GamePage (`src/pages/GamePage.jsx`) with emerald header + flat drawing list + ticket carousel](https://gitea.heise.home/kheise/lottery-codex/milestone/38)**
+    - Rename `DrawingCard` component to reflect its new role as a flat list item rather than a card (no card wrapper, shadow, or hover lift)
+    - Remove `TicketList` component entirely; promote `TicketCard` to the main export of that file — since tickets are now displayed via carousel instead of stacked with perforation dividers, the list-wrapper logic is no longer needed. Update all imports referencing `TicketList` accordingly.
+    - Create new `TicketCarousel` component: single-ticket-per-slide carousel with circular frosted-glass arrow buttons on left and right edges, horizontal slide track, and dot indicators at bottom where the active dot expands into a pill shape colored with the game's primary color
+    - **Game header section** (visible on both desktop and mobile):
+       - Tablet+ (≥768px): Single bordered container with rounded corners and subtle shadow, split into two columns — left side has game name as large bold heading with description underneath; right side is a 3-column grid divided by vertical dividers, each column containing: game-primary-colored icon (calendar / bar chart / coin), uppercase label ("Draw", "Odds", "Jackpot") in small gray tracking-wide text, and bold value text
+       - Mobile (<768px): Single column — game name, description, then the same 3-column stat row as a bordered container below with smaller icons, smaller labels, and values colored with the game's primary color
+    - Desktop (≥768px): Split-view grid in 7/5 column ratio:
+       - Left column (7/12): Flat on page background, no card wrapper — emerald gradient header bar (~48px tall) with centered clock icon and "Previous Drawings" text; below it a 2-column grid where left half shows **Pattern Distribution** (flat, placeholder for now, see sub-phase 2.9) and right half shows the latest drawing as flat content: date header with pulsing red-dot "Latest" badge pill on light red background, centered pattern pill badge with bar-chart icon on gray background, colored balls row using game's theme color
+       - Remaining drawings below as flat bordered list items separated by thin dividers with vertical padding: date header with relative time-ago text (e.g., "3 days ago") on the right, centered pattern pill badge, white variant balls row
+       - Right column (5/12): Emerald gradient header bar (~48px tall) with centered ticket icon and "Generated Tickets" text; form section below with pattern health status indicator (colored dot + message), ticket count dropdown (1-10); generated tickets displayed in the **TicketCarousel** component
+    - Mobile (<768px): Tabbed interface with separate content areas:
+       - Drawings tab: emerald gradient header bar ("Previous Drawings"), pattern distribution section, latest drawing with colored balls + Latest badge, remaining drawings as flat bordered list items
+       - Tickets tab: emerald gradient header bar ("Generated Tickets"), pattern health status (placeholder for now - not implemented until later phase), ticket count dropdown paired side-by-side with an explicit "Generate" button (emerald background, lightning bolt icon), TicketCarousel below with arrow buttons and dot indicators
+    - BottomNavTabs on mobile: two tabs labeled "Drawings" (clock icon) / "Tickets" (ticket icon), active tab uses primary color for icon and label with a 3px top border indicator pill; hidden on desktop where split-view is used instead
+    - Form controls: ticket count dropdown only (1-10) — no pattern selector; pattern is internal to each game class
+    - Desktop: auto-generate tickets when ticket count changes; Mobile: explicit "Generate" button triggers generation (lightning bolt hero icon or svg if no hero icon available)
+    - Uses `useGameHistory` and `useGenerateTickets` hooks
 
-   **Done when:** User can view drawings, generate panels, and see results — split-view on desktop, tabs on mobile.
+    **Done when:** User can view drawings (flat list with latest highlighted), generate tickets, and browse results via carousel — emerald gradient header on desktop split-view and mobile tabs.
 
-- [ ] **2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)**
-   - Calculates and displays pattern frequencies from historical drawings
-   - Shows full pattern text (e.g., "3-Odd 2-Even / 3-Low 2-High") with percentage bar chart
-   - Color-coded bars: green (≥60%), yellow (40–59%), orange (20–39%), slate (<20%)
-   - Sticky positioning on desktop left panel; at top of mobile drawings tab
+- [x] **[2.9 — Create PatternDistribution component (`src/components/games/PatternDistribution.jsx`)](https://gitea.heise.home/kheise/lottery-codex/milestone/39)**
+   - Calculates and displays pattern frequencies from historical drawings (past 100 drawings)
+   - Shows heading "Pattern Distribution" with subtitle "Last 100 Drawings" in small gray text
+   - Each pattern entry: left-aligned pattern label (full lable, no abbreviations) in small medium-weight dark gray, right-aligned percentage value (e.g., "80%") in game's primary color, above a full-width bar track on light gray background with rounded ends and thin height — filled portion uses game's primary color where higher percentages render as solid fill and lower percentages use reduced opacity on the same color
+   - Does NOT use card-like appearance — elements render directly on page background (flat), no border or background wrapper
 
-   **Done when:** Pattern distribution renders accurate statistics from history data with correct color tiers.
+    **Done when:** Pattern distribution renders accurate statistics from history data as flat content with correct color and opacity tiers.
 
-- [ ] **2.10 — Wire up React Router in App.jsx**
-    - Routes: `/` → Dashboard, `/games/:gameId` → GamePage, `/history/:gameId` → HistoryPage (stub)
-    - Replace placeholder counter with router outlet inside Layout
+- [x] **2.10 — Wire up React Router in App.jsx**
+    - Routes: `/` → Dashboard, `/games/:gameId` → GamePage (stub)
+    - Layout wraps all routes with `<Outlet />`
 
-   **Done when:** All three routes render without errors; navigation works.
+   **Done when:** All routes render without errors; navigation works.
 
-- [ ] **2.11 — Add loading and error states**
+- [x] **[2.11 — Add loading and error states](https://gitea.heise.home/kheise/lottery-codex/milestone/40)**
     - Skeleton loaders for history fetching and panel generation
     - Error banners for API failures (network errors, invalid game)
     - Disabled button state during in-flight requests
     - Pattern distribution shows "No data" message when history is empty
 
-   **Done when:** User sees meaningful feedback during all async operations.
+    **Done when:** User sees meaningful feedback during all async operations.
+
+- [x] **[2.12 — Add contextual back button to GamePage](https://gitea.heise.home/kheise/lottery-codex/milestone/41)**
+    - A single "Back to Dashboard" button at the top of the GamePage (detail view only), positioned below the app header and above the game header section — the Dashboard page is left unchanged
+    - Button layout: left chevron icon followed by a "Back to Dashboard" text label, rendered as an inline pill with white background, light gray border, rounded corners, and a subtle shadow
+    - Label is small (0.875rem) semibold text in medium-dark gray; on hover the background lightens to off-white, the text and border shift to the primary emerald color with a slightly deeper shadow, and on press the button scales down slightly
+    - Clicking the button routes the user back to the Dashboard (`/`)
+    - Visible on both mobile and desktop breakpoints
+    - No global navigation chrome is added — this is the only navigation element introduced by this sub-phase
+
+    **Done when:** User can return to the Dashboard from the GamePage via the back button on both mobile and desktop.
 
 ---
 
@@ -256,17 +305,17 @@ Replace mock data with actual BadgerFive game class instances. This is where the
 
 - [ ] **4.1 — Wire BadgerFive into API endpoints**
    - Replace mock history in `GET /api/games/badger-five/history` with `$game->getHistory()`
-   - Replace mock panels in `POST /api/games/badger-five/generate` with `$game->generateTickets($tickets)`
+   - Replace mock tickets in `POST /api/games/badger-five/generate` with `$game->generateTickets($tickets)`
    - Add try-catch wrappers around game class calls
 
    **Done when:** API returns real data from BadgerFive for both history and generation.
 
 - [ ] **4.2 — Verify frontend displays real data correctly**
    - Confirm historical drawings match what the Wisconsin Lottery website shows
-   - Verify generated panels follow pattern distributions (odd/even, low/high)
+   - Verify generated tickets follow pattern distributions (odd/even, low/high)
    - Test edge cases: single ticket, max tickets, all patterns
 
-   **Done when:** End-to-end flow works: Dashboard → Game Page → Generate → Real panels displayed.
+   **Done when:** End-to-end flow works: Dashboard → Game Page → Generate → Real tickets displayed.
 
 - [ ] **4.3 — Handle API errors gracefully in frontend**
    - Network timeout handling (scraping can be slow)
@@ -318,10 +367,10 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
    - Add route handlers for `/api/games/super-cash/*` endpoints
    - Handle 6-number panel display (vs Badger Five's 5)
 
-   **Done when:** User can select Super Cash from dashboard and generate panels.
+   **Done when:** User can select Super Cash from dashboard and generate tickets.
 
 - [ ] **6.3 — Adapt frontend components for variable panel sizes**
-   - Ball/PanelDisplay components must handle both 5 and 6 numbers per panel
+   - Ball/DrawingCard/TicketCard components must handle both 5 and 6 numbers per panel
    - Pattern labels adjust to game-specific distributions
 
    **Done when:** Both games render correctly without code duplication.
@@ -337,9 +386,9 @@ Super Cash is out of scope for initial launch. This phase activates once Badger 
 - [ ] **6.5 — Wire MegaBucks into API and frontend**
    - Register MegaBucks in the controller's `$registry`: `'megabucks' => \LotteryCodex\Games\MegaBucks::class`
    - Dashboard card auto-appears via `GET /api/games` (no new endpoint needed)
-   - Frontend navigates to `/games/megabucks`; Ball/PanelDisplay handle 6-number panels
+   - Frontend navigates to `/games/megabucks`; Ball/DrawingCard/TicketCard handle 6-number panels
 
-   **Done when:** User can select MegaBucks from dashboard, view history, and generate panels alongside Super Cash.
+   **Done when:** User can select MegaBucks from dashboard, view history, and generate tickets alongside Super Cash.
 
 ---
 
@@ -392,96 +441,95 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
 
 ## Visual Design Reference
 
-### Desktop Layout (≥768px) - Split View with Pattern Distribution
+### Desktop Layout (≥768px) - Split View with Emerald Headers
 ```
-┌────────────────────────────────────┬───────────────────────────────────┐
-│                                    │                                   │
-│   Previous Drawings                │     Generated Panels              │
-│   ─────────────────                │     ─────────────────             │
-│                                    │                                   │
-│  Pattern Distribution              │     Tickets: [3 ▼]                │
-│  (Last 50 Drawings)                │     ● It's okay to play.          │
-│                                    │     ○ On schedule                 │
-│                                    │     Auto-generate on change       │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━          │                                   │
-│  3O/2E, 3L/2H ████████████░░ 80%   │     ┌─────────────────────┐       │
-│  3O/2E, 2L/3H ████░░░░░░░░░░ 40%   │     │   Ticket Card 1     │       │
-│  2O/3E, 3L/2H ██░░░░░░░░░░░░ 20%   │     ├─────────────────────┤       │
-│                                    │     │  Sub-Pattern 1      │       │
-│  ────────────────────────          │     │  ● ○ ● ● ○          │       │
-│                                    │     ├─────────────────────┤       │
-│  [Monday, Jan 15th]                │     │  Sub-Pattern 2      │       │
-│  Pattern: 3L/2H                    │     │  ○ ● ● ○ ●          │       │
-│  ● ○ ● ● ○                         │     └─────────────────────┘       │
-│                                    │                                   │
-│  [Sunday, Jan 14th]                │   More tickets scroll here...     │
-│  Pattern: 2L/3H                    │                                   │
-│  ○ ● ● ● ○                         │                                   │
-│                                    │                                   │
-└────────────────────────────────────┴───────────────────────────────────┘
+[ Emerald Gradient App Header — full width, grid overlay, decorative curve ]
+  Lottery Codex logo + brand name
 
-Left Panel (5/12 width)              Right Panel (7/12 width)
-- Sticky pattern stats               - Generation form at top
-- Scrollable drawings below          - Generated panels in grid below
-``` 
+[ Game Header — bordered container, two columns ]
+  ┌─────────────────────┬──────────────────────────┐
+  │ Badger Five         │ [Cal] Draw   [Bar] Odds  │
+  │ Pick 5 from 1-31... │        Wed | Sun    1 in │
+  │                     │                    575   │
+  └─────────────────────┴──────────────────────────┘
 
-### Mobile Layout (<768px) - Tabbed Interface
-```
-┌─────────────────────────────────┐
-│   Previous Drawings  │ Generate │ ← Tabs (toggle)
-├─────────────────────────────────┤
-│                                 │
-│  Pattern Distribution           │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━       │
-│  3O/2E, 3L/2H ████████░░ 80%    │
-│  3O/2E, 2L/3H ████░░░░░░ 40%    │
-│                                 │
-│  [Monday, Jan 15th]             │
-│  Pattern: 3L/2H                 │
-│  ● ○ ● ● ○                      │
-│                                 │
-│  [Sunday, Jan 14th]             │
-│  Pattern: 2L/3H                 │
-│  ○ ● ● ● ○                      │
-│                                 │
-│  ...more drawings scroll...     │
-│                                 │
-└─────────────────────────────────┘
+[ Split View — 7/5 ratio ]
+┌──────────────────────────────┬───────────────────────────────┐
+│ [Emerald] Previous Drawings  │ [Emerald] Generated Tickets   │
+├──────────────────────────────┤───────────────────────────────┤
+│ Pattern Dist. | Latest       │ ● It's okay to play.          │
+│ ──────────────| ┌──────────┐ │ Tickets: [3 ▼]               │
+│ 3O/2E,3L/2H ███░ 80%        │ │                    ◄  ►     │
+│ 3O/2E,2L/3H ██░░ 40%        │ │   Ticket Card 1             │
+│ 2O/3E,3L/2H █░░░ 20%        │ │  Panel A: ● ○ ● ● ○         │
+│                              │ │  Panel B: ● ○ ● ● ○         │
+│ [Mon Jan 15] Latest          │ │                    ◄  ►     │
+│ Pattern pill + colored balls │ └─────────────────────────────┘
+│ [Sun Jan 14] 3 days ago      │                               │
+│ Pattern pill + white balls   │  ...more tickets in carousel  │
+│ [Wed Jan 10] 1 week ago      │    with dot indicators below  │
+│ Pattern pill + white balls   │                               │
+└──────────────────────────────┴───────────────────────────────┘
 
-Tab 1 Active (Previous Drawings)
-- Pattern distribution at top
-- Scrollable drawing cards below
+Left Column (7/12)                    Right Column (5/12)
+- Emerald header bar                  - Emerald header bar
+- Flat pattern distribution           - Pattern health indicator
+- Flat latest drawing                 - Ticket count dropdown
+  (date + Latest badge)               - TicketCarousel component
+- Flat bordered list of older         - Arrow buttons + dot indicators
+  drawings (date, pill, white balls)
 ```
 
-### Mobile Layout (<768px) - Generated Panels Tab
+### Mobile Layout (<768px) - Drawings Tab Active
 ```
-┌─────────────────────────────────┐
-│   Previous │ Generate Panels    │ ← Tabs (toggle)
-├─────────────────────────────────┤
-│                                 │
-│  Generate Optimized Panels      │
-│                                 │
-│  Pattern Health               │
-│  ● It's okay to play.         │
-│  ○ On schedule                │
-│                                 │
-│  Tickets: [3 ▼]                 │
-│  [Generate Button]              │
-│                                 │
-│  ┌─────────────────────┐        │
-│  │   Ticket Card 1     │        │
-│  ├─────────────────────┤        │
-│  │  Sub-Pattern 1      │        │
-│  │  ● ○ ● ● ○          │        │
-│  └─────────────────────┘        │
-│                                 │
-│  More tickets scroll here...    │
-│                                 │
-└─────────────────────────────────┘
+[ Emerald Gradient App Header ]
+[ Game Header — single column stack ]
+  Badger Five
+  Pick 5 from 1-31...
+  ┌─────────────────────────────┐
+  │ [Cal] Draw   [Bar] Odds    │
+  │        Wed | Sun     1 in  │
+  └─────────────────────────────┘
 
-Tab 2 Active (Generated Panels)
-- Simple generation form (ticket count only)
-- Generated panels display below
+[ Emerald ] Previous Drawings [ Generated Tickets ]  ← Tab headers
+─────────────────────────────────────────────────────
+Pattern Distribution
+Last 100 Drawings
+3O/2E,3L/2H ████████░░ 80%
+3O/2E,2L/3H ████░░░░░░ 40%
+
+[Mon Jan 15]          Latest ●───
+Pattern pill + colored balls
+
+[Sun Jan 14]          3 days ago
+Pattern pill + white balls
+
+[Wed Jan 10]          1 week ago
+Pattern pill + white balls
+...more drawings scroll...
+
+[ BottomNavTabs — Drawings (active) | Tickets ]
+```
+
+### Mobile Layout (<768px) - Tickets Tab Active
+```
+[ Emerald Gradient App Header ]
+[ Game Header ]
+
+[ Emerald ] Previous Drawings [ Generated Tickets ]  ← Tab headers
+─────────────────────────────────────────────────────
+● It's okay to play.
+
+Tickets: [3 ▼]    ⚡ Generate
+
+◄   Ticket Card 1   ►
+  Panel A: ● ○ ● ● ○
+  Panel B: ● ○ ● ● ○
+
+◄   Ticket Card 2   ►
+...
+
+[ BottomNavTabs — Drawings | Tickets (active) ]
 ```
 
 ---
@@ -496,10 +544,10 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 | 2 | All 4 API endpoints return valid JSON | 1 |
 | 3 | Dashboard displays game cards and navigates to game pages | 2 |
 | 4 | Game page shows historical drawings with full pattern text and balls matching legacy UI | 2 + 3 |
-| 5 | Panel generation form works (ticket count dropdown, auto-generate on desktop) | 2 |
+| 5 | Ticket generation form works (ticket count dropdown, auto-generate on desktop) | 2 |
 | 6 | Pattern health cards display correct colors and messages based on pattern frequency analysis | 3 |
-| 7 | Generated panels display real data from BadgerFive class | 4 |
-| 8 | Tab switching between "Previous Drawings" and "Generated Panels" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
+| 7 | Generated tickets display real data from BadgerFive class | 4 |
+| 8 | Tab switching between "Previous Drawings" and "Generated Tickets" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
 | 9 | Responsive split-view layout works on mobile (<768px tabs) and desktop (≥768px split-view) | 3 |
 | 10 | Pattern distribution shows accurate pattern statistics with color-coded bars from history data | 2 + 3 |
 | 11 | No PHP errors visible to end users; errors logged only | 0 |
@@ -516,6 +564,7 @@ backend/controllers/GamesController.php  # Route handlers for all game endpoints
 backend/vendor/                    # Composer vendor directory (gitignored)
 backend/api.php                    # Slim Framework router entry point
 backend/games/GameInterface.php    # Interface for all game classes; add getPatternHealth() method
+backend/games/Megabucks.php        # Megabucks game implementation (1-48, draw 6)
 ```
 
 ### Backend — Modified Files
@@ -530,20 +579,20 @@ docker/nginx.conf                  # Add fastcgi_split_path_info directive
 
 ### Frontend — New Files
 ```
-frontend/.env                      # VITE_API_BASE_URL configuration
-frontend/src/contexts/GameContext.jsx    # State management with useReducer
-frontend/src/services/api.js               # Fetch wrapper for all API endpoints
-frontend/src/hooks/useGameHistory.js       # History data hook
-frontend/src/hooks/useGenerateTickets.js   # Ticket generation hook (each ticket = group of panels)
-frontend/src/components/layout/Layout.jsx  # App shell (header + main)
-frontend/src/components/common/Tabs.jsx    # Tab navigation component
-frontend/src/components/games/Ball.jsx     # Number ball display
-frontend/src/components/games/DrawingCard.jsx   # Historical drawing card
-frontend/src/components/games/PanelDisplay.jsx  # Generated panel groups
-frontend/src/components/games/PatternDistribution.jsx   # Pattern frequency bar chart
-frontend/src/pages/Dashboard.jsx           # Game selection landing page
-frontend/src/pages/GamePage.jsx            # Main game view with tabs
-frontend/src/pages/HistoryPage.jsx         # Full history browser (stub)
+frontend/.env                                            # VITE_API_BASE_URL configuration
+frontend/src/contexts/GameContext.jsx                    # State management with useReducer
+frontend/src/services/api.js                             # Fetch wrapper for all API endpoints
+frontend/src/hooks/useGames.js                           # Game list fetch hook with loading/error/data states
+frontend/src/components/layout/Layout.jsx                # App shell (header + main)
+frontend/src/components/layout/BottomNavTabs.jsx         # Bottom-nav tab switcher for mobile (hidden on desktop)
+frontend/src/components/games/Ball.jsx                   # Number ball display
+frontend/src/components/games/DrawingCard.jsx            # Historical drawing row (flat list item, not a card; renamed from previous card-based design)
+frontend/src/components/games/TicketCard.jsx             # Single generated ticket card (promoted to main export after TicketList removal)
+frontend/src/components/games/TicketCarousel.jsx         # Ticket carousel with arrows and dot indicators
+frontend/src/components/games/PatternDistribution.jsx    # Pattern frequency bar chart
+frontend/src/components/games/GameCard.jsx               # Reusable game selection card
+frontend/src/pages/Dashboard.jsx                         # Game selection landing page with responsive card grid
+frontend/src/pages/GamePage.jsx                          # Stub placeholder for game detail view
 ```
 
 ### Frontend — Modified Files
@@ -552,4 +601,5 @@ frontend/package.json              # Add react-router-dom dependency
 frontend/src/main.jsx              # BrowserRouter wrapper + GameProvider
 frontend/src/App.jsx               # Router outlet replacing placeholder counter
 frontend/vite.config.js            # Environment variable support for API proxy
+frontend/src/components/games/TicketList.jsx    # Removed — TicketCard promoted to standalone component, carousel replaces stacked layout with perforation dividers
 ```
