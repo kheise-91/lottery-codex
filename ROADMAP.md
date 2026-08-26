@@ -1,12 +1,18 @@
 # Lottery Codex — Implementation Roadmap
 
-> Generated: 2026-07-02 · Based on migration plan, codebase analysis, and legacy UI review
+> Last updated: 2026-08-25 · Single source of truth for project direction
 
 ## Project Goal
 
-Build a web application that scrapes Wisconsin Lottery drawing history, analyzes pattern distribution (odd/even and low/high per Lottery Codex methodology), and generates optimized number panels for Badger Five and Super Cash games.
+Build a web application that scrapes Wisconsin Lottery drawing history, analyzes pattern distribution (odd/even and low/high per Lottery Codex methodology), and generates optimized number panels for Badger Five, Super Cash, and Megabucks games.
 
 **Stack:** React 18 SPA + PHP 8.2-FPM backend · Docker single-container deployment · No database
+
+## Conventions
+
+- **Phase** = feature-level workstream (one `phase-X` branch)
+- **Sub-phase** = user story; contains at least 2 tasks (one Gitea issue each), ~5 as soft upper guidance
+- **Task** = Gitea issue with a dated branch (`Y-m-d-short-summary`) off the sub-phase branch; PRs back to the sub-phase branch
 
 ---
 
@@ -14,15 +20,11 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 
 | Area | Current | Target |
 |------|---------|--------|
-| **Backend API** | `api.php` missing; Nginx routes to nothing | Slim Framework router with 4 REST endpoints |
-| **BadgerFive game class** | Fully functional (scraping + panel generation) but pre-PHP-7 style, no namespace/types | Namespaced, typed, Composer-loaded |
-| **SuperCash game class** | Fatal error (missing `SuperCashPD.php`), core methods commented out | Fixed constructor, no external dependencies, analysis-only for now |
-| **Frontend** | Placeholder counter in App.jsx; Tailwind configured but unused | Full SPA: Dashboard game selection with GameCard components; GamePage stub; Layout shell with branded header |
-| **Routing** | No router installed | React Router DOM v6, 2 active routes (`/`, `/games/:gameId`) |
-| **Pattern health** | No frequency analysis; all patterns treated equally | Per-pattern playability indicators based on historical frequency |
-| **State management** | Single `useState(0)` placeholder | Context API + useReducer via GameProvider for games/selectedGame/history/ticketResults; auto-fetches games on mount |
-| **Docker volume mount** | Hardcoded host path (`/home/admin/Projects/...`) that doesn't match this machine | Relative bind mount or correct absolute path |
-| **Production errors** | `display_errors = On` leaks stack traces | Errors logged only, hidden from users |
+| **Backend history** | Mock data hardcoded in `GamesController` | Real scraped drawings from the game classes (Phase 3) |
+| **Jackpot** | Hardcoded `$10,000` / "—" placeholders | Live jackpot/top-prize values scraped from the wilottery.com homepage (Phase 3) |
+| **Pattern health** | Static "It's okay to play." placeholder | Per-pattern `avgInterval`, `daysSince`, and status indicators from real history (Phase 4) |
+| **Scraping** | Works but fragile; no retries or caching | Retry with backoff, cached fallback, verified selectors (Phase 5) |
+| **Deployment** | Local Docker development | Health check, optimized image, HTTPS termination (Phase 6) |
 
 ---
 
@@ -258,77 +260,65 @@ Build the React component hierarchy.
 
 ---
 
-## Phase 3 — Pattern Health Analysis
+## Phase 3 — Real Data Integration
 
-Analyze historical drawings to compute pattern frequency and "playability" indicators. This enables the UI to alert users when a pattern is overdue for occurrence.
+Replace mock data with live scraped data for all three games (Badger Five, Super Cash, Megabucks). This is where the backend scraping becomes live in the API.
 
-- [ ] **3.1 — Analyze pattern frequencies in game classes**
-   - After loading previous drawings, iterate over `$this->previousDrawings` to count occurrences of each unique pattern string (e.g., "3-Odd 2-Even / 3-Low 2-High")
-   - For each pattern, calculate average interval between consecutive occurrences (in days) by parsing date headers with `strtotime()`
-   - Track days-since-last-occurrence for each pattern using the most recent drawing date vs. today
-   - Store results in a new private property: `$this->patternHealth = ['3-Odd 2-Even / 3-Low 2-High' => ['avgInterval' => 3, 'daysSince' => 4]]`
+- [ ] **3.1 — Serve real drawing history from game classes**
+   - Remove the hardcoded mock `$historyMap` from `GamesController`; `history()` resolves the game and calls `$game->getHistory()`, wrapped in try-catch returning a 503 friendly error if scraping fails
+   - Fix `SuperCash::getHistory()` and `Megabucks::getHistory()` to call `loadPreviousDrawings()` before returning (currently they return empty data)
+   - Fix `PatternDistribution` to take the most recent 100 drawings (current `slice(-100)` takes the oldest 100 on newest-first data)
 
-   **Done when:** Each game class can compute pattern health from its own history data with zero additional API calls.
+   **Done when:** `/api/games/{gameId}/history` returns live scraped drawings for all three games; pattern distribution shows the latest 100.
 
-- [ ] **3.2 — Add `getPatternHealth()` to GameInterface and game classes**
-   - Define `getPatternHealth(): array` in `GameInterface.php`
-   - Return format: array of objects, each with keys: `pattern`, `avgInterval` (int), `daysSince` (int), `status` (`active` | `good` | `caution`)
-   - Status logic: `active` if daysSince ≤ 1, `good` if daysSince ≥ avgInterval + 1, otherwise `caution`
-   - Implement in both `BadgerFive.php` and `SuperCash.php`
+- [ ] **3.2 — Scrape and display current jackpot / top prize**
+   - Add a homepage jackpot scraper (`backend/scrapers/JackpotScraper.php`, new `LotteryCodex\Scrapers\` PSR-4 entry): one scrape of the wilottery.com homepage, parse each game's `.game-panel` + `.drawing-amount`, normalize values like `"$1.3 MIL"` to `"$1.3M"` (Super Cash returns its fixed $350,000 top prize)
+   - Expose a `jackpot` field in `GET /api/games` and `GET /api/games/{gameId}` responses; return null if the scrape fails (never break the games list)
+   - Replace the hardcoded `'$10,000'` in GamePage with the API value; verify Dashboard cards render `game.jackpot` (binding already exists, currently shows "—")
 
-   **Done when:** Both game classes return pattern health arrays via the interface method.
+   **Done when:** Dashboard cards and game headers show live jackpot values; a failed scrape degrades gracefully to "—".
 
-- [ ] **3.3 — Expose pattern health via API**
-   - Update `GET /api/games/{gameId}` to include a `patternHealth` field in its response (array of `{pattern, avgInterval, daysSince, status}` objects)
-   - If no history is available, return empty array
+- [ ] **3.3 — Frontend cleanup & 6-ball readiness**
+   - Remove the dead `GameContext`/`GameProvider` (`src/contexts/GameContext.jsx`, provider mount in `main.jsx`) — no component consumes it and it causes a duplicate games fetch; hooks remain the data layer
+   - Drive skeleton ball counts from `gameDetails.numbersPerDraw` instead of hardcoded 5
+   - Fix stale color-map keys (`super-cash`/`mega-bucks` → `supercash`/`megabucks`), remove the DrawingItem badge-width special case, remove the dead `BrowserRouter` import in App.jsx
 
-   **Done when:** Endpoint returns pattern health alongside game details.
+   **Done when:** Frontend renders 6-ball games correctly; no dead code or duplicate games fetch remains.
 
-   **Done when:** API includes `patternHealth` in `/api/games/badger-five` response.
+- [ ] **3.4 — End-to-end verification & error handling**
+   - Verify all three games end-to-end: historical drawings match the Wisconsin Lottery website, generated tickets follow pattern distributions (odd/even, low/high), and 6-number panels render correctly (Super Cash, Megabucks)
+   - Handle API errors gracefully in frontend: network timeout handling (scraping can be slow), empty history results display, clear error messages via ErrorBanner
 
-- [ ] **3.4 — Render pattern health cards in GamePage**
-   - Display each pattern as a small card below the ticket count form on desktop, or above drawings tab content on mobile
-   - Color-coded status indicator: green dot for `active`, teal/emerald for `good`, amber for `caution`
-   - Text format: `"Pattern 'X' occurs every ~{N} days. Last seen {X} day(s) ago — it's okay to play."` (adjust message per status)
-   - Use concise messages matching these templates:
-     - `active`: "Pattern active — drawing expected soon."
-     - `good`: "It's okay to play."
-     - `caution`: "Pattern is on schedule. Consider waiting."
-
-   **Done when:** Game page shows pattern health cards with correct colors and messages for each discovered pattern.
+   **Done when:** Dashboard → any game → drawings + tickets all work with real data; failures show clear user-facing messages.
 
 ---
 
-## Phase 4 — Real Data Integration
+## Phase 4 — Pattern Health Analysis
 
-Replace mock data with actual BadgerFive game class instances. This is where the backend scraping and panel generation logic becomes live.
+Analyze historical drawings to compute pattern frequency and "playability" indicators. This enables the UI to alert users when a pattern is overdue for occurrence.
 
-- [ ] **4.1 — Wire BadgerFive into API endpoints**
-   - Replace mock history in `GET /api/games/badger-five/history` with `$game->getHistory()`
-   - Replace mock tickets in `POST /api/games/badger-five/generate` with `$game->generateTickets($tickets)`
-   - Add try-catch wrappers around game class calls
+- [ ] **4.1 — Pattern health in game classes**
+   - Add `getPatternHealth(): array` to `GameInterface`
+   - Implement in BadgerFive: compute **`avgInterval`** (average days between consecutive occurrences, parsed from `$this->previousDrawings` date headers with `strtotime()`) per unique pattern string — this is the **only** new stored property; `daysSince` and `status` are computed on the fly inside `getPatternHealth()`
+   - Implement in SuperCash and Megabucks (same logic; if stable, extract a shared trait to cut the existing 3× scraping duplication)
 
-   **Done when:** API returns real data from BadgerFive for both history and generation.
+   **Done when:** All three game classes return pattern health from their own history data with zero additional API calls.
 
-- [ ] **4.2 — Verify frontend displays real data correctly**
-   - Confirm historical drawings match what the Wisconsin Lottery website shows
-   - Verify generated tickets follow pattern distributions (odd/even, low/high)
-   - Test edge cases: single ticket, max tickets, all patterns
+- [ ] **4.2 — Pattern health in API & GamePage**
+   - Update `GET /api/games/{gameId}` to include a `patternHealth` field (array of `{pattern, avgInterval, daysSince, status}` objects); return empty array if no history is available
+   - Replace both GamePage placeholders (desktop + mobile) with pattern health cards: color-coded status indicator (green dot for `active`, teal/emerald for `good`, amber for `caution`) using these messages:
+     - `active`: "Pattern active — drawing expected soon."
+     - `good`: "It's okay to play."
+     - `caution`: "Pattern is on schedule. Consider waiting."
+   - Status logic: `active` if daysSince ≤ 1, `good` if daysSince ≥ avgInterval + 1, otherwise `caution`
 
-   **Done when:** End-to-end flow works: Dashboard → Game Page → Generate → Real tickets displayed.
-
-- [ ] **4.3 — Handle API errors gracefully in frontend**
-   - Network timeout handling (scraping can be slow)
-   - Empty history results display
-   - Invalid pattern/ticket parameter validation
-
-   **Done when:** No unhandled promise rejections; user sees clear error messages.
+   **Done when:** Game page shows pattern health cards with correct colors and messages for each discovered pattern, matching real drawing data.
 
 ---
 
 ## Phase 5 — Scraping Reliability (Last Priority)
 
-The scraping logic exists and works in BadgerFive, but it's fragile. Harden it after everything else is verified working.
+The scraping logic exists and works, but it's fragile. Harden it after everything else is verified working.
 
 - [ ] **5.1 — Add retry logic with exponential backoff**
    - Wrap `file_get_html()` in a retry loop (max 3 attempts, 1s → 2s → 4s delays)
@@ -343,73 +333,32 @@ The scraping logic exists and works in BadgerFive, but it's fragile. Harden it a
    **Done when:** API returns a valid JSON response even when wilottery.com is unreachable.
 
 - [ ] **5.3 — Verify HTML selectors still match current wilottery.com structure**
-   - Confirm `.winning-numbers-line`, `.date > strong`, `.winning-number` selectors work against the live site
+   - Confirm `.winning-numbers-line`, `.date > strong`, `.winning-number` selectors work against the live site for all three games
+   - Confirm jackpot homepage selectors (`.game-panel`, `.drawing-amount`) still match
    - Update selectors if the website layout has changed since original implementation
 
-   **Done when:** Scraping returns complete, accurate drawing data.
+   **Done when:** Scraping returns complete, accurate drawing and jackpot data.
 
 ---
 
-## Phase 6 — SuperCash! & Megabucks Integration (Future)
-
-Super Cash is out of scope for initial launch. This phase activates once Badger Five is fully working end-to-end.
-
-- [ ] **6.1 — Complete SuperCash game class**
-   - Uncomment and implement all core methods currently disabled
-   - Define number pools for range 1–39 (Low-Odd, Low-Even, High-Odd, High-Even)
-   - Implement scraping logic for `https://wilottery.com/winners/draw-history?game=super-cash`
-   - Note: SuperCash class is now instantiable without the SuperCashPD dependency. The constructor no longer requires external dependencies.
-
-   **Done when:** SuperCash `generateTickets()` returns properly structured ticket arrays with 6-number panels per sub-pattern.
-
-- [ ] **6.2 — Wire SuperCash into API endpoints**
-   - Enable SuperCash in `GET /api/games` list
-   - Add route handlers for `/api/games/super-cash/*` endpoints
-   - Handle 6-number panel display (vs Badger Five's 5)
-
-   **Done when:** User can select Super Cash from dashboard and generate tickets.
-
-- [ ] **6.3 — Adapt frontend components for variable panel sizes**
-   - Ball/DrawingCard/TicketCard components must handle both 5 and 6 numbers per panel
-   - Pattern labels adjust to game-specific distributions
-
-   **Done when:** Both games render correctly without code duplication.
-
-- [ ] **6.4 — Create MegaBucks game class**
-   - Implement `GameInterface` with number range 1–48, draw 6 numbers
-   - Define number pools: Low-Odd (1,3,…,25), Low-Even (2,4,…,24), High-Odd (27,29,…,47), High-Even (26,28,…,48)
-   - Define internal pattern array for panel generation (odd/even × low/high distribution)
-   - Implement scraping logic for `https://wilottery.com/winners/draw-history?game=megabucks`
-
-   **Done when:** `new MegaBucks()` instantiates and returns valid results from all interface methods.
-
-- [ ] **6.5 — Wire MegaBucks into API and frontend**
-   - Register MegaBucks in the controller's `$registry`: `'megabucks' => \LotteryCodex\Games\MegaBucks::class`
-   - Dashboard card auto-appears via `GET /api/games` (no new endpoint needed)
-   - Frontend navigates to `/games/megabucks`; Ball/DrawingCard/TicketCard handle 6-number panels
-
-   **Done when:** User can select MegaBucks from dashboard, view history, and generate tickets alongside Super Cash.
-
----
-
-## Phase 7 — Production Hardening (Future)
+## Phase 6 — Production Hardening (Future)
 
 Infrastructure improvements for deployment beyond local development.
 
-- [ ] **7.1 — Add Docker health check**
+- [ ] **6.1 — Add Docker health check**
    - `curl -f http://localhost/` probe in docker-compose.yml
    - 30s interval, 5s timeout, 3 retries, 10s start period
 
    **Done when:** Container auto-recovers from hung PHP-FPM processes.
 
-- [ ] **7.2 — Consolidate Dockerfile RUN layers**
+- [ ] **6.2 — Consolidate Dockerfile RUN layers**
    - Merge three `apt-get update` cycles into one layer
    - Remove dev headers (`libpng-dev`, etc.) in same layer as extension compilation
    - Add `.dockerignore` to exclude `node_modules/`, `.git/`, `OLD/`
 
    **Done when:** Docker image size is reduced by ≥30%.
 
-- [ ] **7.3 — HTTPS/TLS termination**
+- [ ] **6.3 — HTTPS/TLS termination**
    - Add reverse proxy (Traefik or Caddy) in front of Nginx for remote deployment
    - Or configure Let's Encrypt certbot integration
 
@@ -420,22 +369,14 @@ Infrastructure improvements for deployment beyond local development.
 ## Phase Dependencies
 
 ```
-Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3
-   │             │           │          │
-   └─────────────┴───────────┘          │
-         ↕                              │
-    Phase 4 ◀───────────────────────────┘
-       │
-       ▼
-    Phase 5 ──▶ Phase 6 (Super Cash) ──▶ Phase 7 (Production)
+Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3 ──▶ Phase 4 ──▶ Phase 5 ──▶ Phase 6
 ```
 
 - **Phase 0** must complete before anything else — it fixes the foundation
 - **Phases 1–2** can partially overlap once mock API works (Phase 1.1 done)
-- **Phase 3 backend parts (3.1–3.3)** are independent of frontend; can run in parallel with Phases 2–4
-- **Phase 3 UI part (3.4)** depends on GamePage being functional (Phase 2.8 + Phase 3.3)
-- **Phase 5** is independent of frontend; can run in parallel with Phases 2–4
-- **Phase 6+** requires Badger Five to be fully working end-to-end
+- **Phase 3** brings all three games live with real data; 3.1 (real history) must land before 3.2 (jackpot) and 3.4 (verification)
+- **Phase 4** depends on Phase 3 — pattern health is computed from and displayed alongside real drawings
+- **Phase 5** is independent of frontend; can run in parallel with Phases 3–4
 
 ---
 
@@ -543,15 +484,16 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 | 1 | `docker compose up --build` starts without errors | 0 |
 | 2 | All 4 API endpoints return valid JSON | 1 |
 | 3 | Dashboard displays game cards and navigates to game pages | 2 |
-| 4 | Game page shows historical drawings with full pattern text and balls matching legacy UI | 2 + 3 |
+| 4 | Game page shows real historical drawings with full pattern text and balls for all three games | 3 |
 | 5 | Ticket generation form works (ticket count dropdown, auto-generate on desktop) | 2 |
-| 6 | Pattern health cards display correct colors and messages based on pattern frequency analysis | 3 |
-| 7 | Generated tickets display real data from BadgerFive class | 4 |
+| 6 | Pattern health cards display correct colors and messages based on pattern frequency analysis | 4 |
+| 7 | Generated tickets display real data from the game classes | 3 |
 | 8 | Tab switching between "Previous Drawings" and "Generated Tickets" works smoothly on mobile; split-view renders on desktop | 2 + 3 |
 | 9 | Responsive split-view layout works on mobile (<768px tabs) and desktop (≥768px split-view) | 3 |
-| 10 | Pattern distribution shows accurate pattern statistics with color-coded bars from history data | 2 + 3 |
+| 10 | Pattern distribution shows accurate pattern statistics with color-coded bars from history data | 3 |
 | 11 | No PHP errors visible to end users; errors logged only | 0 |
 | 12 | PWA installs and serves cached content offline | existing |
+| 13 | Dashboard cards and game headers display current jackpot/top-prize values scraped from wilottery.com | 3 |
 
 ---
 
@@ -559,47 +501,32 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 
 ### Backend — New Files
 ```
-backend/composer.json              # PSR-4 autoloading + Slim dependencies
-backend/controllers/GamesController.php  # Route handlers for all game endpoints
-backend/vendor/                    # Composer vendor directory (gitignored)
-backend/api.php                    # Slim Framework router entry point
-backend/games/GameInterface.php    # Interface for all game classes; add getPatternHealth() method
-backend/games/Megabucks.php        # Megabucks game implementation (1-48, draw 6)
+backend/scrapers/JackpotScraper.php  # Single homepage scrape for all games' jackpot/top-prize values (Phase 3.2)
 ```
 
 ### Backend — Modified Files
 ```
-backend/_functions.php             # Updated or replaced by Composer autoloader
-backend/games/BadgerFive.php       # Namespace, types, interface implementation
-backend/games/SuperCash.php        # Remove SuperCashPD dependency, add runtime checks, fix simplehtmldom path
-docker-compose.yml                 # Fix volume mount path to relative bind
-docker/Dockerfile                  # Display_errors off, consolidated RUN layers
-docker/nginx.conf                  # Add fastcgi_split_path_info directive
-```
-
-### Frontend — New Files
-```
-frontend/.env                                            # VITE_API_BASE_URL configuration
-frontend/src/contexts/GameContext.jsx                    # State management with useReducer
-frontend/src/services/api.js                             # Fetch wrapper for all API endpoints
-frontend/src/hooks/useGames.js                           # Game list fetch hook with loading/error/data states
-frontend/src/components/layout/Layout.jsx                # App shell (header + main)
-frontend/src/components/layout/BottomNavTabs.jsx         # Bottom-nav tab switcher for mobile (hidden on desktop)
-frontend/src/components/games/Ball.jsx                   # Number ball display
-frontend/src/components/games/DrawingCard.jsx            # Historical drawing row (flat list item, not a card; renamed from previous card-based design)
-frontend/src/components/games/TicketCard.jsx             # Single generated ticket card (promoted to main export after TicketList removal)
-frontend/src/components/games/TicketCarousel.jsx         # Ticket carousel with arrows and dot indicators
-frontend/src/components/games/PatternDistribution.jsx    # Pattern frequency bar chart
-frontend/src/components/games/GameCard.jsx               # Reusable game selection card
-frontend/src/pages/Dashboard.jsx                         # Game selection landing page with responsive card grid
-frontend/src/pages/GamePage.jsx                          # Stub placeholder for game detail view
+backend/composer.json                # Add LotteryCodex\Scrapers\ PSR-4 mapping to scrapers/
+backend/controllers/GamesController.php  # Remove mock history; call getHistory(); add jackpot + patternHealth to responses
+backend/games/GameInterface.php    # Add getPatternHealth() method
+backend/games/BadgerFive.php       # Compute avgInterval, implement getPatternHealth()
+backend/games/SuperCash.php        # Fix getHistory() to load drawings; compute avgInterval, implement getPatternHealth()
+backend/games/Megabucks.php        # Fix getHistory() to load drawings; compute avgInterval, implement getPatternHealth()
+docker-compose.yml                 # Add health check (Phase 6.1)
+docker/Dockerfile                  # Consolidate RUN layers (Phase 6.2)
 ```
 
 ### Frontend — Modified Files
 ```
-frontend/package.json              # Add react-router-dom dependency
-frontend/src/main.jsx              # BrowserRouter wrapper + GameProvider
-frontend/src/App.jsx               # Router outlet replacing placeholder counter
-frontend/vite.config.js            # Environment variable support for API proxy
-frontend/src/components/games/TicketList.jsx    # Removed — TicketCard promoted to standalone component, carousel replaces stacked layout with perforation dividers
+frontend/src/main.jsx              # Remove GameProvider mount (context removed in Phase 3.3)
+frontend/src/pages/GamePage.jsx    # Live jackpot value, pattern health cards, skeleton ball counts from numbersPerDraw
+frontend/src/pages/Dashboard.jsx   # Render game.jackpot from API
+frontend/src/components/games/PatternDistribution.jsx  # Fix most-recent-100 selection, fix stale color-map keys
+frontend/src/components/games/DrawingItem.jsx          # Remove badge-width special case
+frontend/src/App.jsx               # Remove dead BrowserRouter import
+```
+
+### Frontend — Removed Files
+```
+frontend/src/contexts/GameContext.jsx  # Dead context/provider removed in Phase 3.3; hooks are the data layer
 ```

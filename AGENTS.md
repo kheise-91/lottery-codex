@@ -6,9 +6,7 @@ Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/eve
 
 **Stack:** React 18 SPA + PHP 8.2-FPM backend (Slim Framework 4) · Docker single-container deployment · No database
 
-## Migration Plan
-
-The project is mid-migration from legacy PHP to a modern architecture. See `.claude/plans/migration-to-react-and-modern-php.md` for the full migration plan and `ROADMAP.md` for phased implementation tracking. Current work follows the roadmap phases sequentially.
+**ROADMAP.md is the single source of truth for project direction and phased implementation.**
 
 ## Agent Rules
 

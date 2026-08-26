@@ -1,4 +1,4 @@
-# AGENTS.md
+# CLAUDE.md
 
 ## Lottery Codex
 
@@ -6,9 +6,7 @@ Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/eve
 
 **Stack:** React 18 SPA + PHP 8.2-FPM backend (Slim Framework 4) · Docker single-container deployment · No database
 
-## Migration Plan
-
-The project is mid-migration from legacy PHP to a modern architecture. See `.claude/plans/migration-to-react-and-modern-php.md` for the full migration plan and `ROADMAP.md` for phased implementation tracking. Current work follows the roadmap phases sequentially.
+**ROADMAP.md is the single source of truth for project direction and phased implementation.**
 
 ## Agent Rules
 
@@ -51,19 +49,40 @@ When spawning agents, follow the rules below:
 - **ALWAYS spawn agents for research task or coding tasks** 
     - Never attempt to read or work on medium to large sections of the codebase yourself 
 - **ALWAYS ask if you don't know which subagent to use**
-    - Available agents can be found in @.claude/agents/
+    - Available agents can be found in @.opencode/agents/
 
 These are hard requirement due to local GPU memory constraints and context window sizes.
 
+### 5. Available Subagents
 
+All subagents are defined in `.opencode/agents/`. Use them via the `task` tool with the matching `subagent_type`.
+
+**Explorers** — read-only analysis of codebase sections:
+- `backend-explorer` — Analyze and summarize the `backend/` directory structure, patterns, and architecture
+- `devops-explorer` — Analyze Docker/Nginx infrastructure configuration files
+- `frontend-explorer` — Analyze and summarize the `frontend/` directory structure, patterns, and architecture
+
+**Engineers** — implement code changes:
+- `backend-engineer` — PHP backend code (controllers, services, middleware, configuration)
+- `devops-engineer` — Docker and Nginx configurations (`docker-compose.yml`, `docker/`)
+- `frontend-engineer` — React/JavaScript frontend code (components, hooks, contexts, pages)
+
+**Reviewers** — read-only code review of changes:
+- `backend-reviewer` — Review backend code changes (PHP/Slim Framework)
+- `devops-reviewer` — Review Docker/Nginx configuration changes
+- `frontend-reviewer` — Review frontend code changes (React/Tailwind) using Playwright MCP Server
+
+**Managers** — orchestration and version control:
+- `docs-manager` — Create/update project documentation (`README.md`, `docs/`)
+- `git-manager` — Git operations, Gitea PRs, issues, milestones, branching
 
 ## Repository Platform
 
-This repository uses a self-hosted Gitea instance and the Gitea MCP server.
+This repository uses a self-hosted Gitea instance and the Gitea MCP Server.
 
 - NEVER assume GitHub/Gitea APIs, CLI commands, or workflows exist.
-- ALL pull requests, issues, milestones, projects, etc. MUST be performed through the Gitea MCP server.
-- If the Gitea MCP server is unavailable, stop and report the issue rather than falling back to GitHub tooling.
+- ALL pull requests, issues, milestones, projects, etc. MUST be performed through the Gitea MCP Server.
+- If the Gitea MCP Server is unavailable, stop and report the issue rather than falling back to GitHub tooling.
 
 ## Development URLs
 
