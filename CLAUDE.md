@@ -1,4 +1,4 @@
-# AGENTS.md
+# CLAUDE.md
 
 ## Lottery Codex
 
@@ -6,21 +6,20 @@ Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/eve
 
 **Stack:** React 18 SPA + PHP 8.2-FPM backend (Slim Framework 4) · Docker single-container deployment · No database
 
-## Migration Plan
-
-The project is mid-migration from legacy PHP to a modern architecture. See `.claude/plans/migration-to-react-and-modern-php.md` for the full migration plan and `ROADMAP.md` for phased implementation tracking. Current work follows the roadmap phases sequentially.
+**ROADMAP.md is the single source of truth for project direction and phased implementation.**
 
 ## Agent Rules
 
 ### 1. Think Before Coding
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+**Do not make assumptions when it comes to critical architectural decisions or obvious discrepancies in requests. Do not hide confusion. Surface tradeoffs and present multiple choices to the user when appropriate.**
 
 Before implementing:
 - State your assumptions explicitly. If uncertain, ask.
 - If multiple interpretations exist, present them - don't pick silently.
 - If a simpler approach exists, say so. Push back when warranted.
 - If something is unclear, stop. Name what's confusing. Ask.
+- Do not overthink - if you have to ask yourself the same question more than 3 times, stop and ask the user instead.
 
 ### 2. Simplicity First
 
@@ -51,19 +50,40 @@ When spawning agents, follow the rules below:
 - **ALWAYS spawn agents for research task or coding tasks** 
     - Never attempt to read or work on medium to large sections of the codebase yourself 
 - **ALWAYS ask if you don't know which subagent to use**
-    - Available agents can be found in @.claude/agents/
+    - Available agents can be found in @.opencode/agents/
 
 These are hard requirement due to local GPU memory constraints and context window sizes.
 
+### 5. Available Subagents
 
+All subagents are defined in `.opencode/agents/`. Use them via the `task` tool with the matching `subagent_type`.
+
+**Explorers** — read-only analysis of codebase sections:
+- `backend-explorer` — Analyze and summarize the `backend/` directory structure, patterns, and architecture
+- `devops-explorer` — Analyze Docker/Nginx infrastructure configuration files
+- `frontend-explorer` — Analyze and summarize the `frontend/` directory structure, patterns, and architecture
+
+**Engineers** — implement code changes:
+- `backend-engineer` — PHP backend code (controllers, services, middleware, configuration)
+- `devops-engineer` — Docker and Nginx configurations (`docker-compose.yml`, `docker/`)
+- `frontend-engineer` — React/JavaScript frontend code (components, hooks, contexts, pages)
+
+**Reviewers** — read-only code review of changes:
+- `backend-reviewer` — Review backend code changes (PHP/Slim Framework)
+- `devops-reviewer` — Review Docker/Nginx configuration changes
+- `frontend-reviewer` — Review frontend code changes (React/Tailwind) using Playwright MCP Server
+
+**Managers** — orchestration and version control:
+- `docs-manager` — Create/update project documentation (`README.md`, `docs/`)
+- `git-manager` — Git operations, Gitea PRs, issues, milestones, branching
 
 ## Repository Platform
 
-This repository uses a self-hosted Gitea instance and the Gitea MCP server.
+This repository uses a self-hosted Gitea instance and the Gitea MCP Server.
 
 - NEVER assume GitHub/Gitea APIs, CLI commands, or workflows exist.
-- ALL pull requests, issues, milestones, projects, etc. MUST be performed through the Gitea MCP server.
-- If the Gitea MCP server is unavailable, stop and report the issue rather than falling back to GitHub tooling.
+- ALL pull requests, issues, milestones, projects, etc. MUST be performed through the Gitea MCP Server.
+- If the Gitea MCP Server is unavailable, stop and report the issue rather than falling back to GitHub tooling.
 
 ## Development URLs
 
@@ -135,5 +155,5 @@ Nginx serves the frontend from `/var/www/html/frontend/` with SPA fallback (`try
 - **No tests yet** — test infrastructure has not been set up
 - **SuperCash is fully functional** — pattern analysis and panel generation working
 - **BadgerFive is the primary focus** — fully functional game class, scraping + panel generation working
-- **simplehtmldom** is vendored manually (not via Composer) in `backend/simplehtmldom/`
+- **Scraping:** PHP built-in DOM extension (`DOMDocument` + `DOMXPath`) with shared scrapers in `backend/scrapers/` (`LotteryCodex\Scrapers\`); the vendored simplehtmldom library is removed in Phase 3.1
 - **Current branch convention:** `phase-X-Y` branches for sub-phases, with dated task branches (`Y-m-d-short-summary`) rebased onto phase branches

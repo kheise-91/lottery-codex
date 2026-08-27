@@ -30,6 +30,8 @@ If the sub-phase cannot be found, stop.
 
 Break the sub-phase into independently deliverable implementation tasks. Each task must be completable in a single focused session - roughly half a day to two days of work.
 
+Each sub-phase should be broken down into at least 2 tasks (one Gitea issue each), ~5 as soft upper limit.
+
 For each task, determine:
 - **title:** Short imperative phrase
 - **project:** `Phase X - Parent Phase Title`

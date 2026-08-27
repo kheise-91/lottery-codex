@@ -68,11 +68,11 @@ Wait for the `git-manager` agent to complete before proceeding.
 
 # Step 2 - Create the implementation plan
 
-Review @ROADMAP.md and @.claude/plans/migration-to-react-and-modern-php.md - these are the two planning documents for the entire project. The migration plan has implementation guidelines/instructions/examples. The roadmap is the source of truth and used for tracking progress.
+Review @ROADMAP.md - is the single source of truth for project direction and phased implementation.
 
-If there's any conflicting information between the two, please stop and ask the user for clarifications. Do not make assumptions about what is true.
-
-Create a detailed plan for implementing the task found in the specified Gitea issue while sticking to the **scope boundary**. Use the two planning documents for reference. If more project details are required for planning the work, start by looking in the `docs/` folder for project documentation. If more information is required even after reviewing the project documentation, you may read the pertinent project files to assist in creating the issue plan.
+Create a detailed plan for implementing the task found in the specified Gitea issue while sticking to the **scope boundary**. Use the project roadmap for reference. If more project details are required for planning the work: 
+- Start by looking in the `docs/` folder for project documentation. 
+- If more information is required even after reviewing the `docs/` folder, you may read the pertinent project files to assist in creating the issue plan.
 
 The issue should have a list of acceptance criteria. You may add verification steps to this if you feel the list is incomplete.
 
