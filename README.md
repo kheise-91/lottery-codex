@@ -37,7 +37,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
 ```
 
 - **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage detail page with split-view desktop layout and tabbed mobile interface). App shell (`Layout`) provides branded emerald gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`, `useGameHistory`, `useGenerateTickets`, `useMinLoading`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills using CSS variable theming, and CTA buttons. Theme colors defined via Tailwind `@theme` in `frontend/src/index.css` (emerald primary, per-game accent colors).
-- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs (`badger-five`, `supercash`, `megabucks`) to class names. Game logic classes implement `GameInterface`. HTML scraping via vendored simplehtmldom library. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
+- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs (`badger-five`, `supercash`, `megabucks`) to class names. Game logic classes implement `GameInterface`. HTML scraping via the PHP DOM extension (`DOMDocument` + `DOMXPath`) with shared scrapers in `backend/scrapers/`. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
 ## Quick Start
@@ -75,7 +75,7 @@ The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Upd
 │   │   ├── BadgerFive.php          # Fully functional -- scraping + panel generation working
 │   │   ├── SuperCash.php           # Fully functional -- pattern analysis and panel generation
 │   │   └── Megabucks.php           # Implemented -- follows existing game class pattern
-│   ├── simplehtmldom/              # HTML parser library (vendored, not via Composer)
+│   ├── scrapers/                   # Shared scrapers (DrawingsScraper, JackpotScraper) using the PHP DOM extension
 │   ├── composer.json               # PHP dependencies: slim/slim ^4.0, slim/psr7 ^1.0
 │   └── vendor/                     # Composer-installed dependencies (git-ignored)
 ├── frontend/
@@ -171,7 +171,7 @@ Custom CSS classes (`.card-shadow`, `.card-shadow-hover`, `.stat-pill`) use emer
 
 ## Technologies
 
-- **Backend:** PHP 8.2-FPM, Slim Framework 4, Composer (PSR-4), nikic/fast-route, simplehtmldom
+- **Backend:** PHP 8.2-FPM, Slim Framework 4, Composer (PSR-4), nikic/fast-route, PHP DOM extension (`DOMDocument`/`DOMXPath`)
 - **Frontend:** React 18, Vite 5, Tailwind CSS v4, React Router DOM, Headless UI, Heroicons, SVG game logos
 - **Infrastructure:** Docker, Nginx, PHP-FPM (single container)
 

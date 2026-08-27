@@ -262,30 +262,39 @@ Build the React component hierarchy.
 
 ## Phase 3 — Real Data Integration
 
-Replace mock data with live scraped data for all three games (Badger Five, Super Cash, Megabucks). This is where the backend scraping becomes live in the API.
+Replace mock data with live scraped data for all three games (Badger Five, Super Cash, Megabucks). This is where the backend scraping becomes live in the API. Scraping is migrated from the unmaintained `simple_html_dom` library to PHP's built-in DOM extension (`DOMDocument` + `DOMXPath`), with no changes to the API contract.
 
-- [ ] **3.1 — Serve real drawing history from game classes**
+- [ ] **3.1 — Migrate scraping to the PHP DOM extension**
+   - Add a `LotteryCodex\Scrapers\` → `scrapers/` PSR-4 mapping to `backend/composer.json` (the same namespace `JackpotScraper` will use in 3.3)
+   - Create `backend/scrapers/HistoryScraper.php`: fetch the draw-history page with cURL (browser-like User-Agent, explicit timeout, status-code check), parse with `DOMDocument::loadHTML()` + `DOMXPath` (`//*[contains(@class, "winning-numbers-line")]`, per-row `.//*[contains(@class, "date")]//strong` and `.//*[contains(@class, "winning-number")]`, `->textContent`), and return raw rows keyed by formatted date with `numbers` as an `int[]` — no pattern logic
+   - Migrate all three game classes to delegate to the shared scraper; pattern classification (odd/even, low/high) stays in each class since it needs the per-game group arrays; remove the triplicated `loadPreviousDrawings()` bodies, the three `require_once simple_html_dom` lines, and the simplehtmldom runtime dependency check added in Phase 0.1
+   - Delete the vendored `backend/simplehtmldom/` library once all three classes are migrated
+   - No API changes: `getHistory()` continues to return the same date-keyed `{numbers, pattern}` shape, so all frontend responses remain identical
+
+   **Done when:** No simplehtmldom references remain in the backend; BadgerFive's scraped output matches pre-migration output; SuperCash and Megabucks can scrape via the shared scraper.
+
+- [ ] **3.2 — Serve real drawing history from game classes**
    - Remove the hardcoded mock `$historyMap` from `GamesController`; `history()` resolves the game and calls `$game->getHistory()`, wrapped in try-catch returning a 503 friendly error if scraping fails
-   - Fix `SuperCash::getHistory()` and `Megabucks::getHistory()` to call `loadPreviousDrawings()` before returning (currently they return empty data)
+   - Fix `SuperCash::getHistory()` and `Megabucks::getHistory()` to load drawings via the shared scraper before returning (currently they return empty data)
    - Fix `PatternDistribution` to take the most recent 100 drawings (current `slice(-100)` takes the oldest 100 on newest-first data)
 
    **Done when:** `/api/games/{gameId}/history` returns live scraped drawings for all three games; pattern distribution shows the latest 100.
 
-- [ ] **3.2 — Scrape and display current jackpot / top prize**
-   - Add a homepage jackpot scraper (`backend/scrapers/JackpotScraper.php`, new `LotteryCodex\Scrapers\` PSR-4 entry): one scrape of the wilottery.com homepage, parse each game's `.game-panel` + `.drawing-amount`, normalize values like `"$1.3 MIL"` to `"$1.3M"` (Super Cash returns its fixed $350,000 top prize)
+- [ ] **3.3 — Scrape and display current jackpot / top prize**
+   - Add a homepage jackpot scraper (`backend/scrapers/JackpotScraper.php` in the `LotteryCodex\Scrapers\` namespace created in 3.1): one scrape of the wilottery.com homepage, parse each game's `.game-panel` + `.drawing-amount`, normalize values like `"$1.3 MIL"` to `"$1.3M"` (Super Cash returns its fixed $350,000 top prize)
    - Expose a `jackpot` field in `GET /api/games` and `GET /api/games/{gameId}` responses; return null if the scrape fails (never break the games list)
    - Replace the hardcoded `'$10,000'` in GamePage with the API value; verify Dashboard cards render `game.jackpot` (binding already exists, currently shows "—")
 
    **Done when:** Dashboard cards and game headers show live jackpot values; a failed scrape degrades gracefully to "—".
 
-- [ ] **3.3 — Frontend cleanup & 6-ball readiness**
+- [ ] **3.4 — Frontend cleanup & 6-ball readiness**
    - Remove the dead `GameContext`/`GameProvider` (`src/contexts/GameContext.jsx`, provider mount in `main.jsx`) — no component consumes it and it causes a duplicate games fetch; hooks remain the data layer
    - Drive skeleton ball counts from `gameDetails.numbersPerDraw` instead of hardcoded 5
    - Fix stale color-map keys (`super-cash`/`mega-bucks` → `supercash`/`megabucks`), remove the DrawingItem badge-width special case, remove the dead `BrowserRouter` import in App.jsx
 
    **Done when:** Frontend renders 6-ball games correctly; no dead code or duplicate games fetch remains.
 
-- [ ] **3.4 — End-to-end verification & error handling**
+- [ ] **3.5 — End-to-end verification & error handling**
    - Verify all three games end-to-end: historical drawings match the Wisconsin Lottery website, generated tickets follow pattern distributions (odd/even, low/high), and 6-number panels render correctly (Super Cash, Megabucks)
    - Handle API errors gracefully in frontend: network timeout handling (scraping can be slow), empty history results display, clear error messages via ErrorBanner
 
@@ -300,7 +309,7 @@ Analyze historical drawings to compute pattern frequency and "playability" indic
 - [ ] **4.1 — Pattern health in game classes**
    - Add `getPatternHealth(): array` to `GameInterface`
    - Implement in BadgerFive: compute **`avgInterval`** (average days between consecutive occurrences, parsed from `$this->previousDrawings` date headers with `strtotime()`) per unique pattern string — this is the **only** new stored property; `daysSince` and `status` are computed on the fly inside `getPatternHealth()`
-   - Implement in SuperCash and Megabucks (same logic; if stable, extract a shared trait to cut the existing 3× scraping duplication)
+   - Implement in SuperCash and Megabucks (same logic)
 
    **Done when:** All three game classes return pattern health from their own history data with zero additional API calls.
 
@@ -321,7 +330,7 @@ Analyze historical drawings to compute pattern frequency and "playability" indic
 The scraping logic exists and works, but it's fragile. Harden it after everything else is verified working.
 
 - [ ] **5.1 — Add retry logic with exponential backoff**
-   - Wrap `file_get_html()` in a retry loop (max 3 attempts, 1s → 2s → 4s delays)
+   - Wrap the scrapers' cURL fetch (both `HistoryScraper` and `JackpotScraper`) in a retry loop (max 3 attempts, 1s → 2s → 4s delays)
    - Log each attempt to PHP error log
 
    **Done when:** Transient network failures are handled gracefully without user-visible errors.
@@ -333,7 +342,7 @@ The scraping logic exists and works, but it's fragile. Harden it after everythin
    **Done when:** API returns a valid JSON response even when wilottery.com is unreachable.
 
 - [ ] **5.3 — Verify HTML selectors still match current wilottery.com structure**
-   - Confirm `.winning-numbers-line`, `.date > strong`, `.winning-number` selectors work against the live site for all three games
+   - Confirm the draw-history selectors (`.winning-numbers-line`, `.date > strong`, `.winning-number`, as XPath `contains(@class, …)` expressions) work against the live site for all three games
    - Confirm jackpot homepage selectors (`.game-panel`, `.drawing-amount`) still match
    - Update selectors if the website layout has changed since original implementation
 
@@ -374,7 +383,7 @@ Phase 0 ──▶ Phase 1 ──▶ Phase 2 ──▶ Phase 3 ──▶ Phase 4 
 
 - **Phase 0** must complete before anything else — it fixes the foundation
 - **Phases 1–2** can partially overlap once mock API works (Phase 1.1 done)
-- **Phase 3** brings all three games live with real data; 3.1 (real history) must land before 3.2 (jackpot) and 3.4 (verification)
+- **Phase 3** brings all three games live with real data; 3.1 (DOM migration) must land first — 3.3's jackpot scraper lives in the same namespace — and 3.2 (real history) must land before 3.5 (verification)
 - **Phase 4** depends on Phase 3 — pattern health is computed from and displayed alongside real drawings
 - **Phase 5** is independent of frontend; can run in parallel with Phases 3–4
 
@@ -501,24 +510,30 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 
 ### Backend — New Files
 ```
-backend/scrapers/JackpotScraper.php  # Single homepage scrape for all games' jackpot/top-prize values (Phase 3.2)
+backend/scrapers/HistoryScraper.php  # Shared DOM-based draw-history scraper, cURL + DOMDocument/DOMXPath (Phase 3.1)
+backend/scrapers/JackpotScraper.php  # Single homepage scrape for all games' jackpot/top-prize values (Phase 3.3)
 ```
 
 ### Backend — Modified Files
 ```
-backend/composer.json                # Add LotteryCodex\Scrapers\ PSR-4 mapping to scrapers/
+backend/composer.json                # Add LotteryCodex\Scrapers\ PSR-4 mapping to scrapers/ (Phase 3.1)
 backend/controllers/GamesController.php  # Remove mock history; call getHistory(); add jackpot + patternHealth to responses
 backend/games/GameInterface.php    # Add getPatternHealth() method
-backend/games/BadgerFive.php       # Compute avgInterval, implement getPatternHealth()
-backend/games/SuperCash.php        # Fix getHistory() to load drawings; compute avgInterval, implement getPatternHealth()
-backend/games/Megabucks.php        # Fix getHistory() to load drawings; compute avgInterval, implement getPatternHealth()
+backend/games/BadgerFive.php       # Migrate to shared DOM scraper; compute avgInterval, implement getPatternHealth()
+backend/games/SuperCash.php        # Migrate to shared DOM scraper; fix getHistory() to load drawings; compute avgInterval, implement getPatternHealth()
+backend/games/Megabucks.php        # Migrate to shared DOM scraper; fix getHistory() to load drawings; compute avgInterval, implement getPatternHealth()
 docker-compose.yml                 # Add health check (Phase 6.1)
 docker/Dockerfile                  # Consolidate RUN layers (Phase 6.2)
 ```
 
+### Backend — Removed Files
+```
+backend/simplehtmldom/             # Vendored simple_html_dom library, deleted in Phase 3.1 after all game classes migrate
+```
+
 ### Frontend — Modified Files
 ```
-frontend/src/main.jsx              # Remove GameProvider mount (context removed in Phase 3.3)
+frontend/src/main.jsx              # Remove GameProvider mount (context removed in Phase 3.4)
 frontend/src/pages/GamePage.jsx    # Live jackpot value, pattern health cards, skeleton ball counts from numbersPerDraw
 frontend/src/pages/Dashboard.jsx   # Render game.jackpot from API
 frontend/src/components/games/PatternDistribution.jsx  # Fix most-recent-100 selection, fix stale color-map keys
@@ -528,5 +543,5 @@ frontend/src/App.jsx               # Remove dead BrowserRouter import
 
 ### Frontend — Removed Files
 ```
-frontend/src/contexts/GameContext.jsx  # Dead context/provider removed in Phase 3.3; hooks are the data layer
+frontend/src/contexts/GameContext.jsx  # Dead context/provider removed in Phase 3.4; hooks are the data layer
 ```

@@ -31,7 +31,7 @@ Develops and modifies all server-side functionality including API endpoints, bus
 - RESTful API development in `backend/api.php`
 - Game logic classes (pattern analysis, panel generation) via `GameInterface.php` contract
 - Input validation, sanitization, and error handling
-- Web scraping integration via `simplehtmldom`
+- Web scraping integration via the PHP DOM extension (`DOMDocument`/`DOMXPath`) in `backend/scrapers/`
 - Updates `docs/api/README.md` after relevant changes
 
 **Use when:** Adding or changing API endpoints, modifying game logic, implementing business rules, optimizing scraping patterns, or any PHP/backend task.

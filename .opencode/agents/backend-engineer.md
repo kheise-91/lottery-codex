@@ -58,7 +58,7 @@ Use the following URLs:
 - Design Slim Framework routes, middleware, and handlers with proper separation of concerns
 - Implement RESTful JSON APIs with consistent error handling and response formatting
 - Leverage PHP 8.2 features: match expressions, readonly properties, enums, constructor property promotion, typed class constants
-- Manage external HTTP dependencies (web scraping via `simplehtmldom`) with retry logic and graceful failure
+- Manage external HTTP dependencies (web scraping via the PHP DOM extension — `DOMDocument`/`DOMXPath` in `backend/scrapers/`) with retry logic and graceful failure
 - Write comprehensive unit tests for backend logic
 
 ## Directory Restrictions

@@ -12,13 +12,14 @@ Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/eve
 
 ### 1. Think Before Coding
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+**Do not make assumptions when it comes to critical architectural decisions or obvious discrepancies in requests. Do not hide confusion. Surface tradeoffs and present multiple choices to the user when appropriate.**
 
 Before implementing:
 - State your assumptions explicitly. If uncertain, ask.
 - If multiple interpretations exist, present them - don't pick silently.
 - If a simpler approach exists, say so. Push back when warranted.
 - If something is unclear, stop. Name what's confusing. Ask.
+- Do not overthink - if you have to ask yourself the same question more than 3 times, stop and ask the user instead.
 
 ### 2. Simplicity First
 
@@ -154,5 +155,5 @@ Nginx serves the frontend from `/var/www/html/frontend/` with SPA fallback (`try
 - **No tests yet** — test infrastructure has not been set up
 - **SuperCash is fully functional** — pattern analysis and panel generation working
 - **BadgerFive is the primary focus** — fully functional game class, scraping + panel generation working
-- **simplehtmldom** is vendored manually (not via Composer) in `backend/simplehtmldom/`
+- **Scraping:** PHP built-in DOM extension (`DOMDocument` + `DOMXPath`) with shared scrapers in `backend/scrapers/` (`LotteryCodex\Scrapers\`); the vendored simplehtmldom library is removed in Phase 3.1
 - **Current branch convention:** `phase-X-Y` branches for sub-phases, with dated task branches (`Y-m-d-short-summary`) rebased onto phase branches
