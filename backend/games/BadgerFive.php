@@ -43,7 +43,7 @@ class BadgerFive implements GameInterface, \JsonSerializable
     public function getGameDetails(): array
     {
         return [
-            'id' => 'badger-five',
+            'id' => 'badger-5',
             'name' => 'Badger 5',
             'status' => 'enabled',
             'drawFrequency' => ['Daily'],

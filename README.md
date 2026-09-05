@@ -25,7 +25,7 @@ For additional details on the development lifecycle and workflow used for this p
 
 | Game | Numbers | Range | Draw Days | Status |
 |------|---------|-------|-----------|--------|
-| **Badger 5** (`badger-five`) | 5 | 1-31 | Daily | Fully functional |
+| **Badger 5** (`badger-5`) | 5 | 1-31 | Daily | Fully functional |
 | **SuperCash!** (`supercash`) | 6 | 1-39 | Daily | Fully functional |
 | **Megabucks** (`megabucks`) | 6 | 1-49 | Wed/Sat | Fully functional |
 
@@ -37,7 +37,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
 ```
 
 - **Frontend** -- React 18 + Vite 5 + Tailwind CSS v4 + React Router DOM. Routed SPA with two routes: `/` (Dashboard game selection), `/games/:gameId` (GamePage detail page with split-view desktop layout and tabbed mobile interface). App shell (`Layout`) provides branded emerald gradient header with `<Outlet />`. State management via `GameContext` provider (useReducer for games, selectedGame, history, ticketResults). Custom hooks (`useGames`, `useGameHistory`, `useGenerateTickets`, `useMinLoading`) wrap the API service layer. Game cards rendered via `GameCard` component with SVG game logos, stat pills using CSS variable theming, and CTA buttons. Theme colors defined via Tailwind `@theme` in `frontend/src/index.css` (emerald primary, per-game accent colors).
-- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs (`badger-five`, `supercash`, `megabucks`) to class names. Game logic classes implement `GameInterface`. HTML scraping via the PHP DOM extension (`DOMDocument` + `DOMXPath`) with shared scrapers in `backend/scrapers/`. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
+- **Backend** -- PHP 8.2-FPM powered by Slim Framework 4 (PSR-4 autoloading via Composer), REST JSON endpoints in `backend/api.php` (thin routing table delegating to `GamesController`). Controller uses a `$registry` pattern mapping game IDs (`badger-5`, `supercash`, `megabucks`) to class names. Game logic classes implement `GameInterface`. HTML scraping via the PHP DOM extension (`DOMDocument` + `DOMXPath`) with shared scrapers in `backend/scrapers/`. History endpoint currently returns static mock data; generate endpoint calls real `GameInterface::generateTickets()`.
 - **Infrastructure** -- Single Docker container running Nginx + PHP-FPM on port 80. No database, no caching layer. Host port 5959 maps to container port 80.
 
 ## Quick Start
@@ -160,8 +160,8 @@ The frontend uses Tailwind CSS v4 with a `@theme` directive in `frontend/src/ind
 | Variable | Value | Purpose |
 |----------|-------|---------|
 | `--color-primary` | `#059669` (emerald green) | Primary brand color |
-| `--color-badger-five` | `#ed1c24` | Badger 5 accent |
-| `--color-badger-five-light` | `#fecdd3` | Badger 5 light background |
+| `--color-badger-5` | `#ed1c24` | Badger 5 accent |
+| `--color-badger-5-light` | `#fecdd3` | Badger 5 light background |
 | `--color-supercash` | `#0081c6` | SuperCash accent |
 | `--color-supercash-light` | `#bae6fd` | SuperCash light background |
 | `--color-megabucks` | `#ff7200` | Megabucks accent |
