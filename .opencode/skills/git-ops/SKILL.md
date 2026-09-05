@@ -38,7 +38,7 @@ master
 - **Label:** sub-phase issues carry the label `Task`; QA findings from `/qa-review` carry the label `Bug`. Create each label if it does not exist.
 - **Milestone:** one per sub-phase, titled `Phase X.Y`, body per `templates/milestone.md`.
 - **Issue body:** the issue body **is the plan** — it follows the `What / Why / Implementation / Acceptance Criteria / Notes` structure (see the `decompose-sub-phase` skill's issue-body template).
-- **Creating an issue:** `gitea-mcp_issue_write` requires ALL of `title`, `body`, `milestone`, `labels`, and `ref`. Pass every parameter on every call, even if the tool schema marks some optional.
+- **Creating an issue:** `gitea-mcp_issue_write` requires ALL of `title`, `body`, `milestone`, `labels`, and `ref` (if a branch name is referenced). Pass every parameter on every call, even if the tool schema marks some optional.
 
 ## Pull requests
 
