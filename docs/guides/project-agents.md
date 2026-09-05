@@ -31,7 +31,7 @@ The planning agent, where decomposition quality matters more than speed. Drafts 
 - **Brainstorm** — draft/update `ROADMAP.md` from project goals (phases → sub-phases, each with a "Done when" definition).
 - **Review** — read-only critique of `ROADMAP.md` (gaps, ordering, over-scoping).
 - **Decompose** — break one sub-phase into 2–5 independently deliverable Gitea issues, each with a complete plan body.
-- May spawn `project-explorer` for codebase facts before decomposing.
+- Does not spawn subagents; the orchestrator provides a `project-explorer` report as its codebase facts.
 - The only agent that may write `ROADMAP.md`; returns the Gitea specs (milestone + issues) to the orchestrator rather than creating them.
 
 **Use when:** `/brainstorm`, `/review-roadmap`, and `/create-sub-phase` work.
@@ -161,7 +161,7 @@ The version-control agent. Performs all git and Gitea operations — branches, c
 ### Workflow
 
 1. **Plan** — `software-architect` drafts/reviews `ROADMAP.md` and decomposes a sub-phase into issues.
-2. **Explore** — `project-explorer` (spawned as needed) reports the relevant codebase area.
+2. **Explore** — the orchestrator spawns `project-explorer` to report the relevant codebase area.
 3. **Implement** — `software-engineer` implements one issue's plan within its scope boundary.
 4. **Review** — `code-reviewer` verifies the change against the plan (Critical findings go back to the engineer).
 5. **Design** — `ui-designer` produces mockups for a sub-phase's frontend (when needed).

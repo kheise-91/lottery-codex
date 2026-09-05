@@ -9,7 +9,7 @@ Complete issue #$1. If no issue number was given, ask the user which issue to co
 Refer to @AGENTS.md for the workflow formats. Spawn agents sequentially, one at a time. Do not edit code files yourself.
 
 **Step 1 — Fetch the issue and create its branch.**
-Spawn the @git-manager subagent to fetch issue #$1 (title, body, labels, milestone) and create its issue branch off the sub-phase branch. It checks out the branch and returns the full issue spec plus the branch name.
+Spawn the @git-manager subagent to fetch issue #$1 (title, body, labels, milestone) and create its issue branch off the sub-phase branch. It checks out the branch, updates issue #$1 to set `ref` to the new branch name, and returns the full issue spec plus the branch name.
 
 **Step 2 — Implement.**
 Read the issue body. Determine the scope boundary (directory + stack) from the files and stack it names. Spawn the @software-engineer subagent with:

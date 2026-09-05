@@ -33,7 +33,7 @@ For each sub-phase:
 *Command available: `/complete-issue`*
 
 For each issue:
-- Checkout the pre-made issue branch (`YYYY-MM-DD-short-task-summary`) and rebase onto the `phase-X-Y` branch.
+- Create and check out the issue branch (`YYYY-MM-DD-short-task-summary`) off the `phase-X-Y` branch.
 - Complete the task (implement → scoped review → fix loop → commit).
 - Open a pull request for the issue branch into the `phase-X-Y` branch.
 

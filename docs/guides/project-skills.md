@@ -41,7 +41,7 @@ How to critique `ROADMAP.md` read-only. Returns a critique organized as Gaps, Or
 
 ### [`decompose-sub-phase`](/.opencode/skills/decompose-sub-phase/SKILL.md)
 
-How to break one roadmap sub-phase into 2–5 independently deliverable Gitea issues, each with a complete plan body (the issue body is the plan). Reads the sub-phase entry and any matching mockup, spawns `project-explorer` for codebase facts if needed, and returns the milestone spec plus each issue in execution order — it never creates Gitea objects itself.
+How to break one roadmap sub-phase into 2–5 independently deliverable Gitea issues, each with a complete plan body (the issue body is the plan). Reads the sub-phase entry and any matching mockup, uses the `project-explorer` report the orchestrator provides as its codebase facts, and returns the milestone spec plus each issue in execution order — it never creates Gitea objects itself.
 
 **Use when:** Invoked by `/create-sub-phase`.
 
@@ -53,7 +53,7 @@ How to break one roadmap sub-phase into 2–5 independently deliverable Gitea is
 
 How to read a codebase area and return a structured report a writer can act on without re-reading the code. Strictly read-only: read `AGENTS.md` first, start wide then narrow, let the code win on any discrepancy, and stay inside the named area. Returns the report from the `explorer-report` template with real paths, names, and shapes.
 
-**Use when:** Spawned by `software-architect` (or directly) to understand an area before planning or implementing.
+**Use when:** Spawned by the orchestrator (or directly) to understand an area before planning or implementing — e.g. before `/create-sub-phase` decomposition.
 
 ---
 
@@ -126,7 +126,7 @@ The exact branch, commit, milestone, issue, and PR formats for this repository, 
 ### How Skills Map to the Workflow
 
 1. **Scope** — `software-architect` loads `brainstorm-roadmap` then `review-roadmap`.
-2. **Prepare** — `software-architect` loads `decompose-sub-phase` (spawning `project-explorer` / `explore-codebase` for facts as needed).
+2. **Prepare** — the orchestrator spawns `project-explorer` (`explore-codebase`) for codebase facts; `software-architect` loads `decompose-sub-phase` and decomposes using that report.
 3. **Design** — `ui-designer` loads `mockups` (when a sub-phase has frontend work).
 4. **Develop** — `software-engineer` loads `execute-issue-plan`; `code-reviewer` loads `code-review` for the scoped review and fix loop.
 5. **QA** — `code-reviewer` loads `code-review` (full diff) for `/qa-review`.

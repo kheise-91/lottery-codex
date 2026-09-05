@@ -24,6 +24,7 @@ master
 ```
 
 - Issue branch name: lowercase, hyphen-separated, date-prefixed, max 5 words, no articles (e.g. `2026-09-02-shared-history-scraper`).
+- Every branch is pushed with upstream set the moment it is created: `git push -u origin <branch>` (phase-X, phase-X-Y, and issue branches alike). The branch then exists on Gitea and the local branch tracks origin — no manual `--set-upstream` later.
 - Merges are **merge commits** — never squash, never rebase, never force-push.
 - PRs go: issue branch → sub-phase branch. Sub-phase → phase happens at `/complete-sub-phase`; phase → master is done manually.
 
@@ -38,7 +39,8 @@ master
 - **Label:** sub-phase issues carry the label `Task`; QA findings from `/qa-review` carry the label `Bug`. Create each label if it does not exist.
 - **Milestone:** one per sub-phase, titled `Phase X.Y`, body per `templates/milestone.md`.
 - **Issue body:** the issue body **is the plan** — it follows the `What / Why / Implementation / Acceptance Criteria / Notes` structure (see the `decompose-sub-phase` skill's issue-body template).
-- **Creating an issue:** `gitea-mcp_issue_write` requires ALL of `title`, `body`, `milestone`, `labels`, and `ref` (if a branch name is referenced). Pass every parameter on every call, even if the tool schema marks some optional.
+- **Creating an issue:** `gitea-mcp_issue_write` requires ALL of `title`, `body`, `milestone`, and `labels`. Do NOT set `ref` at creation — the issue's branch does not exist yet. Pass every parameter on every call, even if the tool schema marks some optional.
+- **Linking an issue to its branch:** when an issue is picked up for work (in `/complete-issue`), after creating the issue branch, update the issue to set `ref` = the issue branch name (so Gitea links the issue to its branch).
 
 ## Pull requests
 
