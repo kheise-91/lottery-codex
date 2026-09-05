@@ -9,7 +9,6 @@ backend/vendor/
 # ======================
 frontend/node_modules/
 frontend/dist/
-frontend/mockups/
 
 # ======================
 # CLAUDE CODE FILES

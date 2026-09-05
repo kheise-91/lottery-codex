@@ -1,0 +1,325 @@
+<!-- VISUAL REFERENCE ONLY -->
+<!-- Do NOT blindly copy class names or styles from this file. Use this mockup for layout, structure, and interaction intent only. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lottery Codex — Contextual Back Button (Sub-phase 2.12)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --color-primary: #059669;
+      --color-badger-five: #ed1c24;
+      --color-badger-five-light: #fca5a5;
+      --color-badger-five-lightest: #fecdd3;
+    }
+
+    .card-shadow { box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px; transition: box-shadow 0.2s ease-out, transform 0.2s ease-out; }
+    .card-shadow:hover { box-shadow: hsl(160 75% 25% / 35%) 0px 12px 32px -2px, hsl(160 75% 15% / 25%) 0px 8px 16px -2px; transform: translateY(-4px); }
+
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #ed1c24; animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+
+    .lotto-ball--white { width: 3rem; height: 3rem; border-radius: 50%; background: radial-gradient(circle at 38% 32%, #ffffff 0%, #f4f7fa 35%, #d1d9e6 70%, #a8b4c4 100%); border: 1.5px solid #b0bec5; color: #374151; font-size: 1.0625rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; position: relative; user-select: none; box-shadow: inset -3px -3px 8px rgba(0,0,0,0.12), inset 2px 2px 6px rgba(255,255,255,0.9), 0 3px 8px rgba(0,0,0,0.18); }
+    .lotto-ball--white::after { content: ''; position: absolute; top: 12%; left: 24%; width: 35%; height: 28%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%); }
+
+    .lotto-ball--badger { width: 3rem; height: 3rem; border-radius: 50%; background: radial-gradient(circle at 38% 32%, #fecdd3 0%, #ed1c24 40%, #b91c1c 75%, #7f1d1d 100%); border: 1.5px solid #991b1b; color: #fff; font-size: 1.0625rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; position: relative; user-select: none; text-shadow: 0 1px 2px rgba(0,0,0,0.3); box-shadow: inset -3px -3px 8px rgba(0,0,0,0.2), inset 2px 2px 6px rgba(255,255,255,0.15), 0 3px 8px rgba(185,28,28,0.3); }
+    .lotto-ball--badger::after { content: ''; position: absolute; top: 10%; left: 22%; width: 38%; height: 30%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 65%); }
+
+    .pattern-bar--red { background-color: #ed1c24; }
+
+    .carousel-viewport { overflow: hidden; position: relative; }
+    .carousel-track { display: flex; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    .carousel-slide { min-width: 100%; flex-shrink: 0; }
+    .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: rgba(255,255,255,0.85); backdrop-filter: blur(4px); border: 1px solid #e5e7eb; transition: background-color 0.15s ease, box-shadow 0.15s ease; z-index: 10; }
+    .carousel-arrow:hover { background-color: #fff; }
+    .carousel-arrow--left { left: 0; }
+    .carousel-arrow--right { right: 0; }
+    .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #d1d5db; transition: all 0.2s ease; }
+    .carousel-dot--active { background-color: #ed1c24; width: 24px; border-radius: 4px; }
+
+    /* ── Variant: contextual back button (page-local, GamePage only) ─────── */
+    .back-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.85rem; border-radius: 0.5rem; background: #fff; border: 1px solid #e5e7eb; color: #374151; font-size: 0.875rem; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; cursor: pointer; }
+    .back-btn:hover { background-color: #f9fafb; color: var(--color-primary); border-color: #d1d5db; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    .back-btn:active { transform: scale(0.97); }
+    #backNote { opacity: 0; transition: opacity 0.2s ease; }
+    #backNote.show { opacity: 1; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- VISUAL REFERENCE ONLY -->
+  <!-- Do NOT blindly copy class names or styles from this file. Use this mockup for layout, structure, and interaction intent only. -->
+
+  <div class="flex flex-col min-h-screen bg-gray-50">
+    <!-- Header — gradient hero with branding -->
+    <header class="relative pb-3" style="background: #fff; box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px">
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none" class="absolute inset-0 w-full h-full">
+        <defs>
+          <linearGradient id="header-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#065f46" />
+            <stop offset="50%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#34d399" />
+          </linearGradient>
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#header-gradient)" />
+        <rect width="100%" height="100%" fill="url(#grid)" opacity="0.1" />
+        <path d="M0,195 C240,225 480,170 720,195 C960,225 1200,170 1440,195 L1440,220 L0,220 Z" fill="#000" opacity="0.12" style="filter: blur(6px)" />
+        <path d="M0,200 C240,230 480,175 720,200 C960,230 1200,175 1440,200 L1440,220 L0,220 Z" fill="#f9fafb" />
+      </svg>
+      <div class="relative max-w-6xl mx-auto px-4 py-6 sm:py-8">
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-2.5 shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-white font-semibold tracking-tight" style="font-size: 1.75rem; line-height: 1.2;">Lottery Codex</h1>
+            <p class="text-emerald-100 text-sm mt-0.5">Pattern Analysis &amp; Ticket Generation</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="flex-1 pt-6 pb-8 px-4">
+      <div class="max-w-6xl mx-auto">
+
+        <!-- ══════════════ NEW: Contextual back button (GamePage only) ══════════════ -->
+        <div class="mb-4 flex items-center gap-3">
+          <a id="backBtn" class="back-btn" href="#/">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Back to Dashboard
+          </a>
+          <span id="backNote" class="text-xs font-medium" style="color: var(--color-primary);">← returning to / (Dashboard)</span>
+        </div>
+
+        <!-- Game Header Section -->
+        <section class="mb-4 md:mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
+            <div class="p-5 flex flex-col justify-center">
+              <h1 class="text-2xl font-bold text-gray-800">Badger Five</h1>
+              <p class="text-sm text-gray-500 mt-2 leading-relaxed">Pick 5 numbers from 1-31 in this daily, rolling jackpot game that offers better odds of winning than larger national lotteries.</p>
+            </div>
+            <div class="grid grid-cols-3 divide-x divide-gray-200 bg-white border-t md:border-t-0">
+              <div class="p-4 text-center flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mb-1.5" style="color: #ed1c24;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <span class="block text-[11px] uppercase tracking-wide font-bold" style="color: #ed1c24;">Draw</span>
+                <span class="block text-base font-bold text-gray-700 mt-0.5">Daily</span>
+              </div>
+              <div class="p-4 text-center flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mb-1.5" style="color: #ed1c24;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                <span class="block text-[11px] uppercase tracking-wide font-bold" style="color: #ed1c24;">Odds</span>
+                <span class="block text-base font-bold text-gray-700 mt-0.5">1 in 169,911</span>
+              </div>
+              <div class="p-4 text-center flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mb-1.5" style="color: #ed1c24;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span class="block text-[11px] uppercase tracking-wide font-bold" style="color: #ed1c24;">Jackpot</span>
+                <span class="block text-base font-bold text-gray-700 mt-0.5">$10,000</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Split-View Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+          <!-- Left Column — Previous Drawings (flat) -->
+          <div class="md:col-span-7 space-y-4">
+            <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 flex items-center justify-center rounded-xl text-white" style="height: 48px;">
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-[22px] h-[22px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span class="font-semibold text-sm">Previous Drawings</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" style="align-items: stretch;">
+              <section>
+                <h2 class="text-sm font-semibold text-gray-800 mb-1">Pattern Distribution</h2>
+                <p class="text-xs text-gray-400 mb-3">Last 100 Drawings</p>
+                <div class="space-y-3">
+                  <div>
+                    <div class="flex justify-between items-center mb-1"><span class="text-xs font-medium text-gray-700">3O/2E, 3L/2H</span><span class="text-xs font-semibold" style="color: #ed1c24;">80%</span></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2"><div class="pattern-bar--red h-2 rounded-full" style="width: 80%;"></div></div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between items-center mb-1"><span class="text-xs font-medium text-gray-700">3O/2E, 2L/3H</span><span class="text-xs font-semibold" style="color: #ed1c24;">40%</span></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2"><div class="pattern-bar--red h-2 rounded-full" style="width: 40%; opacity: 0.75;"></div></div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between items-center mb-1"><span class="text-xs font-medium text-gray-700">2O/3E, 3L/2H</span><span class="text-xs font-semibold" style="color: #ed1c24;">20%</span></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2"><div class="pattern-bar--red h-2 rounded-full" style="width: 20%; opacity: 0.5;"></div></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="flex flex-col">
+                <div class="flex items-center justify-between mb-1">
+                  <h2 class="text-sm font-semibold text-gray-800">Monday, January 15th</h2>
+                  <span class="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full"><span class="live-dot"></span>Latest</span>
+                </div>
+                <div class="mb-3 mt-4">
+                  <span class="flex items-center justify-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold tracking-tight bg-gray-100 text-gray-700 border border-gray-200">
+                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    <span>3-Odd 2-Even / 3-Low 2-High</span>
+                  </span>
+                </div>
+                <div class="flex items-center justify-center gap-2.5 flex-wrap">
+                  <span class="lotto-ball--badger">7</span><span class="lotto-ball--badger">14</span><span class="lotto-ball--badger">23</span><span class="lotto-ball--badger">31</span><span class="lotto-ball--badger">32</span>
+                </div>
+                <div class="flex-1"></div>
+              </section>
+            </div>
+
+            <section>
+              <div class="border-b border-gray-100 py-5">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-sm font-semibold text-gray-800">Sunday, January 14th</h3>
+                  <span class="text-[11px] text-gray-400 font-medium">3 days ago</span>
+                </div>
+                <div class="mb-3 flex justify-center items-center">
+                  <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold tracking-tight bg-gray-100 text-gray-700 border border-gray-200">
+                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    <span>2-Odd 3-Even / 2-Low 3-High</span>
+                  </span>
+                </div>
+                <div class="flex items-center justify-center gap-2.5">
+                  <span class="lotto-ball--white">4</span><span class="lotto-ball--white">18</span><span class="lotto-ball--white">27</span><span class="lotto-ball--white">33</span><span class="lotto-ball--white">38</span>
+                </div>
+              </div>
+              <div class="border-b border-gray-100 py-5">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-sm font-semibold text-gray-800">Wednesday, January 10th</h3>
+                  <span class="text-[11px] text-gray-400 font-medium">1 week ago</span>
+                </div>
+                <div class="mb-3 flex justify-center items-center">
+                  <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold tracking-tight bg-gray-100 text-gray-700 border border-gray-200">
+                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    <span>3-Odd 2-Even / 3-Low 2-High</span>
+                  </span>
+                </div>
+                <div class="flex items-center justify-center gap-2.5">
+                  <span class="lotto-ball--white">2</span><span class="lotto-ball--white">11</span><span class="lotto-ball--white">19</span><span class="lotto-ball--white">28</span><span class="lotto-ball--white">29</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column — Generated Tickets (elevated card) -->
+          <div class="md:col-span-5">
+            <div class="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+              <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 flex items-center justify-center text-white" style="height: 48px;">
+                <div class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>
+                  <span class="text-white font-semibold text-sm">Generated Tickets</span>
+                </div>
+              </div>
+              <div class="p-5 bg-white">
+                <div class="mb-4 flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span class="text-sm text-gray-600">It's okay to play.</span>
+                </div>
+                <div class="mb-5">
+                  <label for="ticket-count" class="block text-xs font-medium text-gray-500 mb-1.5">Number of Tickets</label>
+                  <select id="ticket-count" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2" style="background-color:#fff;">
+                    <option value="1">1 Ticket</option><option value="2">2 Tickets</option><option value="3" selected>3 Tickets</option><option value="4">4 Tickets</option><option value="5">5 Tickets</option><option value="6">6 Tickets</option><option value="7">7 Tickets</option><option value="8">8 Tickets</option><option value="9">9 Tickets</option><option value="10">10 Tickets</option>
+                  </select>
+                </div>
+
+                <div class="carousel-viewport relative" style="padding: 0 2px;">
+                  <button class="carousel-arrow carousel-arrow--left" onclick="prevTicket()" aria-label="Previous ticket">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                  </button>
+                  <button class="carousel-arrow carousel-arrow--right" onclick="nextTicket()" aria-label="Next ticket">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  </button>
+
+                  <div class="carousel-track" id="carousel-track">
+                    <div class="carousel-slide px-2">
+                      <article class="ticket-card shadow-lg relative rounded-lg border border-gray-200 bg-white overflow-hidden transition-all duration-200 hover:-translate-y-0.5">
+                        <div class="px-4 pt-4 pb-3 flex items-center justify-between">
+                          <div class="flex flex-col"><h3 class="text-base font-bold text-gray-600">Badger Five</h3><span class="text-xs text-gray-500">Ticket #BF-260801-01</span></div>
+                          <div class="inline-flex items-end gap-[1.5px]" aria-hidden="true">
+                            <span class="bg-gray-400 rounded-[1px]" style="width:3px;height:24px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:1.5px;height:30px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:4px;height:26px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:1px;height:28px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:2px;height:22px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:3.5px;height:32px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:1px;height:20px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:4px;height:28px;"></span>
+                          </div>
+                        </div>
+                        <div class="px-4 pb-4 space-y-3">
+                          <div class="relative rounded-md border border-dashed border-gray-300 border-l-0 min-h-[72px] overflow-hidden bg-gray-50/50"><div class="absolute left-0 top-0 w-[4px] h-full" style="background-color:#ed1c24;"></div><div class="flex items-center gap-2 px-3 pt-2 pb-1"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold" style="color:#ed1c24;background-color:#fecdd3;">Panel A</span></div><div class="flex items-center justify-center gap-2 px-3 pb-2"><span class="lotto-ball--white">5</span><span class="lotto-ball--white">12</span><span class="lotto-ball--white">21</span><span class="lotto-ball--white">29</span><span class="lotto-ball--white">30</span></div></div>
+                          <div class="relative rounded-md border border-dashed border-gray-300 border-l-0 min-h-[72px] overflow-hidden bg-gray-50/50"><div class="absolute left-0 top-0 w-[4px] h-full" style="background-color:#ed1c24;"></div><div class="flex items-center gap-2 px-3 pt-2 pb-1"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold" style="color:#ed1c24;background-color:#fecdd3;">Panel B</span></div><div class="flex items-center justify-center gap-2 px-3 pb-2"><span class="lotto-ball--white">8</span><span class="lotto-ball--white">17</span><span class="lotto-ball--white">23</span><span class="lotto-ball--white">31</span><span class="lotto-ball--white">32</span></div></div>
+                          <div class="relative rounded-md border border-dashed border-gray-300 border-l-0 min-h-[72px] overflow-hidden bg-gray-50/50"><div class="absolute left-0 top-0 w-[4px] h-full" style="background-color:#ed1c24;"></div><div class="flex items-center gap-2 px-3 pt-2 pb-1"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold" style="color:#ed1c24;background-color:#fecdd3;">Panel C</span></div><div class="flex items-center justify-center gap-2 px-3 pb-2"><span class="lotto-ball--white">9</span><span class="lotto-ball--white">17</span><span class="lotto-ball--white">23</span><span class="lotto-ball--white">30</span><span class="lotto-ball--white">32</span></div></div>
+                        </div>
+                        <div class="border-t border-gray-100 bg-gray-50 px-4 py-2 flex items-center justify-end"><span class="text-[11px] text-gray-400">July 26, 2026 · 09:41 AM</span></div>
+                      </article>
+                    </div>
+
+                    <div class="carousel-slide px-2">
+                      <article class="ticket-card shadow-lg relative rounded-lg border border-gray-200 bg-white overflow-hidden transition-all duration-200 hover:-translate-y-0.5">
+                        <div class="px-4 pt-4 pb-3 flex items-center justify-between">
+                          <div class="flex flex-col"><h3 class="text-base font-bold text-gray-600">Badger Five</h3><span class="text-xs text-gray-500">Ticket #BF-260801-02</span></div>
+                          <div class="inline-flex items-end gap-[1.5px]" aria-hidden="true">
+                            <span class="bg-gray-400 rounded-[1px]" style="width:3px;height:26px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:1.5px;height:28px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:4px;height:30px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:1px;height:24px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:2px;height:28px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:3.5px;height:26px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:1px;height:32px;"></span><span class="bg-gray-400 rounded-[1px]" style="width:4px;height:22px;"></span>
+                          </div>
+                        </div>
+                        <div class="px-4 pb-4 space-y-3">
+                          <div class="relative rounded-md border border-dashed border-gray-300 border-l-0 min-h-[72px] overflow-hidden bg-gray-50/50"><div class="absolute left-0 top-0 w-[4px] h-full" style="background-color:#ed1c24;"></div><div class="flex items-center gap-2 px-3 pt-2 pb-1"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold" style="color:#ed1c24;background-color:#fecdd3;">Panel A</span></div><div class="flex items-center justify-center gap-2 px-3 pb-2"><span class="lotto-ball--white">3</span><span class="lotto-ball--white">14</span><span class="lotto-ball--white">19</span><span class="lotto-ball--white">27</span><span class="lotto-ball--white">31</span></div></div>
+                          <div class="relative rounded-md border border-dashed border-gray-300 border-l-0 min-h-[72px] overflow-hidden bg-gray-50/50"><div class="absolute left-0 top-0 w-[4px] h-full" style="background-color:#ed1c24;"></div><div class="flex items-center gap-2 px-3 pt-2 pb-1"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold" style="color:#ed1c24;background-color:#fecdd3;">Panel B</span></div><div class="flex items-center justify-center gap-2 px-3 pb-2"><span class="lotto-ball--white">6</span><span class="lotto-ball--white">11</span><span class="lotto-ball--white">22</span><span class="lotto-ball--white">30</span><span class="lotto-ball--white">31</span></div></div>
+                          <div class="relative rounded-md border border-dashed border-gray-300 border-l-0 min-h-[72px] overflow-hidden bg-gray-50/50"><div class="absolute left-0 top-0 w-[4px] h-full" style="background-color:#ed1c24;"></div><div class="flex items-center gap-2 px-3 pt-2 pb-1"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold" style="color:#ed1c24;background-color:#fecdd3;">Panel C</span></div><div class="flex items-center justify-center gap-2 px-3 pb-2"><span class="lotto-ball--white">9</span><span class="lotto-ball--white">17</span><span class="lotto-ball--white">23</span><span class="lotto-ball--white">30</span><span class="lotto-ball--white">32</span></div></div>
+                        </div>
+                        <div class="border-t border-gray-100 bg-gray-50 px-4 py-2 flex items-center justify-end"><span class="text-[11px] text-gray-400">July 26, 2026 · 09:42 AM</span></div>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-center gap-2 mt-4">
+                  <span class="carousel-dot carousel-dot--active"></span>
+                  <span class="carousel-dot"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- REFERENCE FOOTER -->
+  <div class="px-4 pb-10">
+    <footer class="bg-white/80 backdrop-blur rounded-lg card-shadow px-6 py-4 max-w-md mx-auto text-center">
+      <div class="flex flex-col items-start gap-1.5 text-left">
+        <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Sub-phase 2.12 · Navigation</p>
+        <p class="text-xs text-gray-600 leading-relaxed">Approach: <strong>Contextual Back Button</strong> — No global chrome. A single "← Back to Dashboard" control sits at the top of the GamePage (detail view only); the Dashboard page is left unchanged. Clicking it routes back to /.</p>
+        <p class="text-[10px] text-gray-400 leading-relaxed">Tradeoff: minimal footprint and the simplest change to ship; but it doesn't scale, doesn't offer quick cross-game switching, and leaves the Dashboard without a forward menu.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Back button: reveal a transient confirmation note (simulates navigating back to /)
+    var backBtn = document.getElementById('backBtn');
+    var backNote = document.getElementById('backNote');
+    backBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      backNote.classList.add('show');
+    });
+
+    // Ticket carousel
+    var ticketIndex = 0;
+    var numTickets = 2;
+    var track = document.getElementById('carousel-track');
+    var dots = document.querySelectorAll('.carousel-dot');
+    function updateCarousel() {
+      if (track) track.style.transform = 'translateX(-' + (ticketIndex * 100) + '%)';
+      dots.forEach(function (d, i) { d.classList.toggle('carousel-dot--active', i === ticketIndex); });
+    }
+    function nextTicket() { ticketIndex = (ticketIndex + 1) % numTickets; updateCarousel(); }
+    function prevTicket() { ticketIndex = (ticketIndex - 1 + numTickets) % numTickets; updateCarousel(); }
+  </script>
+
+</body>
+</html>
