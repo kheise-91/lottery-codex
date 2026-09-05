@@ -11,7 +11,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import TicketCard from './TicketCard';
 
 const GAME_COLOR_MAP = {
-  'badger-five': '--color-badger-five',
+  'badger-5': '--color-badger-5',
   supercash: '--color-supercash',
   megabucks: '--color-megabucks',
 };

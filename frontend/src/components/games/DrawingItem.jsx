@@ -3,7 +3,7 @@
  *
  * @param {Object} props
  * @param {Object} props.drawing - Single drawing object with keys: `date` (string), `numbers` (number[]), `pattern` (string)
- * @param {string|null} props.gameId=null - Game identifier for colored balls ('badger-five', 'supercash', 'megabucks'). Pass null for white variant.
+  * @param {string|null} props.gameId=null - Game identifier for colored balls ('badger-5', 'supercash', 'megabucks'). Pass null for white variant.
  * @param {boolean} [props.isRecent=false] - If true, render game-colored balls and "Latest" badge; if false, render white balls and relative time ago text.
  */
 import Ball from './Ball';
@@ -12,7 +12,7 @@ function DrawingItem({ drawing, gameId = null, isRecent = false }) {
   const formattedDate = drawing.date || 'Unknown date';
   const pattern = drawing.pattern || '';
   const numbers = drawing.numbers || [];
-  const badgeWidth = (gameId == 'badger-five') ? 'w-[20rem]' : 'w-[22rem]';
+  const badgeWidth = (gameId == 'badger-5') ? 'w-[20rem]' : 'w-[22rem]';
 
   return (
     <div className="border-b border-gray-100 pb-4 mb-4">

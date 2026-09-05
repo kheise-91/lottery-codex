@@ -3,7 +3,7 @@ import { generateTickets } from '../services/api';
 
 /**
  * Custom React hook for generating lottery tickets via the backend API.
- * @param {string} gameId - The game ID to generate tickets for (e.g., 'badger-five')
+ * @param {string} gameId - The game ID to generate tickets for (e.g., 'badger-5')
  * @returns {{ tickets: Array, loading: boolean, error: string | null, generate: Function }}
  */
 export function useGenerateTickets(gameId) {
