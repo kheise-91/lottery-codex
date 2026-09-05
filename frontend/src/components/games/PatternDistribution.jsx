@@ -3,13 +3,13 @@
  *
  * @param {Object} props
  * @param {Object} props.history - Object mapping date → { pattern } used for calculations
- * @param {string} props.gameId - Game identifier (e.g., 'badger-five') for CSS variable colors
+  * @param {string} props.gameId - Game identifier (e.g., 'badger-5') for CSS variable colors
  * @param {string} [props.gamePrimaryColor] - Legacy fallback primary color
  */
 import { useMemo } from 'react'
 
 const GAME_BAR_COLORS = {
-  'badger-five': { primary: '#ed1c24', light: '#fca5a5', lightest: '#fecdd3' },
+  'badger-5': { primary: '#ed1c24', light: '#fca5a5', lightest: '#fecdd3' },
   'supercash': { primary: '#0081c6', light: '#7dd3fc', lightest: '#bae6fd' },
   'super-cash': { primary: '#0081c6', light: '#7dd3fc', lightest: '#bae6fd' },
   'megabucks': { primary: '#ff7200', light: '#fdba74', lightest: '#fed7aa' },

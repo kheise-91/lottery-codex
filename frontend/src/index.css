@@ -2,9 +2,9 @@
 
 @theme {
   --color-primary: #059669;
-  --color-badger-five: #ed1c24;
-  --color-badger-five-light: #fca5a5;
-  --color-badger-five-lightest: #fecdd3;
+  --color-badger-5: #ed1c24;
+  --color-badger-5-light: #fca5a5;
+  --color-badger-5-lightest: #fecdd3;
   --color-supercash: #0081c6;
   --color-supercash-light: #7dd3fc;
   --color-supercash-lightest: #bae6fd;
@@ -117,8 +117,8 @@
 }
 
 /* Sub-pattern color variants — Badger Five */
-.lotto-ball--sp-badger-five {
-  background: radial-gradient(circle at 38% 32%, var(--color-badger-five-lightest) 0%, var(--color-badger-five) 40%, #b91c1c 75%, #7f1d1d 100%);
+.lotto-ball--sp-badger-5 {
+  background: radial-gradient(circle at 38% 32%, var(--color-badger-5-lightest) 0%, var(--color-badger-5) 40%, #b91c1c 75%, #7f1d1d 100%);
   border-color: #991b1b;
   box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 6px rgba(255, 255, 255, 0.15), 0 3px 8px rgba(185, 28, 28, 0.3);
 }

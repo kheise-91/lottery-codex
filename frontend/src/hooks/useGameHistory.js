@@ -3,7 +3,7 @@ import { fetchHistory } from '../services/api';
 
 /**
  * Custom React hook that fetches historical drawing data for a given game.
- * @param {string} gameId - The game ID to fetch history for (e.g., 'badger-five')
+ * @param {string} gameId - The game ID to fetch history for (e.g., 'badger-5')
  * @returns {{ data: Object | null, loading: boolean, error: string | null }}
  */
 export function useGameHistory(gameId) {

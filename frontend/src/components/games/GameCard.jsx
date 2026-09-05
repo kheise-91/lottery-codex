@@ -6,7 +6,7 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
  * Keys match gameId values; values correspond to CSS variables defined in index.css @theme.
  */
 const gameColors = {
-  'badger-five': { main: '#ed1c24', light: '#fecdd3' },
+  'badger-5': { main: '#ed1c24', light: '#fecdd3' },
   supercash: { main: '#0081c6', light: '#bae6fd' },
   megabucks: { main: '#ff7200', light: '#fed7aa' },
 };
@@ -16,10 +16,10 @@ const gameColors = {
  * Displays game image, status badge, stats pills, and CTA within a clickable card.
  *
  * @param {Object} props
- * @param {string} props.gameId - Game identifier used for link href and imageSrc fallback (e.g., "badger-five")
+ * @param {string} props.gameId - Game identifier used for link href and imageSrc fallback (e.g., "badger-5")
  * @param {string} props.name - Display name of the game (e.g., "Badger 5")
  * @param {string} props.description - Short game description (e.g., "Pick 5 numbers from 1 to 39")
- * @param {string} props.imageSrc - SVG image path (e.g., "/badger-five.svg")
+ * @param {string} props.imageSrc - SVG image path (e.g., "/badger-5.svg")
  * @param {string} props.status - Backend status: "enabled" or "disabled"
  * @param {string} props.drawFrequency - Draw schedule (e.g., "Wed/Sun", "Daily")
  * @param {string} props.oddsOfWinning - Odds display string (e.g., "1 in 575")
