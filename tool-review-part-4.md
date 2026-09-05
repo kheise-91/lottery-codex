@@ -1,0 +1,7 @@
+Everything looks great! I need one more change. For the `complete-sub-phase` command (and anything related it, such as the skill for it), please remove instructions relating to the phase branch. This will ONLY be used for sub-phase branches. I will still continue to complete the phases myself and open the PRs for phase branches myself.
+
+Once that has bee fixed, then I need to update the documentation. Inside the `docs/guides/` folder, there are three guides. I need all three of these updated, plus a new guide added for skills. Follow the same formatting/structure as the two "opencode-" files when creating the guide for the skills. Rename those two files to be "project-agents" and "project-commands", and name the new file "project-skills". The "development-workflow" file can keep its current name.
+
+Make sure ALL 3 of the existing files are updated to reflect the new system we've created here. Any references to an old "ai-models" guide (or other non-existing guides) should be removed. There should be NO model recommendations in here (not even for the Enoch family). Referring to or suggesting the agents we created is okay, but only those agents we created. This will be carried over to the plugin when we extract that, so it's really important that we do not reference any model names.
+
+Please note I removed the last part of AGENTS.md (the decision log). I do not want to add to this file, only modify things that change. 

@@ -12,56 +12,54 @@ description: The workflow followed while working on this project.
 Initialize project (README.md, .gitignore etc)
 
 ### Step 2 - Scope Project
-*Custom Claude Code commands available: `/create-roadmap`, `/review-roadmap`*
+*Commands available: `/brainstorm`, `/review-roadmap`*
+
+- Create or update `ROADMAP.md` from the project's goals (`/brainstorm`).
+- Critique the roadmap for gaps, ordering, and over-scoping (`/review-roadmap`) until it is ready to decompose.
 
 ### Step 3 - Task Preparation
-*Custom Claude Code commands available: `/generate-mockups`, `/create-sub-phase`*
+*Commands available: `/generate-mockups`, `/create-sub-phase`*
 
 When starting a new phase:
-- Create project board for new Phase with description from project roadmap.
-- Create `phase-X` branch from `master`
+- Create the `phase-X` branch from `master`.
 
-For each project sub-phase:
-- Create mockups of UI/UX changes (optional - update sub-phase description in roadmap if needed to summarize chosen mockup)
-- Create `phase-X-Y` branch from `phase-X` branch
-- Create `phase-X-Y` milestone
-- Create issues and branches for required work
-- For each issue: link to new branch, link to project board, move to "To Do" list (only one sub-phase/milestone in "To Do" at a time)
-- Update project roadmap: mark sub-phase as "In progress" and link title to Gitea milestone
+For each sub-phase:
+- Create mockups of UI/UX changes (optional — update the sub-phase description in the roadmap if needed to summarize the chosen mockup).
+- Create the `phase-X-Y` branch from the `phase-X` branch.
+- Create the `Phase X.Y` milestone and the issues (2–5) for the sub-phase, each with its plan in the issue body.
+- Update the roadmap: mark the sub-phase as in progress and link its title to the Gitea milestone.
 
 ### Step 4 - Working on Tasks
-*Custom Claude Code command available: `/complete-issue`*
+*Command available: `/complete-issue`*
 
 For each issue:
-- Checkout pre-made branch (`Y-m-d-short-task-summary`) and rebase on `phase-X-Y` branch
-- Complete task
-- Open pull request for `Y-m-d-short-task-summary` branch into `phase-X-Y` branch
+- Checkout the pre-made issue branch (`YYYY-MM-DD-short-task-summary`) and rebase onto the `phase-X-Y` branch.
+- Complete the task (implement → scoped review → fix loop → commit).
+- Open a pull request for the issue branch into the `phase-X-Y` branch.
 
 ### Step 5 - Assembling Project
-*Custom Claude Code command available: `/update-documentation`, `/qa-review`*
+*Commands available: `/qa-review`, `/complete-sub-phase`*
 
-When all issues for sub-phase/milestone have been completed and merged:
-- Verify all documentation has been updated for the changes implemented in sub-phase (inside sub-phase branch)
-- Mark sub-phase as "Complete" in project roadmap (inside sub-phase branch)
-- Open pull request for `phase-X-Y` branch into `phase-X` branch
+When all issues for a sub-phase/milestone have been completed and merged:
+- Run the full QA review of the sub-phase (`/qa-review`); each Critical finding becomes a `Bug` issue, fixed via `/complete-issue`, then re-run until clean.
+- Complete the sub-phase (`/complete-sub-phase`): run the milestone gate, verify all documentation is updated (tick the checkbox and add the milestone link in `ROADMAP.md`), and open the PR for `phase-X-Y` into `phase-X`.
 
-When all sub-phases have been completed and merged:
-- Perform a QA review of `phase-X` branch (inside phase branch)
-- Open pull request for `phase-X` branch into `master` branch
+When all sub-phases for a phase have been completed and merged, the phase is completed manually:
+- Perform the QA review of `phase-X` (`/qa-review`).
+- Open the PR for `phase-X` into `master` manually.
 
-Repeat steps 4, 5 and 6 until all phases and sub-phases are completed, utilizing project Kanban board on Gitea to track issues
+Repeat steps 4 and 5 until all phases and sub-phases are completed, tracking issues via the Gitea milestone.
 
 ### Step 6 - Complete Project
 When all phases have been completed and merged:
-- Verify all documentation is correct
-- Run code audit (future skill) to ensure code is high quality and concise
-- Package app for production environment and deploy(ment)
+- Verify all documentation is correct.
+- Package the app for the production environment and deploy.
 
 ---
 
 ## Flowchart
 
-*Example flowchart diagram utilizing Claude Code skills*
+*Example flowchart diagram of the workflow.*
 
 ```mermaid
 flowchart TD
@@ -69,22 +67,22 @@ flowchart TD
     End([6 - Deploy Project])
 
     subgraph SCOPE_PROJECT["2 - Scope Project"]
-        S1["/create-project-roadmap"]
-        S2@{ shape: subproc, label: "/review-project-roadmap" }
+        S1["/brainstorm"]
+        S2["/review-roadmap"]
     end
 
     subgraph SCOPE_TASKS["3 - Task Preparation"]
-        C1{"/create-mockup"}
-        TC1@{ shape: proc, label: "/create-sub-phase" }
+        C1{"/generate-mockups"}
+        TC1["/create-sub-phase"]
     end
 
     subgraph DEVELOPMENT["4 - Working on Tasks"]
-        D1@{ shape: proc, label: " &emsp; /complete-issue &emsp; " }
+        D1["/complete-issue"]
     end
 
     subgraph ASSEMBLE["5 - Assemble Project"]
-        DOC["/update-documentation"]
         QA["/qa-review"]
+        CS["/complete-sub-phase"]
     end
 
     Start --> SCOPE_PROJECT
@@ -93,17 +91,17 @@ flowchart TD
     C1 --> TC1
     TC1 --> DEVELOPMENT
     D1 --> ASSEMBLE
-    DOC --> QA
-    QA --> End
+    QA --> CS
+    CS --> End
 
     classDef sequential fill:#E1F5EE,stroke:#1D9E75,color:#085041
     classDef choice fill:#EEEDFE,stroke:#7F77DD,color:#26215C
     classDef decision fill:#FAEEDA,stroke:#EF9F27,color:#412402
     classDef terminal fill:#F1EFE8,stroke:#888780,color:#2C2C2A
 
-    class S1,S2,S3,G1,QA,DOC sequential
-    class TC1,TC2,D1,D2,D3 choice
-    class C1,C2,C3 decision
+    class S1,S2,QA,CS sequential
+    class D1 choice
+    class C1 decision
     class Start,End terminal
 ```
 
@@ -111,6 +109,6 @@ flowchart TD
 
 ## Resources
 
-- [AI Models Guide](/docs/guides/ai-models.md)
-- [Claude Agents Guide](/docs/guides/claude-agents.md)
-- [Claude Skills Guide](/docs/guides/claude-skills.md)
+- [Project Agents Guide](/docs/guides/project-agents.md)
+- [Project Commands Guide](/docs/guides/project-commands.md)
+- [Project Skills Guide](/docs/guides/project-skills.md)

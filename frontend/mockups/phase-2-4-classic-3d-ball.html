@@ -1,0 +1,559 @@
+<!-- VISUAL REFERENCE ONLY -->
+<!-- Do NOT blindly copy class names or styles from this file. Use this mockup for layout, structure, and interaction intent only. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lottery Codex — Ball Component</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ── Card shadow (project convention) ── */
+    .card-shadow {
+      box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px;
+      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    }
+    .card-shadow:hover {
+      box-shadow: hsl(160 75% 25% / 35%) 0px 12px 32px -2px, hsl(160 75% 15% / 25%) 0px 8px 16px -2px;
+      transform: translateY(-4px);
+    }
+
+    /* ── Lottery Ball — base ── */
+    .lotto-ball {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      position: relative;
+      cursor: default;
+      user-select: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* ── Lottery Ball — white (DrawingCard) ── */
+    .lotto-ball--white {
+      background: radial-gradient(circle at 38% 32%, #ffffff 0%, #f4f7fa 35%, #d1d9e6 70%, #a8b4c4 100%);
+      border: 1.5px solid #b0bec5;
+      color: #374151;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.12),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.9),
+        0 3px 8px rgba(0, 0, 0, 0.18);
+    }
+    .lotto-ball--white::after {
+      content: '';
+      position: absolute;
+      top: 12%;
+      left: 24%;
+      width: 35%;
+      height: 28%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%);
+    }
+
+    /* ── Lottery Ball — colored (TicketDisplay) ── */
+    .lotto-ball--colored {
+      border: 1.5px solid;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .lotto-ball--colored::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 22%;
+      width: 38%;
+      height: 30%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 65%);
+    }
+
+    /* ── Ball hover effect ── */
+    .lotto-ball:hover {
+      transform: scale(1.1);
+    }
+    .lotto-ball--white:hover {
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.12),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.9),
+        0 4px 16px rgba(0, 0, 0, 0.28);
+    }
+
+    /* ── Sub-pattern color variants (Badger Five palette) ── */
+    .lotto-ball--sp-odd-even {
+      background: radial-gradient(circle at 38% 32%, #fca5a5 0%, #ef4444 40%, #b91c1c 75%, #7f1d1d 100%);
+      border-color: #991b1b;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+        0 3px 8px rgba(185, 28, 28, 0.3);
+    }
+
+    .lotto-ball--sp-even-odd {
+      background: radial-gradient(circle at 38% 32%, #fca5a5 0%, #dc2626 40%, #b91c1c 75%, #7f1d1d 100%);
+      border-color: #991b1b;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+        0 3px 8px rgba(185, 28, 28, 0.3);
+    }
+
+    .lotto-ball--sp-low-high {
+      background: radial-gradient(circle at 38% 32%, #fde68a 0%, #f59e0b 40%, #d97706 75%, #92400e 100%);
+      border-color: #b45309;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+        0 3px 8px rgba(217, 119, 6, 0.3);
+    }
+
+    .lotto-ball--sp-high-low {
+      background: radial-gradient(circle at 38% 32%, #fde68a 0%, #f59e0b 40%, #d97706 75%, #92400e 100%);
+      border-color: #b45309;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+        0 3px 8px rgba(217, 119, 6, 0.3);
+    }
+
+    .lotto-ball--sp-mixed {
+      background: radial-gradient(circle at 38% 32%, #a7f3d0 0%, #10b981 40%, #059669 75%, #065f46 100%);
+      border-color: #047857;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+        0 3px 8px rgba(5, 150, 105, 0.3);
+    }
+
+    .lotto-ball--sp-singleton {
+      background: radial-gradient(circle at 38% 32%, #c4b5fd 0%, #7c3aed 40%, #6d28d9 75%, #4c1d95 100%);
+      border-color: #5b21b6;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+        0 3px 8px rgba(109, 40, 217, 0.3);
+    }
+
+    /* ── Status pill (project convention) ── */
+    .status-badge {
+      border: 1px solid #e5e7eb;
+    }
+
+    /* ── Section divider ── */
+    .section-divider {
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent);
+    }
+
+    /* ── Panel card hover lift ── */
+    .panel-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .panel-card:hover {
+      transform: translateY(-3px);
+    }
+
+    /* ── Tab navigation (interactive) ── */
+    .tab-btn {
+      position: relative;
+      transition: color 0.15s ease;
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      left: 0.75rem;
+      right: 0.75rem;
+      bottom: -0.625rem;
+      height: 2px;
+      background: #059669;
+      border-radius: 1px;
+    }
+
+    /* ── Ball row animation (on load) ── */
+    @keyframes ballIn {
+      from { opacity: 0; transform: scale(0.6); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .lotto-ball.animate-in {
+      animation: ballIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    /* Stagger delays set via inline style */
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col font-sans">
+
+  <!-- Header — minimal -->
+  <header class="relative overflow-hidden" style="background: #fff; box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px;">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center gap-3">
+      <div class="bg-emerald-600 rounded-lg p-2 shadow-inner" style="background: #059669;">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-gray-800 font-semibold tracking-tight" style="font-size: 1.25rem; line-height: 1.3;">Lottery Codex</h1>
+        <p class="text-gray-400 text-xs">Ball Component — Classic 3D Lottery Ball</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="flex-1 pt-8 pb-12 px-4">
+    <div class="max-w-5xl mx-auto space-y-10">
+
+      <!-- Page heading -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-1">Ball Component</h2>
+        <p class="text-sm text-gray-500 mb-6">Circular 3D elements with game-aware color coding. Renders as clean white balls in drawing contexts and pattern-coded balls on tickets.</p>
+      </div>
+
+      <!-- ──────────────────────────────────────────────── -->
+      <!-- CONTEXT 1: DrawingCard — White Balls             -->
+      <!-- ──────────────────────────────────────────────── -->
+      <section>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Context 1</span>
+          <h3 class="text-sm font-medium text-gray-600">DrawingCard — White Balls (no color-coding)</h3>
+        </div>
+
+        <div class="bg-white rounded-lg card-shadow p-6">
+          <!-- Drawing header -->
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <p class="text-xs text-gray-400 uppercase tracking-wider font-medium">Latest Drawing</p>
+              <p class="text-lg font-semibold text-gray-800 mt-0.5">Badger 5 — June 18, 2025</p>
+            </div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Live</span>
+          </div>
+
+          <!-- Ball row — white, 3D -->
+          <div class="flex items-center gap-3 mb-5" id="drawing-balls">
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 0ms;">7</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 60ms;">12</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 120ms;">23</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 180ms;">31</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 240ms;">40</span>
+          </div>
+
+          <!-- Pattern summary -->
+          <div class="flex flex-wrap gap-2">
+            <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600 border status-pill">3 Odd / 2 Even</span>
+            <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600 border status-pill">3 Low / 2 High</span>
+            <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600 border status-pill">Range: 7–40</span>
+          </div>
+        </div>
+
+        <!-- Second drawing row — smaller preview -->
+        <div class="mt-4 bg-white rounded-lg card-shadow p-5 flex items-center gap-4">
+          <div class="flex-1 min-w-0">
+            <p class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-2">Previous Drawing</p>
+            <p class="text-sm font-semibold text-gray-800">Badger 5 — June 16, 2025</p>
+          </div>
+          <div class="flex items-center gap-2.5 shrink-0" id="drawing-balls-secondary">
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 0ms;">3</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 60ms;">14</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 120ms;">27</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 180ms;">33</span>
+            <span class="lotto-ball lotto-ball--white animate-in" style="animation-delay: 240ms;">38</span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- ──────────────────────────────────────────────── -->
+      <!-- CONTEXT 2: TicketDisplay — Color-Coded Balls     -->
+      <!-- ──────────────────────────────────────────────── -->
+      <section>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">Context 2</span>
+          <h3 class="text-sm font-medium text-gray-600">TicketDisplay — Color-Coded by Sub-Pattern (Badger Five)</h3>
+        </div>
+
+        <!-- Tab navigation to switch between sub-pattern groups -->
+        <div class="border-b border-gray-200 mb-5 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <nav class="-mb-px flex gap-6 overflow-x-auto" id="ticket-tabs">
+            <button class="tab-btn active pb-3 text-sm font-medium whitespace-nowrap" data-tab="odd-even" style="color: #059669;">Odd / Even Splits</button>
+            <button class="tab-btn pb-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="low-high">Low / High Splits</button>
+            <button class="tab-btn pb-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap transition-colors" data-tab="specials">Special Patterns</button>
+          </nav>
+        </div>
+
+        <!-- Tab 1: Odd/Even Splits -->
+        <div id="tab-odd-even" class="ticket-panel space-y-4">
+
+          <!-- Panel A — 3-Odd 2-Even -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">3-Odd / 2-Even</span>
+              <span class="text-xs text-gray-400">Confidence: 78%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1847</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-1">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 0ms;">3</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 50ms;">17</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 100ms;">23</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-even-odd animate-in" style="animation-delay: 150ms;">8</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-even-odd animate-in" style="animation-delay: 200ms;">34</span>
+            </div>
+          </div>
+
+          <!-- Panel B — 2-Odd 3-Even -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">2-Odd / 3-Even</span>
+              <span class="text-xs text-gray-400">Confidence: 65%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1848</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-2">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-even-odd animate-in" style="animation-delay: 0ms;">10</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-even-odd animate-in" style="animation-delay: 50ms;">22</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-even-odd animate-in" style="animation-delay: 100ms;">36</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 150ms;">5</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 200ms;">19</span>
+            </div>
+          </div>
+
+          <!-- Panel C — 4-Odd 1-Even -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">4-Odd / 1-Even</span>
+              <span class="text-xs text-gray-400">Confidence: 52%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1849</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-3">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 0ms;">1</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 50ms;">9</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 100ms;">21</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="animation-delay: 150ms;">37</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-even-odd animate-in" style="animation-delay: 200ms;">14</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Low/High Splits -->
+        <div id="tab-low-high" class="ticket-panel space-y-4 hidden">
+
+          <!-- Panel A — 3-Low 2-High -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">3-Low / 2-High</span>
+              <span class="text-xs text-gray-400">Confidence: 81%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1850</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-lh1">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 0ms;">4</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 50ms;">11</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 100ms;">19</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-high-low animate-in" style="animation-delay: 150ms;">28</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-high-low animate-in" style="animation-delay: 200ms;">35</span>
+            </div>
+          </div>
+
+          <!-- Panel B — 2-Low 3-High -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">2-Low / 3-High</span>
+              <span class="text-xs text-gray-400">Confidence: 69%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1851</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-lh2">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-high-low animate-in" style="animation-delay: 0ms;">26</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-high-low animate-in" style="animation-delay: 50ms;">30</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-high-low animate-in" style="animation-delay: 100ms;">37</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 150ms;">8</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 200ms;">15</span>
+            </div>
+          </div>
+
+          <!-- Panel C — 4-Low 1-High -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">4-Low / 1-High</span>
+              <span class="text-xs text-gray-400">Confidence: 44%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1852</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-lh3">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 0ms;">2</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 50ms;">9</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 100ms;">16</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="animation-delay: 150ms;">24</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-high-low animate-in" style="animation-delay: 200ms;">39</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Special Patterns -->
+        <div id="tab-specials" class="ticket-panel space-y-4 hidden">
+
+          <!-- Panel A — Mixed (consecutive) -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Mixed — Consecutive Pair</span>
+              <span class="text-xs text-gray-400">Confidence: 61%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1853</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-sp1">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 0ms;">6</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 50ms;">13</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 100ms;">14</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 150ms;">27</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 200ms;">33</span>
+            </div>
+          </div>
+
+          <!-- Panel B — Singleton -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-violet-50 text-violet-700 border border-violet-200">Singleton — No Adjacent</span>
+              <span class="text-xs text-gray-400">Confidence: 73%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1854</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-sp2">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-singleton animate-in" style="animation-delay: 0ms;">3</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-singleton animate-in" style="animation-delay: 50ms;">12</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-singleton animate-in" style="animation-delay: 100ms;">21</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-singleton animate-in" style="animation-delay: 150ms;">30</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-singleton animate-in" style="animation-delay: 200ms;">38</span>
+            </div>
+          </div>
+
+          <!-- Panel C — High Spread -->
+          <div class="bg-white rounded-lg card-shadow p-5 panel-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Mixed — Wide Spread</span>
+              <span class="text-xs text-gray-400">Confidence: 56%</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-3">Generated Panel #1855</p>
+            <div class="flex items-center gap-2.5" id="panel-balls-sp3">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 0ms;">1</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 50ms;">9</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 100ms;">23</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 150ms;">31</span>
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed animate-in" style="animation-delay: 200ms;">39</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────── -->
+      <!-- SIZE VARIANTS                                    -->
+      <!-- ──────────────────────────────────────────────── -->
+      <hr class="section-divider" />
+
+      <section>
+        <h3 class="text-sm font-medium text-gray-600 mb-4">Size Variants — Hover to see interactive effect</h3>
+
+        <div class="bg-white rounded-lg card-shadow p-6 space-y-6">
+          <!-- Row of white balls in three sizes -->
+          <div>
+            <p class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-3">White — DrawingCard Sizes</p>
+            <div class="flex items-end gap-5 flex-wrap">
+              <div class="text-center">
+                <span class="lotto-ball lotto-ball--white animate-in" style="width:2rem; height:2rem; font-size:0.75rem; animation-delay: 0ms;">7</span>
+                <p class="text-xs text-gray-400 mt-2">Compact (32px)</p>
+              </div>
+              <div class="text-center">
+                <span class="lotto-ball lotto-ball--white animate-in" style="width:3rem; height:3rem; font-size:1.0625rem; animation-delay: 40ms;">7</span>
+                <p class="text-xs text-gray-400 mt-2">Default (48px)</p>
+              </div>
+              <div class="text-center">
+                <span class="lotto-ball lotto-ball--white animate-in" style="width:3.75rem; height:3.75rem; font-size:1.25rem; animation-delay: 80ms;">7</span>
+                <p class="text-xs text-gray-400 mt-2">Large (60px)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row of colored balls in three sizes -->
+          <div>
+            <p class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-3">Colored — TicketDisplay Sizes</p>
+            <div class="flex items-end gap-5 flex-wrap">
+              <div class="text-center">
+                <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even animate-in" style="width:2rem; height:2rem; font-size:0.75rem; animation-delay: 0ms;">14</span>
+                <p class="text-xs text-gray-400 mt-2">Compact (32px)</p>
+              </div>
+              <div class="text-center">
+                <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high animate-in" style="width:3rem; height:3rem; font-size:1.0625rem; animation-delay: 40ms;">28</span>
+                <p class="text-xs text-gray-400 mt-2">Default (48px)</p>
+              </div>
+              <div class="text-center">
+                <span class="lotto-ball lotto-ball--colored lotto-ball--sp-singleton animate-in" style="width:3.75rem; height:3.75rem; font-size:1.25rem; animation-delay: 80ms;">3</span>
+                <p class="text-xs text-gray-400 mt-2">Large (60px)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- All color variants at default size -->
+          <div>
+            <p class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-3">All Sub-Pattern Variants</p>
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-odd-even" style="width:2.5rem; height:2.5rem; font-size:0.875rem;">1</span>
+              <span class="text-xs text-gray-400 self-center">3-Odd/2-Even</span>
+
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-even-odd" style="width:2.5rem; height:2.5rem; font-size:0.875rem;">4</span>
+              <span class="text-xs text-gray-400 self-center">2-Odd/3-Even</span>
+
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-low-high" style="width:2.5rem; height:2.5rem; font-size:0.875rem;">9</span>
+              <span class="text-xs text-gray-400 self-center">3-Low/2-High</span>
+
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-high-low" style="width:2.5rem; height:2.5rem; font-size:0.875rem;">27</span>
+              <span class="text-xs text-gray-400 self-center">2-Low/3-High</span>
+
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-mixed" style="width:2.5rem; height:2.5rem; font-size:0.875rem;">14</span>
+              <span class="text-xs text-gray-400 self-center">Mixed Pair</span>
+
+              <span class="lotto-ball lotto-ball--colored lotto-ball--sp-singleton" style="width:2.5rem; height:2.5rem; font-size:0.875rem;">3</span>
+              <span class="text-xs text-gray-400 self-center">Singleton</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Reference footer -->
+  <footer class="border-t border-gray-200 bg-white py-3 px-4">
+    <div class="max-w-5xl mx-auto flex items-center justify-between text-xs text-gray-400">
+      <span>Sub-phase 2.4 — Ball Component</span>
+      <span>Classic 3D Lottery Ball approach</span>
+    </div>
+  </footer>
+
+  <!-- Minimal JS for tab switching -->
+  <script>
+    (function() {
+      var tabs = document.querySelectorAll('#ticket-tabs .tab-btn');
+      var panels = document.querySelectorAll('.ticket-panel');
+
+      tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          // Deactivate all tabs
+          tabs.forEach(function(t) {
+            t.classList.remove('active');
+            t.style.color = '';
+            t.classList.add('text-gray-500');
+          });
+          // Activate clicked tab
+          tab.classList.add('active');
+          tab.style.color = '#059669';
+          tab.classList.remove('text-gray-500');
+
+          // Hide all panels, show target
+          panels.forEach(function(p) { p.classList.add('hidden'); });
+          var target = document.getElementById('tab-' + tab.getAttribute('data-tab'));
+          if (target) target.classList.remove('hidden');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

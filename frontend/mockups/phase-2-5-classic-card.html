@@ -1,0 +1,250 @@
+<!-- VISUAL REFERENCE ONLY -->
+<!-- Do NOT blindly copy class names or styles from this file. Use this mockup for layout, structure, and interaction intent only. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrawingCard — Classic Card</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ── Lottery Ball: base ─────────────────────────────── */
+    .lotto-ball {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      position: relative;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    /* ── Lottery Ball: white variant ────────────────────── */
+    .lotto-ball--white {
+      background: radial-gradient(circle at 38% 32%, #ffffff 0%, #f4f7fa 35%, #d1d9e6 70%, #a8b4c4 100%);
+      border: 1.5px solid #b0bec5;
+      color: #374151;
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.12),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.9),
+        0 3px 8px rgba(0, 0, 0, 0.18);
+    }
+    .lotto-ball--white::after {
+      content: '';
+      position: absolute;
+      top: 12%;
+      left: 24%;
+      width: 35%;
+      height: 28%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%);
+    }
+
+    /* ── Lottery Ball: colored (Badger Five red) ────────── */
+    .lotto-ball--red {
+      background: radial-gradient(circle at 38% 32%, #fecdd3 0%, #ed1c24 40%, #b91c1c 75%, #7f1d1d 100%);
+      border-color: #991b1b;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      box-shadow:
+        inset -3px -3px 8px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 6px rgba(255, 255, 255, 0.15),
+        0 3px 8px rgba(185, 28, 28, 0.3);
+    }
+    .lotto-ball--red::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 22%;
+      width: 38%;
+      height: 30%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 65%);
+    }
+
+    /* ── Drawing Card shadow (emerald-tinted) ───────────── */
+    .drawing-card {
+      background: #fff;
+      border-radius: 0.5rem;
+      box-shadow: hsl(160 75% 25% / 25%) 0px 8px 24px -2px, hsl(160 75% 15% / 15%) 0px 4px 12px -2px;
+      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    }
+    .drawing-card:hover {
+      box-shadow: hsl(160 75% 25% / 35%) 0px 12px 32px -2px, hsl(160 75% 15% / 25%) 0px 8px 16px -2px;
+      transform: translateY(-4px);
+    }
+
+    /* ── Pattern badge ──────────────────────────────────── */
+    .pattern-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Most-recent indicator dot ──────────────────────── */
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ed1c24;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* ── Reference footer ───────────────────────────────── */
+    .ref-footer {
+      border-top: 2px dashed #d1d5db;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Page header -->
+  <header class="max-w-xl mx-auto px-6 pt-10 pb-2">
+    <div class="flex items-center gap-3 mb-1">
+      <span class="live-dot"></span>
+      <p class="text-xs font-semibold uppercase tracking-wider text-red-600">Badger Five — Latest Drawings</p>
+    </div>
+    <h1 class="text-2xl font-semibold text-gray-800">Winning Numbers</h1>
+    <p class="mt-1 text-sm text-gray-500">Past drawing results with Codex pattern analysis</p>
+  </header>
+
+  <!-- Drawing cards list -->
+  <main class="max-w-xl mx-auto px-6 pb-12 space-y-4 mt-8">
+
+    <!-- ── Card 1: Most Recent (colored balls) ─────────── -->
+    <article class="drawing-card overflow-hidden cursor-pointer" tabindex="0">
+      <!-- Date header strip -->
+      <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-gray-800">Monday, July 21st, 2026</h2>
+        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+          <span class="live-dot"></span>
+          Latest
+        </span>
+      </div>
+
+      <!-- Pattern badge -->
+      <div class="px-5 pb-3">
+        <span class="pattern-badge bg-gray-100 text-gray-700 border border-gray-200">
+          <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          3-Odd / 2-Even &nbsp;·&nbsp; 3-Low / 2-High
+        </span>
+      </div>
+
+      <!-- Number balls -->
+      <div class="px-5 pb-5 flex items-center gap-2.5">
+        <span class="lotto-ball lotto-ball--red" aria-label="Number 4">4</span>
+        <span class="lotto-ball lotto-ball--red" aria-label="Number 11">11</span>
+        <span class="lotto-ball lotto-ball--red" aria-label="Number 17">17</span>
+        <span class="lotto-ball lotto-ball--red" aria-label="Number 22">22</span>
+        <span class="lotto-ball lotto-ball--red" aria-label="Number 28">28</span>
+      </div>
+    </article>
+
+    <!-- ── Card 2: Older drawing (white balls) ─────────── -->
+    <article class="drawing-card overflow-hidden cursor-pointer" tabindex="0">
+      <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-gray-800">Thursday, July 16th, 2026</h2>
+        <span class="text-[11px] text-gray-400 font-medium">5 days ago</span>
+      </div>
+      <div class="px-5 pb-3">
+        <span class="pattern-badge bg-gray-100 text-gray-700 border border-gray-200">
+          <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          2-Odd / 3-Even &nbsp;·&nbsp; 4-Low / 1-High
+        </span>
+      </div>
+      <div class="px-5 pb-5 flex items-center gap-2.5">
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 3">3</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 8">8</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 14">14</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 20">20</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 26">26</span>
+      </div>
+    </article>
+
+    <!-- ── Card 3: Older drawing (white balls) ─────────── -->
+    <article class="drawing-card overflow-hidden cursor-pointer" tabindex="0">
+      <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-gray-800">Saturday, July 11th, 2026</h2>
+        <span class="text-[11px] text-gray-400 font-medium">10 days ago</span>
+      </div>
+      <div class="px-5 pb-3">
+        <span class="pattern-badge bg-gray-100 text-gray-700 border border-gray-200">
+          <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          5-Odd / 0-Even &nbsp;·&nbsp; 2-Low / 3-High
+        </span>
+      </div>
+      <div class="px-5 pb-5 flex items-center gap-2.5">
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 1">1</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 9">9</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 15">15</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 23">23</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 27">27</span>
+      </div>
+    </article>
+
+    <!-- ── Card 4: Older drawing (white balls) ─────────── -->
+    <article class="drawing-card overflow-hidden cursor-pointer" tabindex="0">
+      <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-gray-800">Wednesday, July 8th, 2026</h2>
+        <span class="text-[11px] text-gray-400 font-medium">13 days ago</span>
+      </div>
+      <div class="px-5 pb-3">
+        <span class="pattern-badge bg-gray-100 text-gray-700 border border-gray-200">
+          <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          3-Odd / 2-Even &nbsp;·&nbsp; 5-Low / 0-High
+        </span>
+      </div>
+      <div class="px-5 pb-5 flex items-center gap-2.5">
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 2">2</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 7">7</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 13">13</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 19">19</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 25">25</span>
+      </div>
+    </article>
+
+    <!-- ── Card 5: Older drawing (white balls) ─────────── -->
+    <article class="drawing-card overflow-hidden cursor-pointer" tabindex="0">
+      <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-gray-800">Saturday, July 4th, 2026</h2>
+        <span class="text-[11px] text-gray-400 font-medium">17 days ago</span>
+      </div>
+      <div class="px-5 pb-3">
+        <span class="pattern-badge bg-gray-100 text-gray-700 border border-gray-200">
+          <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          1-Odd / 4-Even &nbsp;·&nbsp; 3-Low / 2-High
+        </span>
+      </div>
+      <div class="px-5 pb-5 flex items-center gap-2.5">
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 6">6</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 10">10</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 12">12</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 18">18</span>
+        <span class="lotto-ball lotto-ball--white" aria-label="Number 24">24</span>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Reference footer -->
+  <footer class="ref-footer max-w-xl mx-auto px-6 py-4 flex items-center justify-between text-xs text-gray-400">
+    <span>Sub-phase 2.5 &mdash; DrawingCard &middot; Classic Card Approach</span>
+    <span>Wisconsin Badger Five &middot; Mockup v1</span>
+  </footer>
+
+</body>
+</html>

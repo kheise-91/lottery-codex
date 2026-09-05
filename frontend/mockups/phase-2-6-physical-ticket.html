@@ -1,0 +1,813 @@
+<!-- VISUAL REFERENCE ONLY -->
+<!-- Do NOT blindly copy class names or styles from this file. Use this mockup for layout, structure, and interaction intent only. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TicketCard — Physical Ticket Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-primary: #059669;
+      --color-badger-five: #ed1c24;
+      --color-badger-five-light: #fca5a5;
+      --color-badger-five-lightest: #fecdd3;
+      --color-supercash: #0081c6;
+      --color-supercash-light: #7dd3fc;
+      --color-supercash-lightest: #bae6fd;
+    }
+
+    /* --- 3D Lotto Ball (white variant) --- */
+    .lotto-ball {
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: #374151; /* gray-700 */
+      border: 2px solid #b0bec5;
+      position: relative;
+      background: radial-gradient(
+        circle at 30% 28%,
+        #ffffff 0%,
+        #f3f4f6 18%,
+        #d1d5db 42%,
+        #9ca3af 72%,
+        #6b7280 100%
+      );
+      box-shadow:
+        inset -2px -2px 4px rgba(0, 0, 0, 0.15),
+        inset 2px 2px 3px rgba(255, 255, 255, 0.9),
+        1px 2px 6px rgba(0, 0, 0, 0.18);
+    }
+
+    .lotto-ball::after {
+      content: "";
+      position: absolute;
+      top: 7%;
+      left: 22%;
+      width: 35%;
+      height: 22%;
+      border-radius: 50%;
+      background: radial-gradient(
+        ellipse,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+
+    /* --- Perforation dots between tickets --- */
+    .perforation {
+      background-image: radial-gradient(circle, #d1d5db 2px, transparent 2.5px);
+      background-size: 16px 16px;
+      height: 18px;
+    }
+
+    /* --- Sub-pattern color indicators --- */
+    .sp-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* --- Tear-off dashed panel separator --- */
+    .tear-line {
+      border-top: 2px dashed #d1d5db;
+      position: relative;
+    }
+    .tear-line::before,
+    .tear-line::after {
+      content: "";
+      position: absolute;
+      top: -8px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #f9fafb; /* matches page bg */
+    }
+    .tear-line::before { left: -22px; }
+    .tear-line::after { right: -22px; }
+
+    /* --- Ticket paper texture --- */
+    .ticket-paper {
+      background-color: #fefefe;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 28px,
+          rgba(0, 0, 0, 0.015) 28px,
+          rgba(0, 0, 0, 0.015) 29px
+        );
+    }
+
+    /* --- Barcode decoration --- */
+    .barcode {
+      display: inline-flex;
+      gap: 1.5px;
+      align-items: end;
+      height: 32px;
+    }
+    .barcode span {
+      display: block;
+      background: #9ca3af;
+      border-radius: 1px;
+    }
+
+    /* --- VOID watermark --- */
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-28deg);
+      font-size: 96px;
+      font-weight: 900;
+      color: rgba(209, 213, 219, 0.25);
+      letter-spacing: 16px;
+      pointer-events: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    /* --- Panel punch-out border effect --- */
+    .punch-border {
+      border: 1.5px dashed #c4b5fd;
+      position: relative;
+    }
+    .punch-border::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    /* --- Sub-pattern accent bar on panel --- */
+    .sp-accent-bar {
+      width: 6px;
+      min-height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 4px 0 0 4px;
+    }
+
+    /* --- Badge pill for panel number --- */
+    .panel-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* --- Ticket card hover lift --- */
+    .ticket-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .ticket-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    /* --- Hero gradient matching project header --- */
+    .hero-gradient {
+      background: linear-gradient(90deg, #065f46 0%, #059669 50%, #34d399 100%);
+    }
+
+    /* --- Legend dot colors matching sub-patterns --- */
+    .sp-color-1 { background: #ed1c24; }
+    .sp-color-2 { background: #f59e0b; }
+    .sp-color-3 { background: #8b5cf6; }
+
+    /* --- Accent bars matching sub-patterns --- */
+    .accent-1 { background: #ed1c24; }
+    .accent-2 { background: #f59e0b; }
+    .accent-3 { background: #8b5cf6; }
+
+    /* --- Legend pill colors --- */
+    .legend-pill-1 { color: #dc2626; border-color: #fecdd3; background: #fef2f2; }
+    .legend-pill-2 { color: #d97706; border-color: #fed7aa; background: #fffbeb; }
+    .legend-pill-3 { color: #7c3aed; border-color: #ddd6fe; background: #f5f3ff; }
+
+    /* --- Footer reference bar --- */
+    .mockup-footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 28px;
+      background: #1f2937;
+      color: #d1d5db;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.3px;
+      z-index: 50;
+    }
+
+    /* --- Mini legend dots in panel area --- */
+    .mini-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-8">
+
+  <!-- ======================== HERO HEADER ======================== -->
+  <header class="hero-gradient relative overflow-hidden">
+    <!-- Decorative SVG elements -->
+    <svg class="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="85%" cy="30%" r="120" fill="#fff"/>
+      <circle cx="15%" cy="70%" r="80" fill="#fff"/>
+      <circle cx="60%" cy="85%" r="45" fill="#fff"/>
+    </svg>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-6 py-10 text-center">
+      <!-- Logo / icon -->
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 mb-5 backdrop-blur-sm border border-white/30">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.16.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+        </svg>
+      </div>
+
+      <h1 class="text-white text-3xl font-extrabold tracking-tight">Lottery Codex</h1>
+      <p class="mt-2 text-emerald-100 text-sm max-w-md mx-auto">Badger Five — TicketCard Preview · Physical Ticket Approach</p>
+
+      <!-- Sub-phase indicator -->
+      <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-emerald-50 text-xs font-medium">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
+        Sub-phase 2.6 — TicketCard Component
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================== MAIN CONTENT ======================== -->
+  <main class="max-w-xl mx-auto px-4 pt-10 space-y-0">
+
+    <!-- ============================================ TICKET #1 ============================================ -->
+    <article class="ticket-card relative rounded-2xl border border-gray-200 overflow-hidden shadow-sm" style="background:#fefefe;">
+      <!-- VOID watermark -->
+      <div class="watermark select-none pointer-events-none" aria-hidden="true">GENERATED</div>
+
+      <!-- --- Ticket Header Area --- -->
+      <div class="ticket-paper px-5 pt-5 pb-2">
+        <div class="m-1 flex items-center justify-between">
+          <div class="flex flex-col gap-x-5 text-sm text-gray-400">
+            <h2 class="text-lg font-extrabold text-gray-500">
+              Badger Five
+            </h2>
+            <span>Ticket #BF-260726-01</span>
+          </div>
+
+          <!-- Barcode decoration -->
+          <div class="barcode" aria-label="Barcode decorative element">
+            <span style="width:3px; height:24px;"></span>
+            <span style="width:1.5px; height:30px;"></span>
+            <span style="width:4px; height:26px;"></span>
+            <span style="width:1px; height:28px;"></span>
+            <span style="width:2px; height:22px;"></span>
+            <span style="width:3.5px; height:32px;"></span>
+            <span style="width:1px; height:20px;"></span>
+            <span style="width:4px; height:28px;"></span>
+            <span style="width:1.5px; height:26px;"></span>
+            <span style="width:2px; height:30px;"></span>
+            <span style="width:3px; height:24px;"></span>
+            <span style="width:1px; height:28px;"></span>
+            <span style="width:2.5px; height:22px;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- --- Panels (tear-off sections) --- -->
+      <div class="px-5 pb-5 space-y-3">
+
+        <!-- Panel A — SP1 (Odd/Low) -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel A</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">11</span>
+            <span class="lotto-ball">3</span>
+            <span class="lotto-ball">15</span>
+            <span class="lotto-ball">9</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel B — SP2 (Even/High) -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel B</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">22</span>
+            <span class="lotto-ball">38</span>
+            <span class="lotto-ball">44</span>
+            <span class="lotto-ball">30</span>
+            <span class="lotto-ball">18</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel C — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel C</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">3</span>
+            <span class="lotto-ball">23</span>
+            <span class="lotto-ball">24</span>
+            <span class="lotto-ball">11</span>
+            <span class="lotto-ball">6</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel D — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel D</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">13</span>
+            <span class="lotto-ball">4</span>
+            <span class="lotto-ball">1</span>
+            <span class="lotto-ball">36</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel E — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel E</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">33</span>
+            <span class="lotto-ball">14</span>
+            <span class="lotto-ball">41</span>
+            <span class="lotto-ball">26</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+      </div><!-- /panels -->
+
+      <!-- --- Footer strip --- -->
+      <div class="border-t border-gray-100 bg-gray-50 px-5 py-2.5 flex items-center justify-end text-[11px] text-gray-400">
+        <span>Jul 26, 2026 · 09:41 AM</span>
+      </div>
+    </article>
+
+    <!-- ======================== PERFORATION #1 → #2 ======================== -->
+    <div class="perforation mx-8 my-0" aria-hidden="true"></div>
+
+    <!-- ============================================ TICKET #2 ============================================ -->
+    <article class="ticket-card relative rounded-2xl border border-gray-200 overflow-hidden shadow-sm" style="background:#fefefe;">
+      <!-- VOID watermark -->
+      <div class="watermark select-none pointer-events-none" aria-hidden="true">GENERATED</div>
+
+      <!-- --- Ticket Header Area --- -->
+      <div class="ticket-paper px-5 pt-5 pb-2">
+        <div class="m-1 flex items-center justify-between">
+          <div class="flex flex-col gap-x-5 text-sm text-gray-400">
+            <h2 class="text-lg font-extrabold text-gray-500">
+              Badger Five
+            </h2>
+            <span>Ticket #BF-260726-02</span>
+          </div>
+
+          <!-- Barcode decoration -->
+          <div class="barcode" aria-label="Barcode decorative element">
+            <span style="width:3px; height:24px;"></span>
+            <span style="width:1.5px; height:30px;"></span>
+            <span style="width:4px; height:26px;"></span>
+            <span style="width:1px; height:28px;"></span>
+            <span style="width:2px; height:22px;"></span>
+            <span style="width:3.5px; height:32px;"></span>
+            <span style="width:1px; height:20px;"></span>
+            <span style="width:4px; height:28px;"></span>
+            <span style="width:1.5px; height:26px;"></span>
+            <span style="width:2px; height:30px;"></span>
+            <span style="width:3px; height:24px;"></span>
+            <span style="width:1px; height:28px;"></span>
+            <span style="width:2.5px; height:22px;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- --- Panels (tear-off sections) --- -->
+      <div class="px-5 pb-5 space-y-3">
+
+        <!-- Panel A — SP1 (Odd/Low) -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel A</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">11</span>
+            <span class="lotto-ball">3</span>
+            <span class="lotto-ball">15</span>
+            <span class="lotto-ball">9</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel B — SP2 (Even/High) -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel B</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">22</span>
+            <span class="lotto-ball">38</span>
+            <span class="lotto-ball">44</span>
+            <span class="lotto-ball">30</span>
+            <span class="lotto-ball">18</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel C — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel C</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">3</span>
+            <span class="lotto-ball">23</span>
+            <span class="lotto-ball">24</span>
+            <span class="lotto-ball">11</span>
+            <span class="lotto-ball">6</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel D — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel D</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">13</span>
+            <span class="lotto-ball">4</span>
+            <span class="lotto-ball">1</span>
+            <span class="lotto-ball">36</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel E — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel E</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">33</span>
+            <span class="lotto-ball">14</span>
+            <span class="lotto-ball">41</span>
+            <span class="lotto-ball">26</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+      </div><!-- /panels -->
+
+      <!-- --- Footer strip --- -->
+      <div class="border-t border-gray-100 bg-gray-50 px-5 py-2.5 flex items-center justify-end text-[11px] text-gray-400">
+        <span>Jul 26, 2026 · 09:41 AM</span>
+      </div>
+    </article>
+
+    <!-- ======================== PERFORATION #2 → #3 ======================== -->
+    <div class="perforation mx-8 my-0" aria-hidden="true"></div>
+
+    <!-- ============================================ TICKET #3 ============================================ -->
+    <article class="ticket-card relative rounded-2xl border border-gray-200 overflow-hidden shadow-sm" style="background:#fefefe;">
+      <!-- VOID watermark -->
+      <div class="watermark select-none pointer-events-none" aria-hidden="true">GENERATED</div>
+
+      <!-- --- Ticket Header Area --- -->
+      <div class="ticket-paper px-5 pt-5 pb-2">
+        <div class="m-1 flex items-center justify-between">
+          <div class="flex flex-col gap-x-5 text-sm text-gray-400">
+            <h2 class="text-lg font-extrabold text-gray-500">
+              <span class="w-3 h-3 rounded-full bg-badger-five"></span>
+              Badger Five
+            </h2>
+            <span>Ticket #BF-260726-03</span>
+          </div>
+
+          <!-- Barcode decoration -->
+          <div class="barcode" aria-label="Barcode decorative element">
+            <span style="width:3px; height:24px;"></span>
+            <span style="width:1.5px; height:30px;"></span>
+            <span style="width:4px; height:26px;"></span>
+            <span style="width:1px; height:28px;"></span>
+            <span style="width:2px; height:22px;"></span>
+            <span style="width:3.5px; height:32px;"></span>
+            <span style="width:1px; height:20px;"></span>
+            <span style="width:4px; height:28px;"></span>
+            <span style="width:1.5px; height:26px;"></span>
+            <span style="width:2px; height:30px;"></span>
+            <span style="width:3px; height:24px;"></span>
+            <span style="width:1px; height:28px;"></span>
+            <span style="width:2.5px; height:22px;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- --- Panels (tear-off sections) --- -->
+      <div class="px-5 pb-5 space-y-3">
+
+        <!-- Panel A — SP1 (Odd/Low) -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel A</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">11</span>
+            <span class="lotto-ball">3</span>
+            <span class="lotto-ball">15</span>
+            <span class="lotto-ball">9</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel B — SP2 (Even/High) -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel B</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">22</span>
+            <span class="lotto-ball">38</span>
+            <span class="lotto-ball">44</span>
+            <span class="lotto-ball">30</span>
+            <span class="lotto-ball">18</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel C — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel C</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">3</span>
+            <span class="lotto-ball">23</span>
+            <span class="lotto-ball">24</span>
+            <span class="lotto-ball">11</span>
+            <span class="lotto-ball">6</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel D — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel D</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">13</span>
+            <span class="lotto-ball">4</span>
+            <span class="lotto-ball">1</span>
+            <span class="lotto-ball">36</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+        <!-- Panel E — SP3 -->
+        <section class="punch-border rounded-lg bg-gray-50/60 relative overflow-hidden" style="min-height:80px;">
+          <div class="sp-accent-bar accent-1"></div>
+
+          <!-- Panel header row -->
+          <div class="flex items-center justify-between px-3 pt-2.5 pb-1">
+            <div class="inline-flex items-center gap-2">
+              <span class="panel-badge bg-red-50 text-red-600 border border-red-200 px-2">Panel E</span>
+            </div>
+          </div>
+
+          <!-- Balls row -->
+          <div class="flex items-center gap-2.5 px-4 py-2">
+            <span class="lotto-ball">7</span>
+            <span class="lotto-ball">33</span>
+            <span class="lotto-ball">14</span>
+            <span class="lotto-ball">41</span>
+            <span class="lotto-ball">26</span>
+          </div>
+
+          <!-- Tear-off notch indicators on right edge -->
+          <div class="absolute -right-0 top-4 bottom-4 flex flex-col items-center justify-around" aria-hidden="true">
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+            <svg width="8" height="12"><circle cx="4" cy="6" r="3" fill="#d1d5db"/></svg>
+          </div>
+        </section>
+
+      </div><!-- /panels -->
+
+      <!-- --- Footer strip --- -->
+      <div class="border-t border-gray-100 bg-gray-50 px-5 py-2.5 flex items-center justify-end text-[11px] text-gray-400">
+        <span>Jul 26, 2026 · 09:41 AM</span>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- ======================== FIXED FOOTER BAR ======================== -->
+  <footer class="mockup-footer-bar">
+    Mockup &mdash; Sub-phase 2.6: TicketCard component &mdash; Physical Ticket approach
+  </footer>
+
+</body>
+</html>
