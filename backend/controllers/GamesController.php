@@ -13,7 +13,7 @@ class GamesController
      * Add new games here only — no other file needs changing.
      */
     private array $registry = [
-        'badger-five' => \LotteryCodex\Games\BadgerFive::class,
+        'badger-5' => \LotteryCodex\Games\BadgerFive::class,
         'supercash'   => \LotteryCodex\Games\SuperCash::class,
         'megabucks'   => \LotteryCodex\Games\Megabucks::class
     ];
@@ -47,7 +47,7 @@ class GamesController
 
     /**
      * GET /api/games/{gameId} — Get game details.
-     * @param string $gameId Game identifier (e.g. 'badger-five', 'supercash')
+     * @param string $gameId Game identifier (e.g. 'badger-5', 'supercash')
      * @return array Game details or 404 error if game is not registered
      */
     public function show(string $gameId, ResponseInterface $response): ResponseInterface
@@ -74,7 +74,7 @@ class GamesController
 
         // TODO: Replace with real data in Phase 4.1 via $game->getHistory()
         $historyMap = [
-            'badger-five' => [
+            'badger-5' => [
                 "Monday, July 1st" => [
                     'numbers' => [3, 12, 19, 24, 31],
                     'pattern' => '3-Odd 2-Even / 3-Low 2-High',

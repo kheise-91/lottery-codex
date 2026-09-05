@@ -13,7 +13,7 @@ export async function fetchGames() {
 
 /**
  * Fetches details and rules for a specific lottery game.
- * @param {string} id - The game ID (e.g., 'badger-five', 'super-cash')
+ * @param {string} id - The game ID (e.g., 'badger-5', 'super-cash')
  * @returns {Promise<Object>} Game details including name, rules, and drawing information
  * @throws {Error} If the API request fails
  */
@@ -25,7 +25,7 @@ export async function fetchGameDetails(id) {
 
 /**
  * Fetches historical drawing data for a given game.
- * @param {string} id - The game ID (e.g., 'badger-five')
+ * @param {string} id - The game ID (e.g., 'badger-5')
  * @returns {Promise<Object>} Historical drawings keyed by date
  * @throws {Error} If the API request fails
  */
@@ -37,7 +37,7 @@ export async function fetchHistory(id) {
 
 /**
  * Generates optimized lottery tickets for a given game via the backend.
- * @param {string} id - The game ID (e.g., 'badger-five')
+ * @param {string} id - The game ID (e.g., 'badger-5')
  * @param {number} count - Number of tickets to generate
  * @returns {Promise<Object>} Generated tickets data
  * @throws {Error} If the API request fails

@@ -9,7 +9,7 @@
 import Ball from './Ball';
 
 const GAME_CONFIG = {
-  'badger-five':   { initials: 'BF', color: '#ed1c24', light: '#fecdd3' },
+  'badger-5':   { initials: 'BF', color: '#ed1c24', light: '#fecdd3' },
   'supercash':     { initials: 'SC', color: '#0081c6', light: '#bae6fd' },
   'megabucks':     { initials: 'MB', color: '#ff7200', light: '#fed7aa' },
 };

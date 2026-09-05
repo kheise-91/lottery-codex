@@ -4,7 +4,7 @@
  * 
  * @param {Object} props
  * @param {number} props.number - The lottery number to display
- * @param {string|null} [props.gameId=null] - Game identifier (e.g. 'badger-five') - defaults to white ball if no game-id is passed
+ * @param {string|null} [props.gameId=null] - Game identifier (e.g. 'badger-5') - defaults to white ball if no game-id is passed
  */
 function Ball({ number, gameId = null }) {
   const baseClasses = 'inline-flex items-center justify-center rounded-full lotto-ball';
