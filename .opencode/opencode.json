@@ -10,16 +10,16 @@
         "@modelcontextprotocol/server-filesystem",
         "/config/workspace/lottery-codex"
       ]
+    },
+    "playwright-mcp": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@latest"
+      ]
     }
-  },
-  "playwright-mcp": {
-    "enabled": true,
-    "type": "local",
-    "command": [
-      "npx",
-      "-y",
-      "@playwright/mcp@latest"
-    ]
   },
   "tools": {
     "playwright-mcp_*": false
