@@ -76,34 +76,40 @@ function GameCard({
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light, color: `var(--color-${gameId})` }}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span className="block text-[10px] uppercase tracking-wide font-medium">
-              Draw
-            </span>
+            <div className="flex items-end justify-center gap-1 mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="text-[11px] uppercase tracking-wide font-medium">
+                Draw
+              </span>
+            </div>
             <span className="block text-xs font-semibold text-gray-700">
               {Array.isArray(drawFrequency) && drawFrequency.length === 1 && drawFrequency[0] === 'Daily' ? 'Daily' : drawFrequency.map(d => d.slice(0, 3)).join('|')}
             </span>
           </div>
           <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light, color: `var(--color-${gameId})` }}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            <span className="block text-[10px] uppercase tracking-wide font-medium">
-              Odds
-            </span>
+            <div className="flex items-end justify-center gap-1 mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span className="text-[11px] uppercase tracking-wide font-medium">
+                Odds
+              </span>
+            </div>
             <span className="block text-xs font-semibold text-gray-700">
               {oddsOfWinning}
             </span>
           </div>
           <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light, color: `var(--color-${gameId})` }}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="block text-[10px] uppercase tracking-wide font-medium">
-              Jackpot
-            </span>
+            <div className="flex items-end justify-center gap-1 mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-[11px] uppercase tracking-wide font-medium">
+                Jackpot
+              </span>
+            </div>
             <span className="block text-xs font-semibold text-gray-700">
               {jackpot}
             </span>
