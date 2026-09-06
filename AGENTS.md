@@ -226,6 +226,6 @@ Rules:
 
 - **No tests yet** — test infrastructure has not been set up
 - **All three game classes are functional** (Badger Five is the primary focus); pattern analysis and panel generation working
-- **Scraping:** currently the vendored `simplehtmldom` library; Phase 3.1 migrates to the PHP DOM extension (`DOMDocument` + `DOMXPath`) with shared scrapers in `backend/scrapers/` (`LotteryCodex\Scrapers\`) and removes the vendored library
+- **Scraping:** PHP DOM extension (`DOMDocument` + `DOMXPath`) with shared scrapers in `backend/scrapers/` (`LotteryCodex\Scrapers\`); the vendored `simplehtmldom` library was removed in Phase 3.1
 - **`docs/` is 100% human-maintained** — no agent ever modifies files in it
 - **Branches in flight:** `opencode-tools` holds all OpenCode workflow changes (agents, skills, commands)
