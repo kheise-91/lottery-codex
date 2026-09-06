@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LotteryCodex\Games;
 
-require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
-
 /**
  * Megabucks game implementation using Lottery Codex pattern analysis (3-Odd 3-Even / 3-Low 3-High).
  */
@@ -140,23 +138,7 @@ class Megabucks implements GameInterface, \JsonSerializable
      */
     private function loadPreviousDrawings(): self
     {
-        $html = file_get_html('https://wilottery.com/winners/draw-history?game=megabucks');
-
-        foreach ($html->find('.winning-numbers-line') as $numSet) {
-            $drawing = [];
-
-            foreach ($numSet->find('.date') as $dateContainer) {
-                foreach ($dateContainer->find('strong') as $dateText) {
-                    $dateDrawn = date('l, F jS', strtotime($dateText->plaintext));
-                }
-            }
-
-            foreach ($numSet->find('.winning-number') as $num) {
-                $drawing[] = (int) $num->plaintext;
-            }
-
-            $this->previousDrawings[$dateDrawn]['numbers'] = $drawing;
-        }
+        $this->previousDrawings = \LotteryCodex\Scrapers\HistoryScraper::scrape('megabucks');
 
         foreach ($this->previousDrawings as $dateDrawn => $drawing) {
             $odd = $even = 0;
