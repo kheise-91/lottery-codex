@@ -89,7 +89,7 @@ class BadgerFive implements GameInterface, \JsonSerializable
      */
     private function loadPreviousDrawings(): self
     {
-        $this->previousDrawings = (new \LotteryCodex\Scrapers\HistoryScraper())->scrape('badger-5');
+        $this->previousDrawings = \LotteryCodex\Scrapers\HistoryScraper::scrape('badger-5');
 
         foreach ($this->previousDrawings as $dateDrawn => $drawing) {
             $odd = $even = 0;

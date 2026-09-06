@@ -19,9 +19,9 @@ class HistoryScraper
      * @return array Array keyed by formatted date (e.g. "Wednesday, September 2nd"), each value ['numbers' => int[]]
      * @throws \RuntimeException If the HTTP request fails or returns a non-2xx status
      */
-    public function scrape(string $gameId): array
+    public static function scrape(string $gameId): array
     {
-        $html = $this->fetch("https://wilottery.com/winners/draw-history?game={$gameId}");
+        $html = self::fetch("https://wilottery.com/winners/draw-history?game={$gameId}");
 
         libxml_use_internal_errors(true);
         $dom = new \DOMDocument();
@@ -42,7 +42,7 @@ class HistoryScraper
             $formattedDate = date('l, F jS', strtotime($rawDateText));
 
             $numbers = [];
-            foreach ($xpath->query('.//*[contains(@class, "winning-number")]', $row) as $numNode) {
+            foreach ($xpath->query('.//*[contains(@class, "winning-number") and not(.//*[contains(@class, "winning-number")])]', $row) as $numNode) {
                 $numbers[] = (int) $numNode->textContent;
             }
 
@@ -58,7 +58,7 @@ class HistoryScraper
      * @return string The response body
      * @throws \RuntimeException On cURL error, empty response, or non-2xx HTTP status
      */
-    private function fetch(string $url): string
+    private static function fetch(string $url): string
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
