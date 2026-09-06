@@ -43,7 +43,11 @@ class HistoryScraper
 
             $numbers = [];
             foreach ($xpath->query('.//*[contains(@class, "winning-number") and not(.//*[contains(@class, "winning-number")])]', $row) as $numNode) {
-                $numbers[] = (int) $numNode->textContent;
+                $text = trim($numNode->textContent);
+                if (!ctype_digit($text)) {
+                    continue;
+                }
+                $numbers[] = (int) $text;
             }
 
             $drawings[$formattedDate]['numbers'] = $numbers;
