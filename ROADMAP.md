@@ -264,7 +264,7 @@ Build the React component hierarchy.
 
 Replace mock data with live scraped data for all three games (Badger Five, Super Cash, Megabucks). This is where the backend scraping becomes live in the API. Scraping is migrated from the unmaintained `simple_html_dom` library to PHP's built-in DOM extension (`DOMDocument` + `DOMXPath`), with no changes to the API contract.
 
-- [ ] **3.1 — Migrate scraping to the PHP DOM extension**
+- [x] **[3.1 — Migrate scraping to the PHP DOM extension](https://gitea.heise.home/kheise/lottery-codex/milestones/42)**
    - Add a `LotteryCodex\Scrapers\` → `scrapers/` PSR-4 mapping to `backend/composer.json` (the same namespace `JackpotScraper` will use in 3.3)
    - Create `backend/scrapers/HistoryScraper.php`: fetch the draw-history page with cURL (browser-like User-Agent, explicit timeout, status-code check), parse with `DOMDocument::loadHTML()` + `DOMXPath` (`//*[contains(@class, "winning-numbers-line")]`, per-row `.//*[contains(@class, "date")]//strong` and `.//*[contains(@class, "winning-number")]`, `->textContent`), and return raw rows keyed by formatted date with `numbers` as an `int[]` — no pattern logic
    - Migrate all three game classes to delegate to the shared scraper; pattern classification (odd/even, low/high) stays in each class since it needs the per-game group arrays; remove the triplicated `loadPreviousDrawings()` bodies, the three `require_once simple_html_dom` lines, and the simplehtmldom runtime dependency check added in Phase 0.1
