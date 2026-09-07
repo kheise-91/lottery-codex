@@ -1,6 +1,6 @@
 ---
 name: create-sub-phase
-description: Decompose a roadmap sub-phase into Gitea issues and set up its branch, milestone, and issues
+description: Decompose a roadmap sub-phase into Gitea issues, set up its branch and milestone, and mark it in progress in ROADMAP.md
 model: llama.cpp/Enoch-II
 ---
 
@@ -16,7 +16,10 @@ Spawn @software-architect with its decompose job (the `decompose-sub-phase` skil
 - If it reports a mockup/spec conflict, or says the sub-phase is not decomposable as written, STOP and present the issue to the user. Do not proceed.
 
 **Step 3 — Create Gitea objects.**
-Spawn the @git-manager subagent and hand it the milestone spec and the ordered issue specs verbatim. It creates the sub-phase branch `phase-X-Y` off `phase-X` (creating `phase-X` off `master` first if it does not exist), the milestone `Phase X.Y` (reusing it if it exists), and each issue (label `Task`, plan body, milestone attached). It returns the branch name, the milestone number/URL, and every issue number.
+Spawn the @git-manager subagent and hand it the milestone spec and the ordered issue specs verbatim. It creates the sub-phase branch `phase-X.Y` off `phase-X` (if `phase-X` does not exist, STOP and report it — phase branches are created manually), the milestone `Phase X.Y` (reusing it if it exists), and each issue (label `Task`, plan body, milestone attached). It returns the branch name, the milestone number/URL, and every issue number.
 
-**Step 4 — Report.**
+**Step 4 — Docs update (in progress).**
+Spawn the @docs-manager subagent in **command mode** with the sub-phase number, title, and the milestone URL from Step 3. It marks the sub-phase in progress in ROADMAP.md: checkbox `[-]` and the title linked to the milestone URL (format per its `roadmap-entry` template).
+
+**Step 5 — Report.**
 Return a summary per @.opencode/templates/command-summary.md: the branch, the milestone, and the issue list (number + title) in execution order, ready for `/complete-issue`.

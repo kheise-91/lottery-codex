@@ -4,22 +4,14 @@ Web application that scrapes Wisconsin Lottery drawing history, analyzes odd/eve
 
 ## Development Process
 
-This project is developed using a structured, milestone-driven workflow inspired by professional software engineering practices rather than ad-hoc feature development.
+This project is developed with OpenCode, an interactive CLI agent harness, using a structured, roadmap-driven workflow rather than ad-hoc feature development.
 
-Development includes:
-- Phase-based roadmap planning
-- Kanban project tracking
-- Milestone-driven delivery
-- Issue-based implementation
-- Branch-per-task workflows
-- Pull request reviews and QA validation
-- AI-assisted development workflows and automation
+- `ROADMAP.md` (project root) is the single source of truth: phases → sub-phases, each with a "Done when" definition; in-progress and complete sub-phases link their title to the Gitea milestone.
+- Work is tracked on a self-hosted Gitea instance: a milestone per sub-phase (`Phase X.Y`), issues as the unit of work (the issue body is the plan), and a pull request for every merge.
+- Branch tiers: `master` ← `phase-X` ← `phase-X.Y` ← `task-NNN` / `bug-NNN` (NNN = the Gitea issue number). Merges are merge commits.
+- The workflow is driven by custom OpenCode slash commands (`/brainstorm`, `/review-roadmap`, `/generate-mockups`, `/create-sub-phase`, `/complete-issue`, `/complete-sub-phase`, `/qa-review`) backed by specialized subagents (architect, explorer, engineer, reviewer, designer, docs, git) and their skills (playbooks).
 
-Project planning, Kanban boards, milestones, and issue tracking are managed on a self-hosted Gitea instance, while this GitHub repository serves as a public mirror of the source code and commit history.
-
-For additional details on the development lifecycle and workflow used for this project, see:
-
-**[Development Workflow Guide](docs/guides/development-workflow.md)**
+For the details of each piece — the subagents, the slash commands, the skills, and the step-by-step workflow — see the project guides in the [Documentation](#documentation) section.
 
 ## Supported Games
 
@@ -64,81 +56,12 @@ npm run build                # Production build to dist/
 
 The Vite dev server proxies `/api/*` requests to `http://192.168.0.91:5959`. Update `frontend/vite.config.js` if the backend host changes. Backend changes are reflected immediately via Docker volume mount; frontend changes require `docker compose up --build` since `frontend/dist/` is baked into the image.
 
-## Project Structure
-
-```
-├── backend/
-│   ├── controllers/                # Controller classes (GamesController with registry pattern)
-│   │   └── GamesController.php     # Central layer for all game endpoint logic
-│   ├── games/                      # Game logic classes (implements GameInterface)
-│   │   ├── GameInterface.php       # Contract: getGameDetails(), getHistory(), generateTickets()
-│   │   ├── BadgerFive.php          # Fully functional -- scraping + panel generation working
-│   │   ├── SuperCash.php           # Fully functional -- pattern analysis and panel generation
-│   │   └── Megabucks.php           # Implemented -- follows existing game class pattern
-│   ├── scrapers/                   # Shared scrapers (DrawingsScraper, JackpotScraper) using the PHP DOM extension
-│   ├── composer.json               # PHP dependencies: slim/slim ^4.0, slim/psr7 ^1.0
-│   └── vendor/                     # Composer-installed dependencies (git-ignored)
-├── frontend/
-│   ├── src/
-│   │   ├── main.jsx                # React 18 createRoot entry point (wraps App in GameProvider + BrowserRouter)
-│   │   ├── App.jsx                 # Root routed component: Layout shell with Dashboard and GamePage routes
-│   │   ├── index.css               # Tailwind v4 import; @theme directive with game-themed CSS variables; custom .card-shadow, .stat-pill, .lotto-ball, .lotto-ball--white, .lotto-ball--colored, and sub-pattern color classes
-│   │   ├── components/
-│   │   │   ├── SkeletonLoader.jsx  # Reusable pulsing gray placeholder block (block/circle variants) for loading states
-│   │   │   ├── games/
-│   │   │   │   ├── Ball.jsx        # Foundational UI primitive: 48px 3D sphere with white and colored sub-pattern variants
-│   │   │   │   ├── GameCard.jsx    # Clickable game selection card with image, stats, CTA
-│   │   │   │   ├── TicketCard.jsx  # Physical-ticket-style card for a single generated lottery ticket
-│   │   │   │   └── TicketCarousel.jsx  # Horizontal carousel for browsing multiple generated tickets
-│   │   │   └── layout/
-│   │   │       └── Layout.jsx      # Branded layout shell with gradient header and Outlet for nested routes
-│   │   ├── contexts/
-│   │   │   └── GameContext.jsx     # useReducer-based state: games, selectedGame, history, ticketResults
-│   │   ├── hooks/
-│   │   │   ├── useGames.js         # Custom hook wrapping fetchGames with loading/error/data states
-│   │   │   ├── useGameHistory.js   # Hook for fetching game drawing history by gameId
-│   │   │   ├── useGenerateTickets.js  # Imperative hook for generating ticket panels
-│   │   │   └── useMinLoading.js    # Wraps a loading flag with a minimum visible duration (2000ms) for skeleton loaders
-│   │   ├── pages/
-│   │   │   ├── Dashboard.jsx       # Game selection landing page with responsive card grid
-│   │   │   └── GamePage.jsx        # Game detail page with split-view desktop layout and tabbed mobile interface
-│   │   └── services/
-│   │       └── api.js              # Fetch wrapper for all backend API endpoints
-│   ├── public/                     # Static assets: SVG game logos (.env.example, vite.config.js)
-│   ├── .env.example                # VITE_BACKEND_PROXY_URL for Vite dev server proxy target
-│   ├── vite.config.js              # Vite config with configurable API proxy (env var)
-│   └── package.json                # Node.js dependencies
-├── docker/                         # Dockerfile, nginx.conf
-├── docker-compose.yml              # Container orchestration (single service)
-├── docs/                           # Project documentation
-└── README.md                       # This file
-```
-
 ## Documentation
 
-- [API Reference](docs/api/README.md) -- REST endpoints, request/response shapes, status codes. All four endpoints are implemented for three games (Badger 5, SuperCash!, Megabucks).
-- [Components](docs/components/README.md) -- Frontend UI component index. Includes the routed `App`, `Layout` shell, `Dashboard` page, `GameCard` component, and foundational `Ball` primitive. See [Styling](#styling) for theme color details.
-  - [App Component Detail](docs/components/App.md) -- Root routed component with Layout shell, Dashboard, and GamePage routes
-  - [Layout Component Detail](docs/components/Layout.md) -- Branded layout shell with emerald SVG gradient header and nested route support via `<Outlet />`
-  - [Dashboard Component Detail](docs/components/Dashboard.md) -- Game selection landing page with responsive card grid
-  - [GameCard Component Detail](docs/components/GameCard.md) -- Clickable game card with generic gradient header, status badge, CSS variable-themed stat pills, and CTA button
-  - [Ball Component Detail](docs/components/Ball.md) -- Foundational UI primitive: renders a single lottery number as a 48px 3D sphere with white (default) and colored sub-pattern variants
-  - [TicketCard Component Detail](docs/components/TicketCard.md) -- Physical-ticket-style card for rendering a single generated lottery ticket with panels, barcode, and decorative elements
-  - [TicketCarousel Component Detail](docs/components/TicketCarousel.md) -- Horizontal carousel for browsing multiple generated tickets with arrow navigation, dot indicators, and keyboard support
-  - [SkeletonLoader Component Detail](docs/components/SkeletonLoader.md) -- Reusable pulsing gray placeholder block (rounded rectangle or circle) used by GamePage for loading states
-  - [GamePage Component Detail](docs/components/GamePage.md) -- Game detail page with desktop split-view (7/5 grid) and mobile tabbed layout; shows game metadata, historical drawings, and generated tickets
-- [Contexts](docs/contexts/README.md) -- React Context providers for shared application state.
-  - [GameContext Detail](docs/contexts/GameContext.md) -- Central `useReducer`-based state for game selection, history, and ticket results; auto-fetches games list on mount
-- [Hooks](docs/hooks/README.md) -- Custom React hooks wrapping the API service layer with state management.
-  - [useGames Hook Detail](docs/hooks/useGames.md) -- Custom hook wrapping `fetchGames()` with loading, error handling, and data states
-  - [useGameHistory Hook Detail](docs/hooks/useGameHistory.md) -- Custom hook wrapping `fetchHistory(gameId)` with loading, error handling, and result caching by gameId
-  - [useGenerateTickets Hook Detail](docs/hooks/useGenerateTickets.md) -- Imperative hook for ticket generation; wraps `generateTickets(gameId)` with a `generate(count)` function
-  - [useMinLoading Hook Detail](docs/hooks/useMinLoading.md) -- Wraps a boolean loading flag with a minimum visible duration (default 2000ms) so skeleton loaders don't flash on fast networks
-- [Services](docs/services/README.md) -- Frontend API service layer. Fetch wrapper module for all backend endpoints.
-  - [API Service Detail](docs/services/api.md) -- Fetch wrapper module for all backend endpoints
-- [Infrastructure](docs/infrastructure/README.md) -- Docker configuration, Nginx setup, volume mounts, environment variables.
-  - [Docker Configuration](docs/infrastructure/docker.md)
-  - [Nginx Configuration](docs/infrastructure/nginx.md)
+- [Project Agents Guide](docs/guides/project-agents.md) — the subagents and the role each plays in the workflow.
+- [Project Commands Guide](docs/guides/project-commands.md) — the slash commands and how to use each.
+- [Project Skills Guide](docs/guides/project-skills.md) — the playbooks (skills) each agent loads before its job.
+- [Project Development Workflow Guide](docs/guides/development-workflow.md) — the end-to-end workflow, step by step, with a flowchart.
 
 ## Pattern System (Lottery Codex Methodology)
 

@@ -114,13 +114,13 @@ The design agent. Turns a roadmap sub-phase's frontend requirements into n disti
 The documentation agent. Keeps the `ROADMAP.md` status fields, `README.md`, and `AGENTS.md` in sync with the code after work lands.
 
 **Key Responsibilities:**
-- Ticks completed sub-phase checkboxes and adds the Gitea milestone link in `ROADMAP.md` (status fields only).
+- Updates `ROADMAP.md` status fields: marks a sub-phase in progress (`[-]` + the milestone link on the title) when it is set up, and ticks the checkbox (`[x]`) when it is completed.
 - Updates `AGENTS.md` Key Context / Decisions Log when stale; `README.md` only when a statement is factually wrong.
 - Never writes the `ROADMAP.md` spec text, anything in `docs/`, or any source code.
-- Two modes: command mode (limited, via `/complete-sub-phase`) and ad-hoc mode (detailed updates).
+- Two modes: command mode (limited, via `/create-sub-phase` and `/complete-sub-phase`) and ad-hoc mode (detailed updates).
 - No execution: no builds, tests, or code.
 
-**Use when:** After a sub-phase (or phase) is completed, or ad-hoc when a doc needs a detailed update.
+**Use when:** When a sub-phase is set up or completed, or ad-hoc when a doc needs a detailed update.
 
 #### [`git-manager`](/.opencode/agents/git-manager.md)
 

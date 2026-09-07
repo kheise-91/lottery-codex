@@ -91,9 +91,9 @@ How to turn a sub-phase's frontend requirements into `n` distinct, self-containe
 
 ### [`docs-update`](/.opencode/skills/docs-update/SKILL.md)
 
-How to keep `ROADMAP.md` status fields (checkboxes + milestone links), `README.md`, and `AGENTS.md` in sync after work lands, with writes limited to status fields and necessary corrections. Never writes the `ROADMAP.md` spec text, anything in `docs/`, or any source code. Two modes: command mode (limited, via `/complete-sub-phase`) and ad-hoc mode (detailed updates).
+How to keep `ROADMAP.md` status fields (checkboxes + milestone links: `[ ]` → `[-]` in progress → `[x]` complete), `README.md`, and `AGENTS.md` in sync after work lands, with writes limited to status fields and necessary corrections. Never writes the `ROADMAP.md` spec text, anything in `docs/`, or any source code. Two modes: command mode (limited, via `/create-sub-phase` and `/complete-sub-phase`) and ad-hoc mode (detailed updates).
 
-**Use when:** Invoked by `/complete-sub-phase` (command mode) or ad-hoc for detailed doc updates.
+**Use when:** Invoked by `/create-sub-phase` or `/complete-sub-phase` (command mode), or ad-hoc for detailed doc updates.
 
 ---
 
@@ -101,7 +101,7 @@ How to keep `ROADMAP.md` status fields (checkboxes + milestone links), `README.m
 
 ### [`git-ops`](/.opencode/skills/git-ops/SKILL.md)
 
-The exact branch, commit, milestone, issue, and PR formats for this repository, plus the sub-phase milestone gate. All Gitea operations (PRs, issues, milestones, labels, comments) go through the Gitea MCP Server — never assume any other API/CLI exists. Merges are merge commits; never force-push, rebase, or squash.
+The exact branch, commit, milestone, issue, and PR formats for this repository, plus the sub-phase milestone gate (issues closed + no open PRs). All Gitea operations (PRs, issues, milestones, labels, comments) go through the Gitea MCP Server — never assume any other API/CLI exists. Merges are merge commits; never force-push, rebase, or squash.
 
 **Use when:** Any version-control or Gitea work — branches, commits, pushes, issues, milestones, and PRs.
 
@@ -126,11 +126,11 @@ The exact branch, commit, milestone, issue, and PR formats for this repository, 
 ### How Skills Map to the Workflow
 
 1. **Scope** — `software-architect` loads `brainstorm-roadmap` then `review-roadmap`.
-2. **Prepare** — the orchestrator spawns `project-explorer` (`explore-codebase`) for codebase facts; `software-architect` loads `decompose-sub-phase` and decomposes using that report.
+2. **Prepare** — the orchestrator spawns `project-explorer` (`explore-codebase`) for codebase facts; `software-architect` loads `decompose-sub-phase` and decomposes using that report; `docs-manager` (`docs-update`) marks the sub-phase in progress.
 3. **Design** — `ui-designer` loads `mockups` (when a sub-phase has frontend work).
 4. **Develop** — `software-engineer` loads `execute-issue-plan`; `code-reviewer` loads `code-review` for the scoped review and fix loop.
-5. **QA** — `code-reviewer` loads `code-review` (full diff) for `/qa-review`.
-6. **Complete** — `docs-manager` loads `docs-update` and `git-manager` loads `git-ops` to gate the milestone and open the merge PR.
+5. **Complete** — `docs-manager` loads `docs-update` to tick the checkbox and `git-manager` loads `git-ops` to gate the milestone and open the merge PR.
+6. **QA** — `code-reviewer` loads `code-review` (full diff) for `/qa-review` at the end of a phase.
 
 ---
 

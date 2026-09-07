@@ -21,32 +21,33 @@ Initialize project (README.md, .gitignore etc)
 *Commands available: `/generate-mockups`, `/create-sub-phase`*
 
 When starting a new phase:
-- Create the `phase-X` branch from `master`.
+- Create the `phase-X` branch from `master` manually (phase branches are created manually — agents do not create them).
+- Create a project board for `Phase X`.
 
 For each sub-phase:
 - Create mockups of UI/UX changes (optional — update the sub-phase description in the roadmap if needed to summarize the chosen mockup).
-- Create the `phase-X-Y` branch from the `phase-X` branch.
+- Create the `phase-X.Y` branch from the `phase-X` branch.
 - Create the `Phase X.Y` milestone and the issues (2–5) for the sub-phase, each with its plan in the issue body.
-- Update the roadmap: mark the sub-phase as in progress and link its title to the Gitea milestone.
+- Update the roadmap: mark the sub-phase as in progress (`[-]`) and link its title to the Gitea milestone.
 
 ### Step 4 - Working on Tasks
 *Command available: `/complete-issue`*
 
 For each issue:
-- Create and check out the issue branch (`YYYY-MM-DD-short-task-summary`) off the `phase-X-Y` branch.
+- Create and check out the issue branch — `task-NNN` off the `phase-X.Y` branch for `Task` issues, `bug-NNN` off the `phase-X` branch for `Bug` issues (NNN = the issue number).
 - Complete the task (implement → scoped review → fix loop → commit).
-- Open a pull request for the issue branch into the `phase-X-Y` branch.
+- Open a pull request for the issue branch into its target branch (`phase-X.Y` for `Task`, `phase-X` for `Bug`), attaching the `Phase X.Y` milestone to `Task` PRs.
 
 ### Step 5 - Assembling Project
 *Commands available: `/qa-review`, `/complete-sub-phase`*
 
 When all issues for a sub-phase/milestone have been completed and merged:
-- Run the full QA review of the sub-phase (`/qa-review`); each Critical finding becomes a `Bug` issue, fixed via `/complete-issue`, then re-run until clean.
-- Complete the sub-phase (`/complete-sub-phase`): run the milestone gate, verify all documentation is updated (tick the checkbox and add the milestone link in `ROADMAP.md`), and open the PR for `phase-X-Y` into `phase-X`.
+- Complete the sub-phase (`/complete-sub-phase`): run the milestone gate (every issue closed, no open PRs), verify all documentation is updated (tick the checkbox in `ROADMAP.md`), open the PR for `phase-X.Y` into `phase-X`, and set the milestone to closed.
 
 When all sub-phases for a phase have been completed and merged, the phase is completed manually:
-- Perform the QA review of `phase-X` (`/qa-review`).
+- Run the QA review of `phase-X` (`/qa-review`); each Critical finding becomes a `Bug` issue, fixed via `/complete-issue`, then re-run until clean.
 - Open the PR for `phase-X` into `master` manually.
+- Close the project board for `Phase X`.
 
 Repeat steps 4 and 5 until all phases and sub-phases are completed, tracking issues via the Gitea milestone.
 
@@ -91,8 +92,8 @@ flowchart TD
     C1 --> TC1
     TC1 --> DEVELOPMENT
     D1 --> ASSEMBLE
-    QA --> CS
-    CS --> End
+    CS --> QA
+    QA --> End
 
     classDef sequential fill:#E1F5EE,stroke:#1D9E75,color:#085041
     classDef choice fill:#EEEDFE,stroke:#7F77DD,color:#26215C

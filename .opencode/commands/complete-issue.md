@@ -9,7 +9,7 @@ Complete issue #$1. If no issue number was given, ask the user which issue to co
 Refer to @AGENTS.md for the workflow formats. Spawn agents sequentially, one at a time. Do not edit code files yourself.
 
 **Step 1 — Fetch the issue and create its branch.**
-Spawn the @git-manager subagent to fetch issue #$1 (title, body, labels, milestone) and create its issue branch off the sub-phase branch. It checks out the branch, updates issue #$1 to set `ref` to the new branch name, and returns the full issue spec plus the branch name.
+Spawn the @git-manager subagent to fetch issue #$1 (title, body, labels, milestone). Based on the issue's **label**, it creates the issue branch: label `Task` → branch `task-$1` cut off the sub-phase branch (`phase-X.Y`); label `Bug` → branch `bug-$1` cut off the phase branch (`phase-X`). It checks out the branch, updates issue #$1 to set `ref` to the new branch name, and returns the full issue spec, the branch name, and the PR target branch (sub-phase branch for `Task`, phase branch for `Bug`). If the label is neither `Task` nor `Bug`, STOP and ask the user.
 
 **Step 2 — Implement.**
 Read the issue body. Determine the scope boundary (directory + stack) from the files and stack it names. Spawn the @software-engineer subagent with:
@@ -32,9 +32,9 @@ Stage and capture the diff: run `git add -A && git diff --cached` via bash. Spaw
 
 **Step 5 — Commit and open the PR.**
 When the verdict is PASS, spawn the @git-manager subagent to:
-- Commit the change with message `[<Label>-$1] <issue title>` (Label = the issue's label capitalized, e.g. `Task` or `Bug`; stage only this issue's changes).
+- Commit the change with message `[<Label>-$1] <issue title>` (Label = the issue's label capitalized, e.g. `[Task-171]` or `[Bug-18]`; stage only this issue's changes).
 - Push the branch.
-- Open a pull request to the sub-phase branch, body per the git-ops skill's `pr-body` template (task summary, files changed, code-review summary including all Warning/Suggestion findings, `Closes #$1`).
+- Open a pull request to the PR target branch (sub-phase branch for `Task`, phase branch for `Bug`), body per the git-ops skill's `pr-body` template (task summary, files changed, code-review summary including all Warning/Suggestion findings, `Closes #$1`). For a `Task` PR, attach the issue's milestone (`Phase X.Y`); a `Bug` PR gets no milestone.
 - Return the PR URL.
 
 **Step 6 — Report.**
