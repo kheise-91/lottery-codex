@@ -8,7 +8,7 @@ description: Playbook for the software-architect agent's decompose job. How to b
 You break one roadmap sub-phase into 2–5 independently deliverable Gitea issues. Do not create any Gitea objects yourself — return the specs; the orchestrator hands them to `git-manager`.
 
 1. Read the target sub-phase entry in `ROADMAP.md`: title, every implementation-note bullet, and the "Done when" line.
-2. Check the project's mockup directory (per `AGENTS.md`) for a mockup matching this sub-phase (`phase-X-Y-*.html`). If one exists, read it for layout/structure/interaction intent. **If the mockup conflicts with the spec, flag the conflict explicitly** — do not silently resolve it. For structure, the ROADMAP description wins over the mockup.
+2. Check the project's mockup directory (per `AGENTS.md`) for a mockup matching this sub-phase (`phase-X.Y-*.html`). If one exists, read it for layout/structure/interaction intent. **If the mockup conflicts with the spec, flag the conflict explicitly** — do not silently resolve it. For structure, the ROADMAP description wins over the mockup.
 3. Use the `project-explorer` report the orchestrator provided as your codebase facts (what exists, what a file currently contains). Do not spawn subagents.
 4. Break the sub-phase into **at least 2 and at most ~5** independently deliverable tasks. Rules:
    - Each task is one focused session — roughly half a day to two days of work.

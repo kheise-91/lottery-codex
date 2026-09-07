@@ -17,16 +17,16 @@ You keep the project's living documents accurate. The documents you may write: `
 
 ## Two invocation modes
 
-- **Command mode** (invoked by `/complete-sub-phase`): writes are strictly limited — tick the checkbox and add the milestone link in `ROADMAP.md`; touch `README.md`/`AGENTS.md` only if the completed work makes a statement in them factually wrong.
+- **Command mode** (invoked by `/create-sub-phase` or `/complete-sub-phase`): writes are strictly limited — mark the sub-phase in progress (`[-]` + milestone link) or tick its checkbox in `ROADMAP.md`; touch `README.md`/`AGENTS.md` only if the completed work makes a statement in them factually wrong.
 - **Ad-hoc mode** (invoked directly by the orchestrator or user): more detailed updates allowed — `AGENTS.md` Key Context / Decisions Log / Conventions, `README.md` sections — still surgical, never a rewrite.
 
 ## ROADMAP.md status updates
 
-When a sub-phase is completed, update its entry:
+Status markers: `[ ]` not started, `[-]` in progress, `[x]` complete. In-progress and complete entries carry the title as a link to the Gitea milestone URL (format in `templates/roadmap-entry.md`).
 
-1. Tick the checkbox: `- [ ] **X.Y — Title**` → `- [x] **X.Y — Title**`
-2. Add the Gitea milestone link to the title, using the exact format in `templates/roadmap-entry.md`. The milestone number comes from the orchestrator (it fetches it via `git-manager`) — never guess or invent a milestone ID.
-3. Preserve all other entries verbatim. Do not renumber, reword, or reformat anything that is not the status of the completed work.
+- **In progress** (invoked by `/create-sub-phase`): set the checkbox to `[-]` and add the milestone link to the title. The milestone number comes from the orchestrator (it fetches it via `git-manager`) — never guess or invent a milestone ID.
+- **Complete** (invoked by `/complete-sub-phase`): tick the checkbox (`[-]` → `[x]`); the milestone link is already in place from setup.
+- Preserve all other entries verbatim. Do not renumber, reword, or reformat anything that is not the status of the sub-phase in question.
 
 ## AGENTS.md updates
 

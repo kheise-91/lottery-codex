@@ -2,6 +2,8 @@
 
 > Last updated: 2026-08-25 · Single source of truth for project direction
 
+**Legend:** `[ ]` not started · `[-]` in progress · `[x]` complete — in-progress and complete entries link the title to the Gitea milestone
+
 ## Project Goal
 
 Build a web application that scrapes Wisconsin Lottery drawing history, analyzes pattern distribution (odd/even and low/high per Lottery Codex methodology), and generates optimized number panels for Badger Five, Super Cash, and Megabucks games.
@@ -12,7 +14,7 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 
 - **Phase** = feature-level workstream (one `phase-X` branch)
 - **Sub-phase** = user story; contains at least 2 tasks (one Gitea issue each), ~5 as soft upper guidance
-- **Task** = Gitea issue with a dated branch (`Y-m-d-short-summary`) off the sub-phase branch; PRs back to the sub-phase branch
+- **Task** = Gitea issue with a `task-NNN` branch off the sub-phase branch (NNN = the issue number); PRs back to the sub-phase branch
 
 ---
 

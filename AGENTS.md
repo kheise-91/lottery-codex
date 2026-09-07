@@ -177,12 +177,12 @@ Nginx serves the frontend from `/var/www/html/frontend/` with SPA fallback (`try
 
 ### Git & Gitea
 
-- **Branch tiers:** `master` ← `phase-X` ← `phase-X-Y` (sub-phase, cut off the parent phase branch) ← `YYYY-MM-DD-short-task-summary` (issue branch, cut off the sub-phase branch; lowercase, hyphens, max 5 words, no articles)
+- **Branch tiers:** `master` ← `phase-X` (phase, created manually) ← `phase-X.Y` (sub-phase, cut off the phase branch) ← `task-NNN` (Task issue, cut off the sub-phase branch) · `bug-NNN` (Bug issue, cut off the phase branch) — `NNN` is the Gitea issue number
 - Merges are merge commits (no squash, no rebase)
-- **Commit format:** `[Type-IssueNumber] Issue title` (Type = the issue label, capitalized, e.g. `[Task-171]`); docs-only work uses `[DOCS]`, tooling work `[TOOLS]`
-- **Gitea:** label `Task` on sub-phase issues, `Bug` on QA findings; milestone per sub-phase titled `Phase X.Y` with a `Title / Parent Phase / Description / Done When` body; issue body is the plan (`What / Why / Implementation / Acceptance Criteria / Notes`)
-- **PRs:** issue branch → sub-phase branch, body sections `Task Summary / Files changed / Code review summary / Closes #N`
-- `gitea-mcp_issue_write` requires ALL of: `title`, `body`, `milestone`, `labels`, `ref` — pass every parameter even if the schema marks it optional
+- **Commit format:** `[Type-IssueNumber] Issue title` (Type = the issue label, capitalized, e.g. `[Task-171]`, `[Bug-18]`); sub-phase work uses `[Phase-X.Y]`; `[DOCS]`/`[TOOLS]` are human-only (manual commits on tool/doc branches) — agents never emit them
+- **Gitea:** label `Task` on sub-phase issues, `Bug` on QA findings; milestone per sub-phase titled `Phase X.Y` with a `Title / Parent Phase / Description / Done When` body — no phase-level milestones (phases are tracked on kanban boards); `Bug` issues carry no milestone; issue body is the plan (`What / Why / Implementation / Acceptance Criteria / Notes`)
+- **PRs:** task branch → sub-phase branch (attach the `Phase X.Y` milestone to the PR); bug branch → phase branch (no milestone); sub-phase → phase branch (no milestone); body sections `Task Summary / Files changed / Code review summary / Closes #N`
+- `gitea-mcp_issue_write` requires ALL of: `title`, `body`, `milestone`, `labels` — pass every parameter even if the schema marks it optional; do NOT set `ref` at creation (the branch does not exist yet — it is linked at work-time in `/complete-issue`)
 
 ## Models
 
@@ -202,23 +202,23 @@ Tiers: Enoch (fast, 3-bit, reasoning off) · Enoch-II (mid, 3-bit, medium reason
 
 ## Workflow
 
-Pipeline: `/brainstorm` → `/review-roadmap` → `/generate-mockups` → `/create-sub-phase` → `/complete-issue` (per task) → `/qa-review` → `/complete-sub-phase`.
+Pipeline: `/brainstorm` → `/review-roadmap` → `/generate-mockups` → `/create-sub-phase` → `/complete-issue` (per task) → `/complete-sub-phase` (per sub-phase) → `/qa-review` (per phase) → manual phase → `master` PR.
 
 | Command | Purpose |
 |---------|---------|
 | `/brainstorm <goals>` | Create or update ROADMAP.md (phases → sub-phases with "Done when") |
 | `/review-roadmap` | Read-only critique of ROADMAP.md (gaps, ordering, over-scoping) |
 | `/generate-mockups [X.Y] [n]` | Produce n self-contained HTML mockups for a sub-phase in the project's mockup directory |
-| `/create-sub-phase [X.Y]` | Decompose a roadmap sub-phase into 2–5 Gitea issues; create branch, milestone, and issues (plan = issue body) |
-| `/complete-issue [N]` | Branch, implement, scoped review (fix loop), commit, and PR a single issue |
-| `/qa-review [X.Y \| X]` | Full quality review against the parent branch; each Critical finding becomes a Gitea `Bug` issue |
-| `/complete-sub-phase [X.Y]` | Milestone gate, limited docs update, and the merge PR to the phase branch |
+| `/create-sub-phase [X.Y]` | Decompose a roadmap sub-phase into 2–5 Gitea issues; create branch, milestone, and issues (plan = issue body); mark it in progress in ROADMAP.md (`[-]` + milestone link) |
+| `/complete-issue [N]` | Branch, implement, scoped review (fix loop), commit, and PR a single issue — label-driven: `Task` → sub-phase branch (PR attaches the `Phase X.Y` milestone), `Bug` → phase branch (no milestone) |
+| `/qa-review [X]` | Full quality review of a finished phase against `master`; each Critical finding becomes a Gitea `Bug` issue |
+| `/complete-sub-phase [X.Y]` | Milestone gate (issues closed, no open PRs), limited docs update (tick the checkbox), and the merge PR to the phase branch |
 
 Rules:
 - Plans live in Gitea issue bodies — there are no local plan files.
 - Mockups are committed to `frontend/mockups/` (never gitignored).
 - The orchestrator never edits code; all code changes go through `software-engineer`.
-- QA loop: `/qa-review` files `Bug` issues for Critical findings → fix each with `/complete-issue` → re-run `/qa-review` until clean → then `/complete-sub-phase`.
+- QA loop: `/qa-review` files `Bug` issues for Critical findings → fix each with `/complete-issue` → re-run `/qa-review` until clean → then the manual phase → `master` PR.
 - Command syntax: `@name` references a subagent (spawn it) or a file (inject its content); `!`command`` injects shell output into the prompt.
 - Every command ends with the summary table defined in `.opencode/templates/command-summary.md` — the user verifies work from these tables.
 

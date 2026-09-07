@@ -39,7 +39,7 @@ Every mockup ends with a fixed reference bar identifying it:
 ## Naming and location
 
 - Directory: the project's mockup directory (per @AGENTS.md).
-- Filename: `phase-X-Y-[variant-name].html` (e.g. `phase-3-4-drawings-panel-tabs.html`)
+- Filename: `phase-X.Y-[variant-name].html` (e.g. `phase-3.4-drawings-panel-tabs.html`)
 - Commit them — they are part of the repo, never gitignored.
 
 ## Output
