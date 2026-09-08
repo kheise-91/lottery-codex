@@ -62,9 +62,8 @@ class GamesController
 
     /**
      * GET /api/games/{gameId}/history — Get historical drawings.
-     * Uses mock data for now (Phase 1). Replaced with real game class in Phase 4.
      * @param string $gameId Game identifier
-     * @return array Historical drawings or 404 error if game is not registered
+     * @return array Historical drawings or 404/503 error
      */
     public function history(string $gameId, ResponseInterface $response): ResponseInterface
     {
@@ -72,93 +71,19 @@ class GamesController
             return $this->jsonResponse($response, ['error' => 'Game not found'], 404);
         }
 
-        // TODO: Replace with real data in Phase 4.1 via $game->getHistory()
-        $historyMap = [
-            'badger-5' => [
-                "Monday, July 1st" => [
-                    'numbers' => [3, 12, 19, 24, 31],
-                    'pattern' => '3-Odd 2-Even / 3-Low 2-High',
-                ],
-                "Sunday, June 30th" => [
-                    'numbers' => [5, 8, 17, 22, 29],
-                    'pattern' => '3-Odd 2-Even / 2-Low 3-High',
-                ],
-                "Saturday, June 29th" => [
-                    'numbers' => [2, 11, 14, 23, 30],
-                    'pattern' => '2-Odd 3-Even / 3-Low 2-High',
-                ],
-                "Friday, June 28th" => [
-                    'numbers' => [7, 9, 16, 21, 28],
-                    'pattern' => '3-Odd 2-Even / 2-Low 3-High',
-                ],
-                "Thursday, June 27th" => [
-                    'numbers' => [1, 4, 13, 20, 25],
-                    'pattern' => '3-Odd 2-Even / 3-Low 2-High',
-                ],
-                "Wednesday, June 26th" => [
-                    'numbers' => [6, 10, 18, 26, 31],
-                    'pattern' => '1-Odd 4-Even / 1-Low 4-High',
-                ],
-                "Tuesday, June 25th" => [
-                    'numbers' => [3, 8, 15, 22, 27],
-                    'pattern' => '3-Odd 2-Even / 2-Low 3-High',
-                ],
-            ],
-            'supercash' => [
-                "Monday, July 1st" => [
-                    'numbers' => [4, 11, 18, 25, 32, 37],
-                    'pattern' => '3-Odd 3-Even / 3-Low 3-High',
-                ],
-                "Sunday, June 30th" => [
-                    'numbers' => [2, 9, 14, 23, 30, 35],
-                    'pattern' => '3-Odd 3-Even / 2-Low 4-High',
-                ],
-                "Saturday, June 29th" => [
-                    'numbers' => [7, 12, 19, 26, 31, 38],
-                    'pattern' => '4-Odd 2-Even / 3-Low 3-High',
-                ],
-                "Friday, June 28th" => [
-                    'numbers' => [3, 8, 15, 22, 29, 36],
-                    'pattern' => '4-Odd 2-Even / 2-Low 4-High',
-                ],
-                "Thursday, June 27th" => [
-                    'numbers' => [1, 10, 17, 24, 33, 39],
-                    'pattern' => '5-Odd 1-Even / 3-Low 3-High',
-                ],
-                "Wednesday, June 26th" => [
-                    'numbers' => [6, 13, 20, 27, 34, 38],
-                    'pattern' => '2-Odd 4-Even / 2-Low 4-High',
-                ],
-            ],
-            'megabucks' => [
-                "Monday, July 1st" => [
-                    'numbers' => [4, 11, 18, 25, 32, 37],
-                    'pattern' => '3-Odd 3-Even / 3-Low 3-High',
-                ],
-                "Sunday, June 30th" => [
-                    'numbers' => [2, 9, 14, 23, 30, 35],
-                    'pattern' => '3-Odd 3-Even / 2-Low 4-High',
-                ],
-                "Saturday, June 29th" => [
-                    'numbers' => [7, 12, 19, 26, 31, 38],
-                    'pattern' => '4-Odd 2-Even / 3-Low 3-High',
-                ],
-                "Friday, June 28th" => [
-                    'numbers' => [3, 8, 15, 22, 29, 36],
-                    'pattern' => '4-Odd 2-Even / 2-Low 4-High',
-                ],
-                "Thursday, June 27th" => [
-                    'numbers' => [1, 10, 17, 24, 33, 39],
-                    'pattern' => '5-Odd 1-Even / 3-Low 3-High',
-                ],
-                "Wednesday, June 26th" => [
-                    'numbers' => [6, 13, 20, 27, 34, 38],
-                    'pattern' => '2-Odd 4-Even / 2-Low 4-High',
-                ],
-            ],
-        ];
+        $game = $this->resolve($gameId);
+        if (!$game) {
+            return $this->jsonResponse($response, ['error' => 'Game unavailable'], 503);
+        }
 
-        return $this->jsonResponse($response, ['history' => $historyMap[$gameId]]);
+        try {
+            $history = $game->getHistory();
+        } catch (\RuntimeException $e) {
+            error_log("GamesController::history failed for '{$gameId}': " . $e->getMessage());
+            return $this->jsonResponse($response, ['error' => 'Drawing history is temporarily unavailable'], 503);
+        }
+
+        return $this->jsonResponse($response, ['history' => $history]);
     }
 
     /**
