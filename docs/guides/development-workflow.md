@@ -28,7 +28,7 @@ For each sub-phase:
 - Create mockups of UI/UX changes (optional — update the sub-phase description in the roadmap if needed to summarize the chosen mockup).
 - Create the `phase-X.Y` branch from the `phase-X` branch.
 - Create the `Phase X.Y` milestone and the issues (2–5) for the sub-phase, each with its plan in the issue body.
-- Update the roadmap: mark the sub-phase as in progress (`[-]`) and link its title to the Gitea milestone.
+- Update the roadmap: mark the sub-phase as in progress (`[-]`) and link its title to the Gitea milestone, then commit and push the change on the sub-phase branch.
 
 ### Step 4 - Working on Tasks
 *Command available: `/complete-issue`*

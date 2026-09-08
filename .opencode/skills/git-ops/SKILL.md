@@ -40,7 +40,7 @@ master
 ## Gitea objects
 
 - **Label:** sub-phase issues carry the label `Task`; QA findings from `/qa-review` carry the label `Bug`. Create each label if it does not exist.
-- **Milestone:** one per sub-phase, titled `Phase X.Y`, body per `templates/milestone.md`. There are **no phase-level milestones** — phases are tracked on kanban boards — and `Bug` issues carry no milestone.
+- **Milestone:** one per sub-phase, titled `Phase X.Y`, body per `templates/milestone.md`. There are **no phase-level milestones** — phases are tracked on kanban boards — and `Bug` issues carry no milestone. Set its state to `closed` at `/complete-sub-phase`.
 - **Issue body:** the issue body **is the plan** — it follows the `What / Why / Implementation / Acceptance Criteria / Notes` structure (see the `decompose-sub-phase` skill's issue-body template).
 - **Creating an issue:** `gitea-mcp_issue_write` requires ALL of `title`, `body`, `milestone`, and `labels`. Do NOT set `ref` at creation — the issue's branch does not exist yet. Pass every parameter on every call, even if the tool schema marks some optional. Task issues get the sub-phase milestone (`Phase X.Y`); `Bug` issues get **no** milestone — pass a null/empty value for `milestone`.
 - **Linking an issue to its branch:** when an issue is picked up for work (in `/complete-issue`), after creating the issue branch, update the issue to set `ref` = the issue branch name (so Gitea links the issue to its branch).

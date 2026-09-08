@@ -212,7 +212,7 @@ Pipeline: `/brainstorm` → `/review-roadmap` → `/generate-mockups` → `/crea
 | `/create-sub-phase [X.Y]` | Decompose a roadmap sub-phase into 2–5 Gitea issues; create branch, milestone, and issues (plan = issue body); mark it in progress in ROADMAP.md (`[-]` + milestone link) |
 | `/complete-issue [N]` | Branch, implement, scoped review (fix loop), commit, and PR a single issue — label-driven: `Task` → sub-phase branch (PR attaches the `Phase X.Y` milestone), `Bug` → phase branch (no milestone) |
 | `/qa-review [X]` | Full quality review of a finished phase against `master`; each Critical finding becomes a Gitea `Bug` issue |
-| `/complete-sub-phase [X.Y]` | Milestone gate (issues closed, no open PRs), limited docs update (tick the checkbox), and the merge PR to the phase branch |
+| `/complete-sub-phase [X.Y]` | Milestone gate (issues closed, no open PRs), limited docs update (tick the checkbox), the merge PR to the phase branch, and the `Phase X.Y` milestone set to closed |
 
 Rules:
 - Plans live in Gitea issue bodies — there are no local plan files.

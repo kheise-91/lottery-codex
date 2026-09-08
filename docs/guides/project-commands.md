@@ -49,7 +49,7 @@ Produces `n` (default 3) self-contained, fully-styled HTML mockup variants for a
 
 ### [`/create-sub-phase [X.Y]`](/.opencode/commands/create-sub-phase.md)
 
-Sets up a sub-phase: spawns `project-explorer` to report the codebase area, decomposes it into 2–5 Gitea issues (each with a complete plan body), creates the sub-phase branch `phase-X.Y` (off `phase-X`), the `Phase X.Y` milestone, and each issue (label `Task`), then marks the sub-phase in progress in `ROADMAP.md` (`[-]` + the milestone link). The issue body is the plan — there are no local plan files.
+Sets up a sub-phase: spawns `project-explorer` to report the codebase area, decomposes it into 2–5 Gitea issues (each with a complete plan body), creates the sub-phase branch `phase-X.Y` (off `phase-X`), the `Phase X.Y` milestone, and each issue (label `Task`), then marks the sub-phase in progress in `ROADMAP.md` (`[-]` + the milestone link) and commits the change. The issue body is the plan — there are no local plan files.
 
 **Use when:** Starting a sub-phase's work, after the roadmap is scoped.
 
@@ -77,7 +77,7 @@ Full quality review of a finished phase (`X`, parent `master`). Captures the ful
 
 ### [`/complete-sub-phase [X.Y]`](/.opencode/commands/complete-sub-phase.md)
 
-Closes out a finished sub-phase: runs the milestone gate (every issue on `Phase X.Y` closed and no open PR targeting the sub-phase branch), performs the limited docs update (tick the checkbox in `ROADMAP.md` — the milestone link was already set by `/create-sub-phase`), commits, and opens the merge PR to `phase-X` (no milestone). Sub-phase only — completing a phase (`phase-X` → `master`) is done manually.
+Closes out a finished sub-phase: runs the milestone gate (every issue on `Phase X.Y` closed and no open PR targeting the sub-phase branch), performs the limited docs update (tick the checkbox in `ROADMAP.md` — the milestone link was already set by `/create-sub-phase`), commits, sets the `Phase X.Y` milestone to closed, and opens the merge PR to `phase-X` (no milestone). Sub-phase only — completing a phase (`phase-X` → `master`) is done manually.
 
 **Use when:** All of the sub-phase's issues are completed and their PRs approved, and the sub-phase is ready to merge into its phase branch.
 
@@ -95,7 +95,7 @@ Closes out a finished sub-phase: runs the milestone gate (every issue on `Phase 
 | [`/create-sub-phase [X.Y]`](/.opencode/commands/create-sub-phase.md) | Decompose a sub-phase into Gitea issues; create branch, milestone, issues; mark it in progress in `ROADMAP.md` |
 | [`/complete-issue [N]`](/.opencode/commands/complete-issue.md) | Implement, review (fix loop), commit, and PR one issue (label-driven branch/PR target) |
 | [`/qa-review [X]`](/.opencode/commands/qa-review.md) | Full QA review of a finished phase; each Critical finding becomes a Gitea `Bug` issue |
-| [`/complete-sub-phase [X.Y]`](/.opencode/commands/complete-sub-phase.md) | Milestone gate, limited docs update, and the merge PR to the phase branch |
+| [`/complete-sub-phase [X.Y]`](/.opencode/commands/complete-sub-phase.md) | Milestone gate, limited docs update, the merge PR to the phase branch, and the `Phase X.Y` milestone set to closed |
 
 ### Naming Conventions
 
@@ -113,7 +113,7 @@ Closes out a finished sub-phase: runs the milestone gate (every issue on `Phase 
 1. **Scope** — `/brainstorm` then `/review-roadmap` to produce a decomposition-ready `ROADMAP.md`.
 2. **Prepare** — `/generate-mockups` (optional) then `/create-sub-phase` to create the branch, milestone, and issues, and mark the sub-phase in progress in the roadmap.
 3. **Develop** — `/complete-issue` for each issue (implement → review → fix → commit → PR).
-4. **Complete** — when a sub-phase's issues are all merged, `/complete-sub-phase` to gate the milestone, update docs, and open the merge PR to the phase branch.
+4. **Complete** — when a sub-phase's issues are all merged, `/complete-sub-phase` to gate the milestone, update docs, set the milestone to closed, and open the merge PR to the phase branch.
 5. **QA** — when all sub-phases of a phase are merged, `/qa-review`; file Criticals as `Bug` issues, fix them via `/complete-issue`, re-run until clean. (Phase → `master` is done manually.)
 
 ---

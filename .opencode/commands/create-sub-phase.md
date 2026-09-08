@@ -19,7 +19,7 @@ Spawn @software-architect with its decompose job (the `decompose-sub-phase` skil
 Spawn the @git-manager subagent and hand it the milestone spec and the ordered issue specs verbatim. It creates the sub-phase branch `phase-X.Y` off `phase-X` (if `phase-X` does not exist, STOP and report it — phase branches are created manually), the milestone `Phase X.Y` (reusing it if it exists), and each issue (label `Task`, plan body, milestone attached). It returns the branch name, the milestone number/URL, and every issue number.
 
 **Step 4 — Docs update (in progress).**
-Spawn the @docs-manager subagent in **command mode** with the sub-phase number, title, and the milestone URL from Step 3. It marks the sub-phase in progress in ROADMAP.md: checkbox `[-]` and the title linked to the milestone URL (format per its `roadmap-entry` template).
+Spawn the @docs-manager subagent in **command mode** with the sub-phase number, title, and the milestone URL from Step 3. It marks the sub-phase in progress in ROADMAP.md: checkbox `[-]` and the title linked to the milestone URL (format per its `roadmap-entry` template). Then commit and push the change yourself with the message `[Phase-$1] Starting $1` — no Gitea work is involved, so do not spawn git-manager.
 
 **Step 5 — Report.**
 Return a summary per @.opencode/templates/command-summary.md: the branch, the milestone, and the issue list (number + title) in execution order, ready for `/complete-issue`.
