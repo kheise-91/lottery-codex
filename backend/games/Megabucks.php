@@ -66,6 +66,7 @@ class Megabucks implements GameInterface, \JsonSerializable
      */
     public function getHistory(): array
     {
+        $this->loadPreviousDrawings();
         return $this->getPreviousDrawings();
     }
 
