@@ -23,7 +23,7 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 | Area | Current | Target |
 |------|---------|--------|
 | **Backend history** | Mock data hardcoded in `GamesController` | Real scraped drawings from the game classes (Phase 3) |
-| **Jackpot** | Hardcoded `$10,000` / "—" placeholders | Live jackpot/top-prize values scraped from the wilottery.com homepage (Phase 3) |
+| **Jackpot** | Hardcoded `$10,000` / "—" placeholders | Live jackpot/top-prize values scraped from per-game pages at `wilottery.com/games/{gameId}` (Phase 3) |
 | **Pattern health** | Static "It's okay to play." placeholder | Per-pattern `avgInterval`, `daysSince`, and status indicators from real history (Phase 4) |
 | **Scraping** | Works but fragile; no retries or caching | Retry with backoff, cached fallback, verified selectors (Phase 5) |
 | **Deployment** | Local Docker development | Health check, optimized image, HTTPS termination (Phase 6) |
@@ -283,11 +283,14 @@ Replace mock data with live scraped data for all three games (Badger Five, Super
    **Done when:** `/api/games/{gameId}/history` returns live scraped drawings for all three games; pattern distribution shows the latest 100.
 
 - [ ] **3.3 — Scrape and display current jackpot / top prize**
-   - Add a homepage jackpot scraper (`backend/scrapers/JackpotScraper.php` in the `LotteryCodex\Scrapers\` namespace created in 3.1): one scrape of the wilottery.com homepage, parse each game's `.game-panel` + `.drawing-amount`, normalize values like `"$1.3 MIL"` to `"$1.3M"` (Super Cash returns its fixed $350,000 top prize)
-   - Expose a `jackpot` field in `GET /api/games` and `GET /api/games/{gameId}` responses; return null if the scrape fails (never break the games list)
-   - Replace the hardcoded `'$10,000'` in GamePage with the API value; verify Dashboard cards render `game.jackpot` (binding already exists, currently shows "—")
+    - Add a per-game jackpot scraper (`backend/scrapers/JackpotScraper.php` in the `LotteryCodex\Scrapers\` namespace created in 3.1): fetch `https://wilottery.com/games/{$gameId}`, parse `.current-jackpot > .jackpot-amount` elements
+    - Badger Five: single `.jackpot-amount` text node (e.g. `$10,000`) — return the dollar amount as-is, no annuity/cash label
+    - Super Cash: static top prize of `$350,000` — hardcode in the game class, do not scrape (the page has no `.jackpot-amount` element)
+    - Megabucks: two `.jackpot-amount` elements (annuity + cash); each has a sibling `<span>` with the unit text (`MIL`, `K`, etc.) — parse both, return as objects: `{ "annuity": "$1.7M", "cash": "$0.9M" }`
+    - Expose a `jackpot` field in `GET /api/games` and `GET /api/games/{gameId}` responses; Badger Five and Super Cash return a string, Megabucks returns an object with `annuity`/`cash` keys; return null if the scrape fails (never break the games list)
+    - Replace the hardcoded `'$10,000'` in GamePage with the API value; verify Dashboard cards render `game.jackpot` (binding already exists, currently shows "—"); for Megabucks, render annuity/cash labels alongside the values
 
-   **Done when:** Dashboard cards and game headers show live jackpot values; a failed scrape degrades gracefully to "—".
+    **Done when:** Dashboard cards and game headers show live jackpot values (Badger Five: cash amount, Super Cash: static $350,000, Megabucks: annuity + cash); a failed scrape degrades gracefully to "—".
 
 - [ ] **3.4 — Frontend cleanup & 6-ball readiness**
    - Remove the dead `GameContext`/`GameProvider` (`src/contexts/GameContext.jsx`, provider mount in `main.jsx`) — no component consumes it and it causes a duplicate games fetch; hooks remain the data layer
@@ -513,7 +516,7 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 ### Backend — New Files
 ```
 backend/scrapers/HistoryScraper.php  # Shared DOM-based draw-history scraper, cURL + DOMDocument/DOMXPath (Phase 3.1)
-backend/scrapers/JackpotScraper.php  # Single homepage scrape for all games' jackpot/top-prize values (Phase 3.3)
+backend/scrapers/JackpotScraper.php  # Per-game jackpot scraper using https://wilottery.com/games/{$gameId} (Phase 3.3)
 ```
 
 ### Backend — Modified Files
