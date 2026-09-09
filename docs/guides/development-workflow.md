@@ -21,7 +21,7 @@ Initialize project (README.md, .gitignore etc)
 *Commands available: `/generate-mockups`, `/create-sub-phase`*
 
 When starting a new phase:
-- Create the `phase-X` branch from `master` manually (phase branches are created manually — agents do not create them).
+- Create the `phase-X` branch from `master` and push it to origin if it does not exist yet (this only happens for the first sub-phase of a phase — after that it should already exist).
 - Create a project board for `Phase X`.
 
 For each sub-phase:
@@ -36,7 +36,7 @@ For each sub-phase:
 For each issue:
 - Create and check out the issue branch — `task-NNN` off the `phase-X.Y` branch for `Task` issues, `bug-NNN` off the `phase-X` branch for `Bug` issues (NNN = the issue number).
 - Complete the task (implement → scoped review → fix loop → commit).
-- Open a pull request for the issue branch into its target branch (`phase-X.Y` for `Task`, `phase-X` for `Bug`), attaching the `Phase X.Y` milestone to `Task` PRs.
+- Open a pull request for the issue branch into its target branch (`phase-X.Y` for `Task`, `phase-X` for `Bug`) — no PR carries a milestone (the `Phase X.Y` milestone is on the issues).
 
 ### Step 5 - Assembling Project
 *Commands available: `/qa-review`, `/complete-sub-phase`*

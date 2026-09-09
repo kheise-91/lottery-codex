@@ -4,15 +4,13 @@ description: Close out a finished sub-phase — milestone gate, limited docs upd
 model: llama.cpp/Enoch
 ---
 
-Complete $1. If no sub-phase was given, ask the user what to complete and stop. This command completes a **sub-phase** (`X.Y`) only — completing a phase (`phase-X` → `master`) is done manually.
-- The branch is `phase-X.Y` and the PR goes to `phase-X`.
+Complete $1. This command completes a **sub-phase** (`$1`) only — completing a phase (`phase-X` → `master`) is done manually.
+- The branch is `phase-$1` and the PR goes to `phase-X`.
 
 Refer to @AGENTS.md for the workflow formats. Spawn agents sequentially, one at a time. Do not edit any files yourself.
 
-Current branch: !`git branch --show-current`
-
 **Step 1 — Branch + milestone gate.**
-Confirm the current branch is `phase-X.Y`. Then spawn the @git-manager subagent: verify via the Gitea MCP Server that **every issue on the milestone** (`Phase X.Y`) is **closed** and **no pull request targeting the sub-phase branch is open**. It returns the gate result plus the milestone number/URL. If any issue is open or any PR is open, STOP and report the open numbers — do not update docs or open a PR.
+Spawn the @git-manager subagent: if `phase-$1` is not checked out, it checks it out, fetches from origin, and pulls. It then verifies via the Gitea MCP Server that **every issue on the milestone** (`Phase $1`) is **closed** and **no pull request targeting the sub-phase branch is open**. It returns the gate result plus the milestone number/URL. If any issue is open or any PR is open, STOP and report the open numbers — do not update docs or open a PR.
 
 **Step 2 — Docs update (limited).**
 Spawn the @docs-manager subagent in **command mode** with:
@@ -24,7 +22,7 @@ It ticks the checkbox in ROADMAP.md (`[-]` → `[x]`) and adds the milestone lin
 Spawn the @git-manager subagent to:
 - Commit the doc changes with message `[Phase-$1] Complete $1`.
 - Push the branch.
-- Set the `Phase X.Y` milestone state to "closed".
+- Set the `Phase $1` milestone state to "closed".
 - Open a pull request to `phase-X` (no milestone), body per the git-ops skill's `pr-body` template summarizing the completion (issues closed, doc changes).
 - Return the PR URL.
 

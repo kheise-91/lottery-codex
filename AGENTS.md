@@ -177,11 +177,11 @@ Nginx serves the frontend from `/var/www/html/frontend/` with SPA fallback (`try
 
 ### Git & Gitea
 
-- **Branch tiers:** `master` ← `phase-X` (phase, created manually) ← `phase-X.Y` (sub-phase, cut off the phase branch) ← `task-NNN` (Task issue, cut off the sub-phase branch) · `bug-NNN` (Bug issue, cut off the phase branch) — `NNN` is the Gitea issue number
+- **Branch tiers:** `master` ← `phase-X` (phase, created from `master` by `/create-sub-phase` if missing — first sub-phase only) ← `phase-X.Y` (sub-phase, cut off the phase branch) ← `task-NNN` (Task issue, cut off the sub-phase branch) · `bug-NNN` (Bug issue, cut off the phase branch) — `NNN` is the Gitea issue number
 - Merges are merge commits (no squash, no rebase)
 - **Commit format:** `[Type-IssueNumber] Issue title` (Type = the issue label, capitalized, e.g. `[Task-171]`, `[Bug-18]`); sub-phase work uses `[Phase-X.Y]`; `[DOCS]`/`[TOOLS]` are human-only (manual commits on tool/doc branches) — agents never emit them
 - **Gitea:** label `Task` on sub-phase issues, `Bug` on QA findings; milestone per sub-phase titled `Phase X.Y` with a `Title / Parent Phase / Description / Done When` body — no phase-level milestones (phases are tracked on kanban boards); `Bug` issues carry no milestone; issue body is the plan (`What / Why / Implementation / Acceptance Criteria / Notes`)
-- **PRs:** task branch → sub-phase branch (attach the `Phase X.Y` milestone to the PR); bug branch → phase branch (no milestone); sub-phase → phase branch (no milestone); body sections `Task Summary / Files changed / Code review summary / Closes #N`
+- **PRs:** task branch → sub-phase branch, bug branch → phase branch, sub-phase → phase branch — no PR carries a milestone (the `Phase X.Y` milestone is on the issues); body sections `Task Summary / Files changed / Code review summary / Closes #N`
 - `gitea-mcp_issue_write` requires ALL of: `title`, `body`, `milestone`, `labels` — pass every parameter even if the schema marks it optional; do NOT set `ref` at creation (the branch does not exist yet — it is linked at work-time in `/complete-issue`)
 
 ## Models
@@ -210,7 +210,7 @@ Pipeline: `/brainstorm` → `/review-roadmap` → `/generate-mockups` → `/crea
 | `/review-roadmap` | Read-only critique of ROADMAP.md (gaps, ordering, over-scoping) |
 | `/generate-mockups [X.Y] [n]` | Produce n self-contained HTML mockups for a sub-phase in the project's mockup directory |
 | `/create-sub-phase [X.Y]` | Decompose a roadmap sub-phase into 2–5 Gitea issues; create branch, milestone, and issues (plan = issue body); mark it in progress in ROADMAP.md (`[-]` + milestone link) |
-| `/complete-issue [N]` | Branch, implement, scoped review (fix loop), commit, and PR a single issue — label-driven: `Task` → sub-phase branch (PR attaches the `Phase X.Y` milestone), `Bug` → phase branch (no milestone) |
+| `/complete-issue [N]` | Branch, implement, scoped review (fix loop), commit, and PR a single issue — label-driven: `Task` → sub-phase branch, `Bug` → phase branch |
 | `/qa-review [X]` | Full quality review of a finished phase against `master`; each Critical finding becomes a Gitea `Bug` issue |
 | `/complete-sub-phase [X.Y]` | Milestone gate (issues closed, no open PRs), limited docs update (tick the checkbox), the merge PR to the phase branch, and the `Phase X.Y` milestone set to closed |
 

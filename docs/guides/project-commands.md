@@ -49,7 +49,7 @@ Produces `n` (default 3) self-contained, fully-styled HTML mockup variants for a
 
 ### [`/create-sub-phase [X.Y]`](/.opencode/commands/create-sub-phase.md)
 
-Sets up a sub-phase: spawns `project-explorer` to report the codebase area, decomposes it into 2–5 Gitea issues (each with a complete plan body), creates the sub-phase branch `phase-X.Y` (off `phase-X`), the `Phase X.Y` milestone, and each issue (label `Task`), then marks the sub-phase in progress in `ROADMAP.md` (`[-]` + the milestone link) and commits the change. The issue body is the plan — there are no local plan files.
+Sets up a sub-phase: spawns `project-explorer` to report the codebase area, decomposes it into 2–5 Gitea issues (each with a complete plan body), creates the sub-phase branch `phase-X.Y` (off `phase-X` — creating and pushing `phase-X` from `master` if it does not exist yet, first sub-phase only), the `Phase X.Y` milestone, and each issue (label `Task`), then marks the sub-phase in progress in `ROADMAP.md` (`[-]` + the milestone link) and commits the change. The issue body is the plan — there are no local plan files.
 
 **Use when:** Starting a sub-phase's work, after the roadmap is scoped.
 
@@ -59,7 +59,7 @@ Sets up a sub-phase: spawns `project-explorer` to report the codebase area, deco
 
 ### [`/complete-issue [N]`](/.opencode/commands/complete-issue.md)
 
-Implements a single Gitea issue end to end: fetches the issue and creates its branch from the issue's label (`Task` → `task-N` off the sub-phase branch; `Bug` → `bug-N` off the phase branch), linking the issue to the branch via `ref`; implements the plan; runs a scoped review with a fix loop (max 3 rounds); commits; and opens a PR — to the sub-phase branch for `Task` (with the `Phase X.Y` milestone attached) or to the phase branch for `Bug` (no milestone). Warnings/Suggestions are carried into the PR body; Critical findings block the PR.
+Implements a single Gitea issue end to end: fetches the issue and creates its branch from the issue's label (`Task` → `task-N` off the sub-phase branch; `Bug` → `bug-N` off the phase branch), linking the issue to the branch via `ref`; implements the plan; runs a scoped review with a fix loop (max 3 rounds); commits; and opens a PR — to the sub-phase branch for `Task` or to the phase branch for `Bug`. Warnings/Suggestions are carried into the PR body; Critical findings block the PR.
 
 **Use when:** Working a single issue from the sub-phase's task list.
 
@@ -104,7 +104,7 @@ Closes out a finished sub-phase: runs the milestone gate (every issue on `Phase 
 | Task-issue branch | `task-NNN` (NNN = the Gitea issue number) |
 | Bug-issue branch | `bug-NNN` (NNN = the Gitea issue number) |
 | Sub-phase branch | `phase-X.Y` |
-| Phase branch | `phase-X` (created manually) |
+| Phase branch | `phase-X` (created from `master` by `/create-sub-phase` if missing — first sub-phase only) |
 | Milestone | `Phase X.Y` (one per sub-phase; no phase-level milestones) |
 | Commit | `[Type-IssueNumber] Issue title` (Type = the issue label, e.g. `[Task-171]`, `[Bug-18]`); sub-phase work `[Phase-X.Y]`; `[DOCS]`/`[TOOLS]` are human-only |
 

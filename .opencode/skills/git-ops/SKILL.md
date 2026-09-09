@@ -18,17 +18,17 @@ Four tiers, each cut from the one above it:
 
 ```
 master
-└── phase-X              (one per phase — created manually by the user)
+└── phase-X              (one per phase — created from master by /create-sub-phase if missing)
     ├── bug-NNN          (one per Bug issue, cut from phase-X)
     └── phase-X.Y        (one per sub-phase, cut from phase-X)
         └── task-NNN     (one per Task issue, cut from phase-X.Y)
 ```
 
 - Issue branch name: `task-NNN` or `bug-NNN` where `NNN` is the Gitea issue number (e.g. `task-171`, `bug-18`). No dated branches.
-- `phase-X` is created manually by the user from `master` — agents never create phase branches; if the phase branch is missing, STOP and report it.
+- `phase-X` is created from `master` and pushed to origin when `/create-sub-phase` finds it missing — in practice this only happens for the first sub-phase of a phase (for later sub-phases it should already exist).
 - Every branch an agent creates is pushed with upstream set the moment it is created: `git push -u origin <branch>` (phase-X.Y, task, and bug branches alike). The branch then exists on Gitea and the local branch tracks origin — no manual `--set-upstream` later.
 - Merges are **merge commits** — never squash, never rebase, never force-push.
-- PRs go: task branch → sub-phase branch (attach the `Phase X.Y` milestone). Bug branch → phase branch (no milestone). Sub-phase → phase happens at `/complete-sub-phase` (no milestone); phase → master is done manually.
+- PRs go: task branch → sub-phase branch, bug branch → phase branch, sub-phase → phase at `/complete-sub-phase`, phase → master manually. **No PR carries a milestone** — the `Phase X.Y` milestone is attached to the issues only.
 
 ## Commits
 
@@ -48,8 +48,7 @@ master
 ## Pull requests
 
 - Body per `templates/pr-body.md`.
-- **Task PRs** (task branch → sub-phase branch): attach the sub-phase milestone — pass the `milestone` parameter (the milestone ID, available from the issue's milestone) so the PR links to `Phase X.Y`.
-- **Bug PRs** (bug branch → phase branch) and **sub-phase PRs** (→ phase branch): no milestone.
+- **No PR carries a milestone** — do not pass a `milestone` parameter when creating a pull request; the `Phase X.Y` milestone is attached to the issues only.
 - Always return the PR URL in your report.
 
 ## Milestone gate
