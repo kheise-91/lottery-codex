@@ -275,7 +275,7 @@ Replace mock data with live scraped data for all three games (Badger Five, Super
 
    **Done when:** No simplehtmldom references remain in the backend; BadgerFive's scraped output matches pre-migration output; SuperCash and Megabucks can scrape via the shared scraper.
 
-- [-] **[3.2 — Serve real drawing history from game classes](https://gitea.heise.home/kheise/lottery-codex/milestones/43)**
+- [x] **[3.2 — Serve real drawing history from game classes](https://gitea.heise.home/kheise/lottery-codex/milestones/43)**
    - Remove the hardcoded mock `$historyMap` from `GamesController`; `history()` resolves the game and calls `$game->getHistory()`, wrapped in try-catch returning a 503 friendly error if scraping fails
    - Fix `SuperCash::getHistory()` and `Megabucks::getHistory()` to load drawings via the shared scraper before returning (currently they return empty data)
    - Fix `PatternDistribution` to take the most recent 100 drawings (current `slice(-100)` takes the oldest 100 on newest-first data)

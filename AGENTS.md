@@ -134,7 +134,7 @@ Frontend (React SPA) <--JSON--> Backend (Slim API) <--CURL--> wilottery.com (scr
 |--------|----------|-------------|
 | GET | `/api/games` | List available games |
 | GET | `/api/games/{gameId}` | Get game details and rules |
-| GET | `/api/games/{gameId}/history` | Get historical drawing data (mock data; live scraping lands in Phase 3) |
+| GET | `/api/games/{gameId}/history` | Get historical drawing data (live scraped from game classes) |
 | POST | `/api/games/{gameId}/generate` | Generate prediction panels |
 
 ### Docker/Nginx Routing
