@@ -20,7 +20,7 @@ function PatternDistribution({ history, gameId, gamePrimaryColor }) {
   const distribution = useMemo(() => {
     if (!history || typeof history !== 'object') return []
     const entries = Object.values(history ?? {})
-    const last100 = entries.length > 100 ? entries.slice(-100) : entries
+    const last100 = entries.slice(0, 100)
     const total = last100.length
     if (total === 0) return []
 
