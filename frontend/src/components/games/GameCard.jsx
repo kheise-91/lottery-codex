@@ -111,7 +111,7 @@ function GameCard({
                 Jackpot
               </span>
             </div>
-            <JackpotValue jackpot={jackpot} className="block text-xs font-semibold text-gray-700" />
+            <JackpotValue jackpot={jackpot} className="block text-xs font-semibold text-gray-700" colorStyle={{ color: `var(--color-${gameId})` }} />
           </div>
         </div>
       </div>
