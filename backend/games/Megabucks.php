@@ -56,8 +56,23 @@ class Megabucks implements GameInterface, \JsonSerializable
                 'highEven' => $this->getHighEven()
             ],
             'description' => 'Pick 6 numbers from 1-49 in this twice-weekly, Wisconsin-only rolling jackpot game where every $1 ticket gives you two separate plays.',
-            'oddsOfWinning' => '1 in 6,991,908'
+            'oddsOfWinning' => '1 in 6,991,908',
+            'jackpot' => $this->scrapeJackpot()
         ];
+    }
+
+    /**
+     * Scrape the current jackpot from wilottery.com.
+     * @return array{annuity: string, cash: string}|null Composed annuity/cash values, or null if the scrape fails
+     */
+    private function scrapeJackpot(): ?array
+    {
+        try {
+            return \LotteryCodex\Scrapers\JackpotScraper::scrape('megabucks');
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
+            return null;
+        }
     }
 
     /**

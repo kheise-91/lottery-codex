@@ -56,7 +56,8 @@ class SuperCash implements GameInterface, \JsonSerializable
                 'highEven' => $this->getHighEven()
             ],
             'description' => 'Pick 6 numbers from 1-39 for a chance to win a fixed $350,000 top prize in a daily drawing that features a doubler multiplier for lower prize tiers.',
-            'oddsOfWinning' => '1 in 1,631,312'
+            'oddsOfWinning' => '1 in 1,631,312',
+            'jackpot' => '$350,000'
         ];
     }
 
