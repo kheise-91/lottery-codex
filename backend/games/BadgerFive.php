@@ -55,8 +55,23 @@ class BadgerFive implements GameInterface, \JsonSerializable
                 'highEven' => $this->getHighEven()
             ],
             'description' => 'Pick 5 numbers from 1-31 in this daily, rolling jackpot game that offers better odds of winning than larger national lotteries.',
-            'oddsOfWinning' => '1 in 169,911'
+            'oddsOfWinning' => '1 in 169,911',
+            'jackpot' => $this->scrapeJackpot()
         ];
+    }
+
+    /**
+     * Scrape the current jackpot from wilottery.com.
+     * @return string|null The verbatim jackpot dollar string, or null if the scrape fails
+     */
+    private function scrapeJackpot(): ?string
+    {
+        try {
+            return \LotteryCodex\Scrapers\JackpotScraper::scrape('badger-5');
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
+            return null;
+        }
     }
 
     /**
