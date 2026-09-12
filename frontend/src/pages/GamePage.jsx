@@ -12,6 +12,7 @@ import PatternDistribution from '../components/games/PatternDistribution'
 import SkeletonLoader from '../components/SkeletonLoader'
 import ErrorBanner from '../components/ErrorBanner'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
+import JackpotValue from '../components/games/JackpotValue'
 import { abbreviateDrawFrequency } from '../utils/format'
 
 /** Minimum visible duration (ms) for skeleton loaders on this page. */
@@ -96,7 +97,7 @@ function GamePage() {
   /* ---- Stat values from game details (with fallbacks) ---- */
   const drawFrequency = gameDetails?.drawFrequency || '- - -'
   const odds = gameDetails?.oddsOfWinning || '- - -'
-  const jackpot = '$10,000' // placeholder per issue spec
+  const jackpot = gameDetails ? gameDetails.jackpot : null
 
   /* ---- Mobile tab content: Drawings ---- */
   const drawingsTabContent = (
@@ -574,7 +575,15 @@ function GamePage() {
   )
 }
 
-/** Desktop stat pill with icon, uppercase label, and value. */
+/**
+ * Desktop stat pill with icon, uppercase label, and value.
+ *
+ * @param {Object} props
+ * @param {string} props.gameId - Game identifier for theming
+ * @param {string} props.icon - Icon key ("calendar" | "chart" | "jackpot")
+ * @param {string} props.label - Uppercase stat label
+ * @param {string|{annuity: string, cash: string}} [props.value] - Stat value (jackpot may be an object)
+ */
 function StatPill({ gameId, icon, label, value }) {
   const icons = {
     calendar: (
@@ -598,12 +607,20 @@ function StatPill({ gameId, icon, label, value }) {
     <div className="p-4 text-center flex flex-col items-center justify-center" style={{ color: `var(--color-${gameId})` }}>
       {icons[icon] || icons.chart}
       <span className="block text-[11px] uppercase tracking-wide font-bold">{label}</span>
-      <span className="block text-base font-bold text-gray-700 mt-0.5">{value}</span>
+      <JackpotValue jackpot={value} className="block text-base font-bold text-gray-700 mt-0.5" />
     </div>
   )
 }
 
-/** Mobile stat pill — smaller icons/values, stacked below game description. */
+/**
+ * Mobile stat pill — smaller icons/values, stacked below game description.
+ *
+ * @param {Object} props
+ * @param {string} props.gameId - Game identifier for theming
+ * @param {string} props.icon - Icon key ("calendar" | "chart" | "jackpot")
+ * @param {string} props.label - Uppercase stat label
+ * @param {string|{annuity: string, cash: string}} [props.value] - Stat value (jackpot may be an object)
+ */
 function StatPillMobile({ gameId, icon, label, value }) {
   const icons = {
     calendar: (
@@ -627,7 +644,7 @@ function StatPillMobile({ gameId, icon, label, value }) {
     <div className="p-3 text-center flex flex-col items-center justify-center" style={{ color: `var(--color-${gameId})` }}>
       {icons[icon] || icons.chart}
       <span className="block text-[9px] uppercase tracking-wide font-semibold">{label}</span>
-      <span className="block text-sm font-bold mt-0.5 text-gray-700">{value}</span>
+      <JackpotValue jackpot={value} className="block text-sm font-bold mt-0.5 text-gray-700" />
     </div>
   )
 }

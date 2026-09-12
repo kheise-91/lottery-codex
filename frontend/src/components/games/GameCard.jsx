@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import JackpotValue from './JackpotValue';
 
 /**
  * Game-specific color palette.
@@ -23,7 +24,7 @@ const gameColors = {
  * @param {string} props.status - Backend status: "enabled" or "disabled"
  * @param {string} props.drawFrequency - Draw schedule (e.g., "Wed/Sun", "Daily")
  * @param {string} props.oddsOfWinning - Odds display string (e.g., "1 in 575")
- * @param {string} props.jackpot - Jackpot amount placeholder (e.g., "$50,000")
+ * @param {string|{annuity: string, cash: string}} props.jackpot - Jackpot amount (e.g., "$50,000" or { annuity: "$1,000,000", cash: "$750,000" })
  * @param {boolean} props.enabled - Whether the game is currently playable
  */
 function GameCard({
@@ -110,9 +111,7 @@ function GameCard({
                 Jackpot
               </span>
             </div>
-            <span className="block text-xs font-semibold text-gray-700">
-              {jackpot}
-            </span>
+            <JackpotValue jackpot={jackpot} className="block text-xs font-semibold text-gray-700" />
           </div>
         </div>
       </div>
