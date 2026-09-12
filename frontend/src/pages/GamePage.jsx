@@ -607,7 +607,7 @@ function StatPill({ gameId, icon, label, value }) {
     <div className="p-4 text-center flex flex-col items-center justify-center" style={{ color: `var(--color-${gameId})` }}>
       {icons[icon] || icons.chart}
       <span className="block text-[11px] uppercase tracking-wide font-bold">{label}</span>
-      <JackpotValue jackpot={value} className="block text-base font-bold text-gray-700 mt-0.5" />
+      <JackpotValue jackpot={value} className="block text-base font-bold text-gray-700 mt-0.5" colorStyle={{ color: `var(--color-${gameId})` }} />
     </div>
   )
 }
@@ -644,7 +644,7 @@ function StatPillMobile({ gameId, icon, label, value }) {
     <div className="p-3 text-center flex flex-col items-center justify-center" style={{ color: `var(--color-${gameId})` }}>
       {icons[icon] || icons.chart}
       <span className="block text-[9px] uppercase tracking-wide font-semibold">{label}</span>
-      <JackpotValue jackpot={value} className="block text-sm font-bold mt-0.5 text-gray-700" />
+      <JackpotValue jackpot={value} className="block text-sm font-bold mt-0.5 text-gray-700" colorStyle={{ color: `var(--color-${gameId})` }} />
     </div>
   )
 }
