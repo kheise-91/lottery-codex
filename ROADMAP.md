@@ -282,7 +282,7 @@ Replace mock data with live scraped data for all three games (Badger Five, Super
 
    **Done when:** `/api/games/{gameId}/history` returns live scraped drawings for all three games; pattern distribution shows the latest 100.
 
-- [ ] **3.3 — Scrape and display current jackpot / top prize**
+- [-] **[3.3 — Scrape and display current jackpot / top prize](https://gitea.heise.home/kheise/lottery-codex/milestones/44)**
     - Add a per-game jackpot scraper (`backend/scrapers/JackpotScraper.php` in the `LotteryCodex\Scrapers\` namespace created in 3.1): fetch `https://wilottery.com/games/{$gameId}`, parse `.current-jackpot > .jackpot-amount` elements
     - Badger Five: single `.jackpot-amount` text node (e.g. `$10,000`) — return the dollar amount as-is, no annuity/cash label
     - Super Cash: static top prize of `$350,000` — hardcode in the game class, do not scrape (the page has no `.jackpot-amount` element)
