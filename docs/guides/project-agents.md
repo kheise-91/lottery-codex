@@ -6,7 +6,7 @@ description: A comprehensive list of the agents used in this project, and the ro
 
 # Project Agents Guide
 
-Agents are specialized subagents configured via `.opencode/agents/*.md`. Each is tailored for a specific role in the workflow — planning, implementation, exploration, review, design, documentation, or version control. Each agent loads its matching skill (playbook) before starting. Clicking an agent name takes you to its file.
+Agents are specialized subagents configured via `.opencode/agents/*.md`. Each is tailored for a specific role in the workflow — planning, implementation, exploration, review, design, documentation, or version control. Most agents load their matching skill (playbook) before starting; the architect's `decompose-sub-phase` skill covers its decompose job, while its other jobs and the designer's mockup spec are carried by the invoking command. Clicking an agent name takes you to its file.
 
 ---
 
@@ -15,7 +15,7 @@ Agents are specialized subagents configured via `.opencode/agents/*.md`. Each is
 - Agent files live in `.opencode/agents/`
 - Every agent is `mode: subagent`, spawned via the `task` tool with the matching `subagent_type`
 - All agents run sequentially (never in parallel) — local resource constraints
-- Each agent loads its matching skill (playbook) in `.opencode/skills/` before starting
+- Most agents load their matching skill (playbook) in `.opencode/skills/` before starting; the architect loads `decompose-sub-phase` for its decompose job, and the designer's mockup spec lives in the `/generate-mockups` command
 
 ---
 
@@ -25,16 +25,17 @@ Agents are specialized subagents configured via `.opencode/agents/*.md`. Each is
 
 #### [`software-architect`](/.opencode/agents/software-architect.md)
 
-The planning agent, where decomposition quality matters more than speed. Drafts and updates `ROADMAP.md`, critiques it, and breaks sub-phases into Gitea issues with complete plan bodies. Never implements code.
+The planning agent, where decomposition quality matters more than speed. Creates and updates `ROADMAP.md`, critiques it, and breaks sub-phases into Gitea issues with complete plan bodies. Never implements code.
 
 **Key Responsibilities:**
-- **Brainstorm** — draft/update `ROADMAP.md` from project goals (phases → sub-phases, each with a "Done when" definition).
+- **Generate** — create `ROADMAP.md` from scratch after interviewing the user and getting explicit confirmation of a requirements summary.
+- **Update** — modify an existing `ROADMAP.md` per confirmed change requests, preserving completed (`[x]`) entries verbatim.
 - **Review** — read-only critique of `ROADMAP.md` (gaps, ordering, over-scoping).
-- **Decompose** — break one sub-phase into 2–5 independently deliverable Gitea issues, each with a complete plan body.
+- **Decompose** — break one sub-phase into 2–5 independently deliverable Gitea issues, each with a complete plan body (loads its `decompose-sub-phase` skill for this job).
 - Does not spawn subagents; the orchestrator provides a `project-explorer` report as its codebase facts.
 - The only agent that may write `ROADMAP.md`; returns the Gitea specs (milestone + issues) to the orchestrator rather than creating them.
 
-**Use when:** `/brainstorm`, `/review-roadmap`, and `/create-sub-phase` work.
+**Use when:** `/generate-roadmap`, `/update-roadmap`, `/review-roadmap`, and `/create-sub-phase` work.
 
 ---
 
@@ -101,9 +102,9 @@ The design agent. Turns a roadmap sub-phase's frontend requirements into n disti
 - Plans n variants that differ in structure or interaction philosophy, not cosmetics.
 - Produces complete standalone HTML (Tailwind via CDN, inline vanilla JS, no build step).
 - Every file carries the "VISUAL REFERENCE ONLY" warning header and a reference bar.
-- Writes exclusively to the project's mockup directory; never touches source files.
+- Writes exclusively to the project's mockup directory.
 
-**Use when:** `/generate-mockups` work only.
+**Use when:** `/generate-mockups` work only. The full mockup spec (file format, naming, variant rules) lives in the command.
 
 ---
 

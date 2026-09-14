@@ -21,11 +21,19 @@ Slash commands for the Gitea-integrated development workflow. Each command orche
 
 ## Scoping
 
-### [`/brainstorm <goals>`](/.opencode/commands/brainstorm.md)
+### [`/generate-roadmap <goals>`](/.opencode/commands/generate-roadmap.md)
 
-Creates or updates `ROADMAP.md` from the project's goals. The roadmap is the single source of truth for the rest of the project — phases → sub-phases, each sub-phase a checkbox line with implementation notes and a "Done when" definition. If the goals are ambiguous in a way that changes the phase structure, it returns questions rather than guessing.
+Creates `ROADMAP.md` from scratch from the project's goals. First interviews the user (via the `question` tool) to pin down outcome, scope boundaries, constraints, current state, and phasing expectations, then writes the roadmap: phases → sub-phases, each sub-phase a checkbox line with implementation notes and a concrete, testable "Done when" definition.
 
-**Use when:** Starting a new project, or regenerating/updating `ROADMAP.md` to reflect current goals.
+**Use when:** Starting a new project's roadmap from scratch.
+
+---
+
+### [`/update-roadmap <changes>`](/.opencode/commands/update-roadmap.md)
+
+Updates an existing `ROADMAP.md`. First interviews the user to confirm exactly which entries change and which completed (`[x]`) entries must stay verbatim, then applies the confirmed edits. Preserves completed entries verbatim — never renumbers or rewords them.
+
+**Use when:** Goals, scope, or status have shifted and `ROADMAP.md` needs to reflect it.
 
 ---
 
@@ -89,7 +97,8 @@ Closes out a finished sub-phase: runs the milestone gate (every issue on `Phase 
 
 | Command | Description |
 |---------|-------------|
-| [`/brainstorm <goals>`](/.opencode/commands/brainstorm.md) | Create or update `ROADMAP.md` from project goals |
+| [`/generate-roadmap <goals>`](/.opencode/commands/generate-roadmap.md) | Create `ROADMAP.md` from scratch (interview first, then phases → sub-phases with "Done when") |
+| [`/update-roadmap <changes>`](/.opencode/commands/update-roadmap.md) | Update an existing `ROADMAP.md` (interview first; completed `[x]` entries preserved verbatim) |
 | [`/review-roadmap`](/.opencode/commands/review-roadmap.md) | Read-only critique of `ROADMAP.md` (gaps, ordering, over-scoping) |
 | [`/generate-mockups [X.Y] [n]`](/.opencode/commands/generate-mockups.md) | `n` self-contained HTML mockup variants for a sub-phase (default 3) |
 | [`/create-sub-phase [X.Y]`](/.opencode/commands/create-sub-phase.md) | Decompose a sub-phase into Gitea issues; create branch, milestone, issues; mark it in progress in `ROADMAP.md` |
@@ -110,7 +119,7 @@ Closes out a finished sub-phase: runs the milestone gate (every issue on `Phase 
 
 ### Workflow
 
-1. **Scope** — `/brainstorm` then `/review-roadmap` to produce a decomposition-ready `ROADMAP.md`.
+1. **Scope** — `/generate-roadmap` (or `/update-roadmap`) then `/review-roadmap` to produce a decomposition-ready `ROADMAP.md`.
 2. **Prepare** — `/generate-mockups` (optional) then `/create-sub-phase` to create the branch, milestone, and issues, and mark the sub-phase in progress in the roadmap.
 3. **Develop** — `/complete-issue` for each issue (implement → review → fix → commit → PR).
 4. **Complete** — when a sub-phase's issues are all merged, `/complete-sub-phase` to gate the milestone, update docs, set the milestone to closed, and open the merge PR to the phase branch.

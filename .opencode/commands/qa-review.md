@@ -21,7 +21,9 @@ Run `git diff master...HEAD` via bash; keep the output — it is the review scop
 Spawn the @code-reviewer subagent in **scoped mode** with the full diff, the phase context from ROADMAP.md, and "Use your `code-review` skill." If the change touches the UI, tell it to check whether the Playwright MCP server is available and, if so, validate against the dev server (URL per @AGENTS.md).
 
 **Step 4 — File issues for Critical findings.**
-For each **Critical** finding, spawn the @git-manager subagent to create a Gitea issue: label `Bug`, **no milestone** (phases are tracked on kanban boards), body = the finding (file/line, what is broken, how to verify the fix). Do not create issues for Warnings or Suggestions.
+For each **Critical** finding, spawn the @git-manager subagent to create a Gitea issue: label `Bug`, body = the finding (file/line, what is broken, how to verify the fix). File issues for Critical findings only — Warnings and Suggestions go in the report.
 
 **Step 5 — Report.**
-Return a summary per @.opencode/templates/command-summary.md: the verdict, the Critical issues created (numbers), and the Warnings/Suggestions carried forward. Do not open PRs or merge anything — Critical issues are fixed via `/complete-issue`, then re-run `/qa-review`.
+Load and use the `command-summary` skill to summarize all of the work completed in this command.
+
+Do not open PRs or merge anything. Critical issues are fixed via `/complete-issue`, then re-run `/qa-review`.

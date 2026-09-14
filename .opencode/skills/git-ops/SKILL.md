@@ -28,7 +28,7 @@ master
 - `phase-X` is created from `master` and pushed to origin when `/create-sub-phase` finds it missing — in practice this only happens for the first sub-phase of a phase (for later sub-phases it should already exist).
 - Every branch an agent creates is pushed with upstream set the moment it is created: `git push -u origin <branch>` (phase-X.Y, task, and bug branches alike). The branch then exists on Gitea and the local branch tracks origin — no manual `--set-upstream` later.
 - Merges are **merge commits** — never squash, never rebase, never force-push.
-- PRs go: task branch → sub-phase branch, bug branch → phase branch, sub-phase → phase at `/complete-sub-phase`, phase → master manually. **No PR carries a milestone** — the `Phase X.Y` milestone is attached to the issues only.
+- PRs go: task branch → sub-phase branch, bug branch → phase branch, sub-phase → phase at `/complete-sub-phase`, phase → master manually.
 
 ## Commits
 
@@ -40,7 +40,7 @@ master
 ## Gitea objects
 
 - **Label:** sub-phase issues carry the label `Task`; QA findings from `/qa-review` carry the label `Bug`. Create each label if it does not exist.
-- **Milestone:** one per sub-phase, titled `Phase X.Y`, body per `templates/milestone.md`. There are **no phase-level milestones** — phases are tracked on kanban boards — and `Bug` issues carry no milestone. Set its state to `closed` at `/complete-sub-phase`.
+- **Milestone:** one per sub-phase, titled `Phase X.Y`, body per `templates/milestone.md`. There are **no phase-level milestones** — phases are tracked on kanban boards. Set its state to `closed` at `/complete-sub-phase`.
 - **Issue body:** the issue body **is the plan** — it follows the `What / Why / Implementation / Acceptance Criteria / Notes` structure (see the `decompose-sub-phase` skill's issue-body template).
 - **Creating an issue:** `gitea-mcp_issue_write` requires ALL of `title`, `body`, `milestone`, and `labels`. Do NOT set `ref` at creation — the issue's branch does not exist yet. Pass every parameter on every call, even if the tool schema marks some optional. Task issues get the sub-phase milestone (`Phase X.Y`); `Bug` issues get **no** milestone — pass a null/empty value for `milestone`.
 - **Linking an issue to its branch:** when an issue is picked up for work (in `/complete-issue`), after creating the issue branch, update the issue to set `ref` = the issue branch name (so Gitea links the issue to its branch).
@@ -48,7 +48,7 @@ master
 ## Pull requests
 
 - Body per `templates/pr-body.md`.
-- **No PR carries a milestone** — do not pass a `milestone` parameter when creating a pull request; the `Phase X.Y` milestone is attached to the issues only.
+- Milestones attach to issues only — the `Phase X.Y` milestone is on the issues, not the PR.
 - Always return the PR URL in your report.
 
 ## Milestone gate

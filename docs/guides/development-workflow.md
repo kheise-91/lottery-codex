@@ -12,9 +12,9 @@ description: The workflow followed while working on this project.
 Initialize project (README.md, .gitignore etc)
 
 ### Step 2 - Scope Project
-*Commands available: `/brainstorm`, `/review-roadmap`*
+*Commands available: `/generate-roadmap`, `/update-roadmap`, `/review-roadmap`*
 
-- Create or update `ROADMAP.md` from the project's goals (`/brainstorm`).
+- Create `ROADMAP.md` from the project's goals (`/generate-roadmap`) or update it as goals shift (`/update-roadmap`). Both interview the user before writing.
 - Critique the roadmap for gaps, ordering, and over-scoping (`/review-roadmap`) until it is ready to decompose.
 
 ### Step 3 - Task Preparation
@@ -68,7 +68,7 @@ flowchart TD
     End([6 - Deploy Project])
 
     subgraph SCOPE_PROJECT["2 - Scope Project"]
-        S1["/brainstorm"]
+        S1["/generate-roadmap"]
         S2["/review-roadmap"]
     end
 

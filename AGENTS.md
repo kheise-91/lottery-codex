@@ -58,9 +58,9 @@ These are hard requirements due to local GPU memory constraints and context wind
 
 ### 5. Available Subagents
 
-All subagents are defined in `.opencode/agents/`. Use them via the `task` tool with the matching `subagent_type`. Each agent's working playbook is a skill in `.opencode/skills/` (the architect has three — `brainstorm-roadmap`, `review-roadmap`, `decompose-sub-phase`); commands instruct agents to use it.
+All subagents are defined in `.opencode/agents/`. Use them via the `task` tool with the matching `subagent_type`. Each agent's working playbook is a skill in `.opencode/skills/` (the architect's one is `decompose-sub-phase`); commands instruct agents to use it.
 
-- `software-architect` — Brainstorms/creates and updates ROADMAP.md, critiques it, and decomposes a sub-phase into 2–5 Gitea issues with complete plan bodies (thinking model).
+- `software-architect` — Creates, updates, and critiques ROADMAP.md, and decomposes a sub-phase into 2–5 Gitea issues with complete plan bodies (thinking model).
 - `project-explorer` — Read-only structured codebase analysis; returns a report from a template.
 - `software-engineer` — Implements one issue's plan within the scope passed at spawn time.
 - `code-reviewer` — Read-only code review in scoped (diff) or standalone mode; uses the Playwright MCP Server for UI changes when it is available.
@@ -181,7 +181,7 @@ Nginx serves the frontend from `/var/www/html/frontend/` with SPA fallback (`try
 - Merges are merge commits (no squash, no rebase)
 - **Commit format:** `[Type-IssueNumber] Issue title` (Type = the issue label, capitalized, e.g. `[Task-171]`, `[Bug-18]`); sub-phase work uses `[Phase-X.Y]`; `[DOCS]`/`[TOOLS]` are human-only (manual commits on tool/doc branches) — agents never emit them
 - **Gitea:** label `Task` on sub-phase issues, `Bug` on QA findings; milestone per sub-phase titled `Phase X.Y` with a `Title / Parent Phase / Description / Done When` body — no phase-level milestones (phases are tracked on kanban boards); `Bug` issues carry no milestone; issue body is the plan (`What / Why / Implementation / Acceptance Criteria / Notes`)
-- **PRs:** task branch → sub-phase branch, bug branch → phase branch, sub-phase → phase branch — no PR carries a milestone (the `Phase X.Y` milestone is on the issues); body sections `Task Summary / Files changed / Code review summary / Closes #N`
+- **PRs:** task branch → sub-phase branch, bug branch → phase branch, sub-phase → phase branch; milestones attach to issues only (the `Phase X.Y` milestone is on the issues, not the PR); body sections `Task Summary / Files changed / Code review summary / Closes #N`
 - `gitea-mcp_issue_write` requires ALL of: `title`, `body`, `milestone`, `labels` — pass every parameter even if the schema marks it optional; do NOT set `ref` at creation (the branch does not exist yet — it is linked at work-time in `/complete-issue`)
 
 ## Models
@@ -190,7 +190,8 @@ Local models via llama.cpp. **Model routing is pinned only in command frontmatte
 
 | Command | Model |
 |---------|-------|
-| `/brainstorm` | `llama.cpp/Enoch-III` |
+| `/generate-roadmap` | `llama.cpp/Enoch-III` |
+| `/update-roadmap` | `llama.cpp/Enoch-III` |
 | `/review-roadmap` | `llama.cpp/Enoch-III` |
 | `/create-sub-phase` | `llama.cpp/Enoch-II` |
 | `/generate-mockups` | `llama.cpp/Muse` |
@@ -202,11 +203,12 @@ Tiers: Enoch (fast, 3-bit, reasoning off) · Enoch-II (mid, 3-bit, medium reason
 
 ## Workflow
 
-Pipeline: `/brainstorm` → `/review-roadmap` → `/generate-mockups` → `/create-sub-phase` → `/complete-issue` (per task) → `/complete-sub-phase` (per sub-phase) → `/qa-review` (per phase) → manual phase → `master` PR.
+Pipeline: `/generate-roadmap` / `/update-roadmap` → `/review-roadmap` → `/generate-mockups` → `/create-sub-phase` → `/complete-issue` (per task) → `/complete-sub-phase` (per sub-phase) → `/qa-review` (per phase) → manual phase → `master` PR.
 
 | Command | Purpose |
 |---------|---------|
-| `/brainstorm <goals>` | Create or update ROADMAP.md (phases → sub-phases with "Done when") |
+| `/generate-roadmap <goals>` | Create ROADMAP.md from scratch (interview first, then phases → sub-phases with "Done when") |
+| `/update-roadmap <changes>` | Update an existing ROADMAP.md (interview first; completed `[x]` entries preserved verbatim) |
 | `/review-roadmap` | Read-only critique of ROADMAP.md (gaps, ordering, over-scoping) |
 | `/generate-mockups [X.Y] [n]` | Produce n self-contained HTML mockups for a sub-phase in the project's mockup directory |
 | `/create-sub-phase [X.Y]` | Decompose a roadmap sub-phase into 2–5 Gitea issues; create branch, milestone, and issues (plan = issue body); mark it in progress in ROADMAP.md (`[-]` + milestone link) |
@@ -220,7 +222,7 @@ Rules:
 - The orchestrator never edits code; all code changes go through `software-engineer`.
 - QA loop: `/qa-review` files `Bug` issues for Critical findings → fix each with `/complete-issue` → re-run `/qa-review` until clean → then the manual phase → `master` PR.
 - Command syntax: `@name` references a subagent (spawn it) or a file (inject its content); `!`command`` injects shell output into the prompt.
-- Every command ends with the summary table defined in `.opencode/templates/command-summary.md` — the user verifies work from these tables.
+- Every command ends with the summary table defined in the `command-summary` skill — the user verifies work from these tables.
 
 ## Key Context
 

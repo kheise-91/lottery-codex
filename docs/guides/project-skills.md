@@ -23,22 +23,6 @@ A skill is not a slash command: it is loaded by an agent (via the `skill` tool) 
 
 ## Planning — `software-architect`
 
-### [`brainstorm-roadmap`](/.opencode/skills/brainstorm-roadmap/SKILL.md)
-
-How to create or update `ROADMAP.md` from project goals. Structures the file as Project Goal, Current State vs Target, Conventions, and Phases; each sub-phase is a checkbox line with implementation-note bullets and a concrete, testable "Done when." Preserves completed (`[x]`) entries verbatim.
-
-**Use when:** Invoked by `/brainstorm`.
-
----
-
-### [`review-roadmap`](/.opencode/skills/review-roadmap/SKILL.md)
-
-How to critique `ROADMAP.md` read-only. Returns a critique organized as Gaps, Ordering, Over-scoping, Tasks disguised as sub-phases, and Weak "Done when" lines, ending with a verdict on whether the roadmap is ready to decompose.
-
-**Use when:** Invoked by `/review-roadmap`.
-
----
-
 ### [`decompose-sub-phase`](/.opencode/skills/decompose-sub-phase/SKILL.md)
 
 How to break one roadmap sub-phase into 2–5 independently deliverable Gitea issues, each with a complete plan body (the issue body is the plan). Reads the sub-phase entry and any matching mockup, uses the `project-explorer` report the orchestrator provides as its codebase facts, and returns the milestone spec plus each issue in execution order — it never creates Gitea objects itself.
@@ -79,9 +63,7 @@ How to review a diff (scoped mode) or an area (standalone mode) against the plan
 
 ## Design — `ui-designer`
 
-### [`mockups`](/.opencode/skills/mockups/SKILL.md)
-
-How to turn a sub-phase's frontend requirements into `n` distinct, self-contained HTML mockups. Grounds each design in the project's existing design tokens and components, plans `n` variants that differ in structure or interaction philosophy (not cosmetics), and writes each as a complete standalone HTML file with the "VISUAL REFERENCE ONLY" warning and a reference bar, in the project's mockup directory.
+The designer has no skill of its own — the full mockup spec (requirements gathering, HTML file format, reference bar, naming, variant rules) is inlined in the [`/generate-mockups`](/.opencode/commands/generate-mockups.md) command.
 
 **Use when:** Invoked by `/generate-mockups`.
 
@@ -113,24 +95,23 @@ The exact branch, commit, milestone, issue, and PR formats for this repository, 
 
 | Skill | Agent | Description |
 |-------|-------|-------------|
-| [`brainstorm-roadmap`](/.opencode/skills/brainstorm-roadmap/SKILL.md) | `software-architect` | Create/update `ROADMAP.md` from project goals |
-| [`review-roadmap`](/.opencode/skills/review-roadmap/SKILL.md) | `software-architect` | Read-only critique of `ROADMAP.md` (gaps, ordering, over-scoping) |
 | [`decompose-sub-phase`](/.opencode/skills/decompose-sub-phase/SKILL.md) | `software-architect` | Break a sub-phase into 2–5 issues with complete plan bodies |
 | [`explore-codebase`](/.opencode/skills/explore-codebase/SKILL.md) | `project-explorer` | Read a codebase area; return a structured report |
 | [`execute-issue-plan`](/.opencode/skills/execute-issue-plan/SKILL.md) | `software-engineer` | Implement one issue's plan within its scope boundary |
 | [`code-review`](/.opencode/skills/code-review/SKILL.md) | `code-reviewer` | Review a diff/area; tag findings; PASS/FAIL verdict |
-| [`mockups`](/.opencode/skills/mockups/SKILL.md) | `ui-designer` | Self-contained HTML mockups for a sub-phase |
 | [`docs-update`](/.opencode/skills/docs-update/SKILL.md) | `docs-manager` | Keep `ROADMAP.md` status, `README.md`, and `AGENTS.md` in sync |
 | [`git-ops`](/.opencode/skills/git-ops/SKILL.md) | `git-manager` | Exact branch/commit/milestone/issue/PR formats; Gitea via MCP |
+| [`command-summary`](/.opencode/skills/command-summary/SKILL.md) | (orchestrator) | The final summary table every command ends with |
 
 ### How Skills Map to the Workflow
 
-1. **Scope** — `software-architect` loads `brainstorm-roadmap` then `review-roadmap`.
+1. **Scope** — `/generate-roadmap` and `/update-roadmap` carry the roadmap spec inline (no skill); `/review-roadmap` carries its critique checklist inline.
 2. **Prepare** — the orchestrator spawns `project-explorer` (`explore-codebase`) for codebase facts; `software-architect` loads `decompose-sub-phase` and decomposes using that report; `docs-manager` (`docs-update`) marks the sub-phase in progress.
-3. **Design** — `ui-designer` loads `mockups` (when a sub-phase has frontend work).
+3. **Design** — `ui-designer` follows the mockup spec inlined in `/generate-mockups` (when a sub-phase has frontend work).
 4. **Develop** — `software-engineer` loads `execute-issue-plan`; `code-reviewer` loads `code-review` for the scoped review and fix loop.
 5. **Complete** — `docs-manager` loads `docs-update` to tick the checkbox and `git-manager` loads `git-ops` to gate the milestone and open the merge PR.
 6. **QA** — `code-reviewer` loads `code-review` (full diff) for `/qa-review` at the end of a phase.
+7. **Report** — every command ends by loading `command-summary`.
 
 ---
 

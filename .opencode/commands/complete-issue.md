@@ -38,4 +38,6 @@ When the verdict is PASS, spawn the @git-manager subagent to:
 - Return the PR URL.
 
 **Step 6 — Report.**
-Return a summary per @.opencode/templates/command-summary.md — follow it exactly (`STEP #` is the step number from this command; exactly three columns): the branch, the commit, the review verdict, the PR URL, and the Warning/Suggestion findings carried forward.
+Load and use the `command-summary` skill to summarize all of the work completed in this command.
+
+The work for the issue is complete and ready for the user to review and merge the PR.
