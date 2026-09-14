@@ -23,7 +23,7 @@ Spawn the @git-manager subagent to:
 - Commit the doc changes with message `[Phase-$1] Complete $1`.
 - Push the branch.
 - Set the `Phase $1` milestone state to "closed".
-- Open a pull request to `phase-X` (no milestone), body per the git-ops skill's `pr-body` template summarizing the completion (issues closed, doc changes).
+- Open a pull request to `phase-X`, body per the git-ops skill's `pr-body` template summarizing the completion (issues closed, doc changes).
 - Return the PR URL.
 
 **Step 4 — Report.**

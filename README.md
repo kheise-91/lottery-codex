@@ -9,7 +9,7 @@ This project is developed with OpenCode, an interactive CLI agent harness, using
 - `ROADMAP.md` (project root) is the single source of truth: phases → sub-phases, each with a "Done when" definition; in-progress and complete sub-phases link their title to the Gitea milestone.
 - Work is tracked on a self-hosted Gitea instance: a milestone per sub-phase (`Phase X.Y`), issues as the unit of work (the issue body is the plan), and a pull request for every merge.
 - Branch tiers: `master` ← `phase-X` ← `phase-X.Y` ← `task-NNN` / `bug-NNN` (NNN = the Gitea issue number). Merges are merge commits.
-- The workflow is driven by custom OpenCode slash commands (`/brainstorm`, `/review-roadmap`, `/generate-mockups`, `/create-sub-phase`, `/complete-issue`, `/complete-sub-phase`, `/qa-review`) backed by specialized subagents (architect, explorer, engineer, reviewer, designer, docs, git) and their skills (playbooks).
+- The workflow is driven by custom OpenCode slash commands (`/generate-roadmap`, `/update-roadmap`, `/review-roadmap`, `/generate-mockups`, `/create-sub-phase`, `/complete-issue`, `/complete-sub-phase`, `/qa-review`) backed by specialized subagents (architect, explorer, engineer, reviewer, designer, docs, git) and their skills (playbooks).
 
 For the details of each piece — the subagents, the slash commands, the skills, and the step-by-step workflow — see the project guides in the [Documentation](#documentation) section.
 

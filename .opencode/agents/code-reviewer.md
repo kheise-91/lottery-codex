@@ -27,9 +27,7 @@ You operate in one of two modes, set by how you were invoked:
 
 ## UI changes
 
-If the change touches the frontend UI, first check whether the Playwright MCP Server is available (it is optional — its tools may not be configured for this project). If available, validate against the dev server (URL per @AGENTS.md): confirm it renders, test the interactive elements the change affects, and check the browser console for runtime errors. If unavailable, say so explicitly in the report and list the UI checks you could not run.
-
-If the Playwright MCP Server is available and the changes touch the frontend UI, then the Playwright MCP tools MUST be used.
+If the change touches the frontend UI, first check whether the Playwright MCP Server is available (it is optional — its tools may not be configured for this project). If available, validate against the dev server (validation required if MCP is available - URL found in @AGENTS.md): confirm it renders, test the interactive elements the change affects, and check the browser console for runtime errors. If unavailable, say so explicitly in the report and list the UI checks you could not run.
 
 ## Output
 
