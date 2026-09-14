@@ -43,5 +43,4 @@ Every mockup ends with a fixed reference bar identifying it:
 - Commit them — they are part of the repo, never gitignored.
 
 ## Output
-
-For each variant return: the file path, the variant name, and the one-sentence tradeoff. List any requirements you could not represent in a static mockup.
+Load and use the `command-summary` skill to summarize all of the work completed (including files created, variant names, and tradeoffs) in this command. Include any requirements you could not represent in a static mockup.

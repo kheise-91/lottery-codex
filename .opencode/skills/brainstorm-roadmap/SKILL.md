@@ -25,4 +25,4 @@ You may write to `ROADMAP.md` for this job only.
    ```
 4. Keep "Done when" lines concrete and verifiable — never "works" or "is complete".
 5. Preserve any existing completed (`[x]`) entries verbatim. Do not renumber or reword them.
-6. Write the file, then return a summary of the phases and sub-phases you added or changed.
+6. Write the file, load and use the `command-summary` skill to return a summary of the phases and sub-phases you added or changed.

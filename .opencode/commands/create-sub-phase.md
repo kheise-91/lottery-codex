@@ -22,4 +22,6 @@ Spawn the @git-manager subagent and hand it the milestone spec and the ordered i
 Spawn the @docs-manager subagent in **command mode** with the sub-phase number, title, and the milestone URL from Step 3. It marks the sub-phase in progress in ROADMAP.md: checkbox `[-]` and the title linked to the milestone URL (format per its `roadmap-entry` template). Then commit and push the change yourself with the message `[Phase-$1] Starting $1` — no Gitea work is involved, so do not spawn git-manager.
 
 **Step 5 — Report.**
-Return a summary per @.opencode/templates/command-summary.md: the branch, the milestone, and the issue list (number + title) in execution order, ready for `/complete-issue`.
+Load and use the `command-summary` skill to summarize all of the work completed in this command.
+
+Ready for `/complete-issue` with the first issue created.

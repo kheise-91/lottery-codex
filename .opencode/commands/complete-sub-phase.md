@@ -27,4 +27,6 @@ Spawn the @git-manager subagent to:
 - Return the PR URL.
 
 **Step 4 — Report.**
-Return a summary per @.opencode/templates/command-summary.md: the gate result, the doc files updated, and the PR URL. The sub-phase is now complete — review and merge the PR to land it.
+Load and use the `command-summary` skill to summarize all of the work completed in this command.
+
+The sub-phase is now complete and ready for the user to review and merge the PR.

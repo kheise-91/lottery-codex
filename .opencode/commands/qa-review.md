@@ -24,4 +24,6 @@ Spawn the @code-reviewer subagent in **scoped mode** with the full diff, the pha
 For each **Critical** finding, spawn the @git-manager subagent to create a Gitea issue: label `Bug`, **no milestone** (phases are tracked on kanban boards), body = the finding (file/line, what is broken, how to verify the fix). Do not create issues for Warnings or Suggestions.
 
 **Step 5 — Report.**
-Return a summary per @.opencode/templates/command-summary.md: the verdict, the Critical issues created (numbers), and the Warnings/Suggestions carried forward. Do not open PRs or merge anything — Critical issues are fixed via `/complete-issue`, then re-run `/qa-review`.
+Load and use the `command-summary` skill to summarize all of the work completed in this command.
+
+Do not open PRs or merge anything. Critical issues are fixed via `/complete-issue`, then re-run `/qa-review`.
