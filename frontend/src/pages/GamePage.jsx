@@ -95,6 +95,7 @@ function GamePage() {
   const olderDrawings = drawings.length > 1 ? drawings.slice(1) : []
 
   /* ---- Stat values from game details (with fallbacks) ---- */
+  const ballCount = gameDetails?.numbersPerDraw ?? 5
   const drawFrequency = gameDetails?.drawFrequency || '- - -'
   const odds = gameDetails?.oddsOfWinning || '- - -'
   const jackpot = gameDetails ? gameDetails.jackpot : null
@@ -149,7 +150,7 @@ function GamePage() {
               <SkeletonLoader width="180px" height="24px" variant="block" />
             </div>
             <div className="flex items-center justify-center gap-2.5">
-              {Array.from({ length: 5 }).map((_, j) => (
+              {Array.from({ length: ballCount }).map((_, j) => (
                 <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
               ))}
             </div>
@@ -201,7 +202,7 @@ function GamePage() {
               </div>
               {/* Balls row */}
               <div className="flex items-center justify-center gap-2.5">
-                {Array.from({ length: 5 }).map((_, j) => (
+                {Array.from({ length: ballCount }).map((_, j) => (
                   <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
                 ))}
               </div>
@@ -273,7 +274,7 @@ function GamePage() {
               <div key={i} className="flex items-center gap-2 mb-2 rounded-lg bg-gray-50 p-2.5">
                 <SkeletonLoader width="64px" height="16px" />
                 <div className="flex items-center gap-1.5 ml-auto">
-                  {Array.from({ length: 5 }).map((_, j) => (
+                  {Array.from({ length: ballCount }).map((_, j) => (
                     <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
                   ))}
                 </div>
@@ -429,7 +430,7 @@ function GamePage() {
                     <SkeletonLoader width="180px" height="24px" variant="block" />
                   </div>
                   <div className="flex items-center justify-center gap-2.5">
-                    {Array.from({ length: 5 }).map((_, j) => (
+                    {Array.from({ length: ballCount }).map((_, j) => (
                       <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
                     ))}
                   </div>
@@ -482,7 +483,7 @@ function GamePage() {
                   </div>
                   {/* Balls row */}
                   <div className="flex items-center justify-center gap-2.5">
-                    {Array.from({ length: 5 }).map((_, j) => (
+                    {Array.from({ length: ballCount }).map((_, j) => (
                       <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
                     ))}
                   </div>
@@ -542,11 +543,11 @@ function GamePage() {
                    {Array.from({ length: 3 }).map((_, i) => (
                      <div key={i} className="flex items-center gap-2 mb-2 rounded-lg bg-gray-50 p-2.5">
                        <SkeletonLoader width="64px" height="16px" />
-                       <div className="flex items-center gap-1.5 ml-auto">
-                         {Array.from({ length: 5 }).map((_, j) => (
-                           <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
-                         ))}
-                       </div>
+                        <div className="flex items-center gap-1.5 ml-auto">
+                          {Array.from({ length: ballCount }).map((_, j) => (
+                            <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
+                          ))}
+                        </div>
                      </div>
                    ))}
                    {/* Footer */}
