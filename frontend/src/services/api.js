@@ -1,14 +1,26 @@
 const BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
+let gamesPromise = null;
+
 /**
  * Fetches the list of available lottery games from the backend.
+ * The request is memoized per page load so React StrictMode's double-invoked
+ * mount effects in development do not fire a second network request.
  * @returns {Promise<Object>} List of available games
  * @throws {Error} If the API request fails
  */
-export async function fetchGames() {
-  const res = await fetch(`${BASE}/games`);
-  if (!res.ok) throw new Error(`Failed to fetch games: ${res.status}`);
-  return res.json();
+export function fetchGames() {
+  if (!gamesPromise) {
+    gamesPromise = (async () => {
+      const res = await fetch(`${BASE}/games`);
+      if (!res.ok) throw new Error(`Failed to fetch games: ${res.status}`);
+      return res.json();
+    })();
+    gamesPromise.catch(() => {
+      gamesPromise = null;
+    });
+  }
+  return gamesPromise;
 }
 
 /**
