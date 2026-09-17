@@ -11,9 +11,7 @@ import { useMemo } from 'react'
 const GAME_BAR_COLORS = {
   'badger-5': { primary: '#ed1c24', light: '#fca5a5', lightest: '#fecdd3' },
   'supercash': { primary: '#0081c6', light: '#7dd3fc', lightest: '#bae6fd' },
-  'super-cash': { primary: '#0081c6', light: '#7dd3fc', lightest: '#bae6fd' },
   'megabucks': { primary: '#ff7200', light: '#fdba74', lightest: '#fed7aa' },
-  'mega-bucks': { primary: '#ff7200', light: '#fdba74', lightest: '#fed7aa' },
 };
 
 function PatternDistribution({ history, gameId, gamePrimaryColor }) {
