@@ -299,7 +299,7 @@ Replace mock data with live scraped data for all three games (Badger Five, Super
 
    **Done when:** Frontend renders 6-ball games correctly; no dead code or duplicate games fetch remains.
 
-- [ ] **3.5 — End-to-end verification & error handling**
+- [-] **[3.5 — End-to-end verification & error handling](https://gitea.heise.home/kheise/lottery-codex/milestones/46)**
    - Verify all three games end-to-end: historical drawings match the Wisconsin Lottery website, generated tickets follow pattern distributions (odd/even, low/high), and 6-number panels render correctly (Super Cash, Megabucks)
    - Handle API errors gracefully in frontend: network timeout handling (scraping can be slow), empty history results display, clear error messages via ErrorBanner
 
