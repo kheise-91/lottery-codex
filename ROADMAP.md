@@ -292,7 +292,7 @@ Replace mock data with live scraped data for all three games (Badger Five, Super
 
     **Done when:** Dashboard cards and game headers show live jackpot values (Badger Five: cash amount, Super Cash: static $350,000, Megabucks: annuity + cash); a failed scrape degrades gracefully to "—".
 
-- [x] **[3.4 — Frontend cleanup & 6-ball readiness](https://gitea.heise.home/kheise/lottery-codex/milestones/45)**
+- [-] **[3.4 — Frontend cleanup & 6-ball readiness](https://gitea.heise.home/kheise/lottery-codex/milestones/45)**
    - Remove the dead `GameContext`/`GameProvider` (`src/contexts/GameContext.jsx`, provider mount in `main.jsx`) — no component consumes it and it causes a duplicate games fetch; hooks remain the data layer
    - Drive skeleton ball counts from `gameDetails.numbersPerDraw` instead of hardcoded 5
    - Fix stale color-map keys (`super-cash`/`mega-bucks` → `supercash`/`megabucks`), remove the DrawingItem badge-width special case, remove the dead `BrowserRouter` import in App.jsx
