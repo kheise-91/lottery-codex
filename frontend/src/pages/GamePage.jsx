@@ -103,11 +103,15 @@ function GamePage() {
   const odds = gameDetails?.oddsOfWinning || '- - -'
   const jackpot = gameDetails ? gameDetails.jackpot : null
 
+  /* ---- Active error messages in stable order (nulls filtered out) ---- */
+  const errors = useMemo(
+    () => [detailsError, historyError, generateError].filter((e) => e !== null),
+    [detailsError, historyError, generateError]
+  )
+
   /* ---- Mobile tab content: Drawings ---- */
   const drawingsTabContent = (
     <>
-      {historyError && <ErrorBanner message={historyError} />}
-
       {/* Section header */}
       <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 py-3.5 flex items-center justify-center rounded-xl text-white mb-4" style={{ height: '48px' }}>
         <div className="flex items-center gap-2">
@@ -293,7 +297,6 @@ function GamePage() {
         )
       )}
 
-      {generateError && <ErrorBanner message={generateError} />}
     </>
   )
 
@@ -310,8 +313,8 @@ function GamePage() {
         </Link>
       </div>
 
-      {/* ---- Game details error banner ---- */}
-      {detailsError && <ErrorBanner message={detailsError} />}
+      {/* ---- Page-level error banner (all active errors, full width) ---- */}
+      {errors.length > 0 && <ErrorBanner messages={errors} />}
 
       {/* ---- Game Header Section (visible on both desktop and mobile) ---- */}
       <section className="mb-4 md:mb-8">
@@ -390,8 +393,6 @@ function GamePage() {
       <div className="hidden md:grid md:grid-cols-12 gap-6">
         {/* Left Column (7/12) — Drawings */}
         <div className="col-span-7 space-y-4">
-          {historyError && <ErrorBanner message={historyError} />}
-
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-3.5 flex items-center justify-center rounded-xl text-white" style={{ height: '48px' }}>
             <div className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-[22px] h-[22px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -562,11 +563,9 @@ function GamePage() {
                    </div>
                  </div>
                ) : (
-                 <TicketCarousel tickets={carouselTickets} game={gameDetails} />
-               )
-             )}
-
-            {generateError && <ErrorBanner message={generateError} />}
+                  <TicketCarousel tickets={carouselTickets} game={gameDetails} />
+                )
+              )}
           </div>
         </div>
       </div>

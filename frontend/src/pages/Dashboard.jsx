@@ -17,12 +17,13 @@ function Dashboard() {
         Select a lottery game below to view analysis, history, and generate optimized panels.
       </p>
 
+      {error && (
+        <ErrorBanner message={error} />
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading && (
           <p className="col-span-full text-center text-gray-500 py-8">Loading games...</p>
-        )}
-        {error && (
-          <ErrorBanner message={error} />
         )}
         {!loading && !error && games.map((game) => (
           <div key={game.id}>
