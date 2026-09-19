@@ -32,6 +32,7 @@ function GamePage() {
 
   const [gameDetails, setGameDetails] = useState(null)
   const [gameDetailsLoading, setGameDetailsLoading] = useState(true)
+  const [detailsError, setDetailsError] = useState(null)
   const [ticketCount, setTicketCount] = useState(3)
   const [activeTab, setActiveTab] = useState(0) // 0=Drawings, 1=Tickets
 
@@ -47,12 +48,14 @@ function GamePage() {
   useEffect(() => {
     let cancelled = false
     setGameDetailsLoading(true)
+    setDetailsError(null)
     ;(async () => {
       try {
         const details = await fetchGameDetails(gameId)
         if (!cancelled) setGameDetails(details)
       } catch (err) {
         console.error('Failed to fetch game details:', err)
+        if (!cancelled) setDetailsError(err.message)
       } finally {
         if (!cancelled) setGameDetailsLoading(false)
       }
@@ -103,7 +106,7 @@ function GamePage() {
   /* ---- Mobile tab content: Drawings ---- */
   const drawingsTabContent = (
     <>
-      {historyError && <ErrorBanner message="Failed to load drawing history. Please try again." />}
+      {historyError && <ErrorBanner message={historyError} />}
 
       {/* Section header */}
       <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 py-3.5 flex items-center justify-center rounded-xl text-white mb-4" style={{ height: '48px' }}>
@@ -290,7 +293,7 @@ function GamePage() {
         )
       )}
 
-      {generateError && <ErrorBanner message="Failed to generate tickets. Please try again." />}
+      {generateError && <ErrorBanner message={generateError} />}
     </>
   )
 
@@ -306,6 +309,9 @@ function GamePage() {
           Back to Dashboard
         </Link>
       </div>
+
+      {/* ---- Game details error banner ---- */}
+      {detailsError && <ErrorBanner message={detailsError} />}
 
       {/* ---- Game Header Section (visible on both desktop and mobile) ---- */}
       <section className="mb-4 md:mb-8">
@@ -384,7 +390,7 @@ function GamePage() {
       <div className="hidden md:grid md:grid-cols-12 gap-6">
         {/* Left Column (7/12) — Drawings */}
         <div className="col-span-7 space-y-4">
-          {historyError && <ErrorBanner message="Failed to load drawing history. Please try again." />}
+          {historyError && <ErrorBanner message={historyError} />}
 
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-3.5 flex items-center justify-center rounded-xl text-white" style={{ height: '48px' }}>
             <div className="flex items-center gap-2">
@@ -560,7 +566,7 @@ function GamePage() {
                )
              )}
 
-            {generateError && <ErrorBanner message="Failed to generate tickets. Please try again." />}
+            {generateError && <ErrorBanner message={generateError} />}
           </div>
         </div>
       </div>

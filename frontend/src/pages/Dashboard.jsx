@@ -1,5 +1,6 @@
 import { useGames } from '../hooks/useGames';
 import GameCard from '../components/games/GameCard';
+import ErrorBanner from '../components/ErrorBanner';
 
 /**
  * Dashboard page — game selection landing.
@@ -21,7 +22,7 @@ function Dashboard() {
           <p className="col-span-full text-center text-gray-500 py-8">Loading games...</p>
         )}
         {error && (
-          <p className="col-span-full text-center text-red-500 py-8">{error}</p>
+          <ErrorBanner message={error} />
         )}
         {!loading && !error && games.map((game) => (
           <div key={game.id}>
