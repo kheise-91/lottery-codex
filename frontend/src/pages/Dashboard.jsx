@@ -25,6 +25,9 @@ function Dashboard() {
         {loading && (
           <p className="col-span-full text-center text-gray-500 py-8">Loading games...</p>
         )}
+        {!loading && !error && games.length === 0 && (
+          <p className="col-span-full text-center text-sm text-gray-400 py-8">No games available</p>
+        )}
         {!loading && !error && games.map((game) => (
           <div key={game.id}>
             <GameCard

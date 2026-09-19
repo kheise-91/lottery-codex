@@ -97,6 +97,14 @@ function GamePage() {
   const latestDrawing = drawings.length > 0 ? drawings[0] : null
   const olderDrawings = drawings.length > 1 ? drawings.slice(1) : []
 
+  /* ---- Empty state: history resolved with no error and zero drawings ---- */
+  const emptyHistory = !historyLoading && !historyError && drawings.length === 0
+
+  /** Shared "no drawing history" message (matches PatternDistribution's empty-state tone). */
+  const emptyHistoryMessage = (
+    <p className="text-xs text-gray-400">No drawing history available</p>
+  )
+
   /* ---- Stat values from game details (with fallbacks) ---- */
   const ballCount = gameDetails?.numbersPerDraw ?? 5
   const drawFrequency = gameDetails?.drawFrequency || '- - -'
@@ -124,7 +132,7 @@ function GamePage() {
 
       {/* Pattern Distribution */}
       <section className="mb-8">
-        {showHistorySkeleton || !drawings.length ? (
+        {showHistorySkeleton ? (
           <div>
             <SkeletonLoader width="140px" height="16px" />
             <SkeletonLoader width="90px" height="12px" />
@@ -140,6 +148,8 @@ function GamePage() {
               ))}
             </div>
           </div>
+        ) : emptyHistory ? (
+          emptyHistoryMessage
         ) : (
           <PatternDistribution history={history?.history} gameId={gameId} />
         )}
@@ -194,7 +204,7 @@ function GamePage() {
         <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
       ))}
 
-      {(showHistorySkeleton || !drawings.length) && (
+      {showHistorySkeleton ? (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="border-b border-gray-100 pb-4">
@@ -216,7 +226,9 @@ function GamePage() {
             </div>
           ))}
         </div>
-      )}
+      ) : emptyHistory ? (
+        emptyHistoryMessage
+      ) : null}
     </>
   )
 
@@ -405,7 +417,7 @@ function GamePage() {
           {/* Pattern Distribution + Latest Drawing side-by-side */}
           <div className="grid grid-cols-2 gap-4">
             <section>
-              {showHistorySkeleton || !drawings.length ? (
+              {showHistorySkeleton ? (
                 <div>
                   <SkeletonLoader width="140px" height="16px" />
                   <SkeletonLoader width="90px" height="12px" />
@@ -421,6 +433,8 @@ function GamePage() {
                     ))}
                   </div>
                 </div>
+              ) : emptyHistory ? (
+                emptyHistoryMessage
               ) : (
                 <PatternDistribution history={history?.history} gameId={gameId} />
               )}
@@ -475,7 +489,7 @@ function GamePage() {
             <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
           ))}
 
-          {(showHistorySkeleton || !drawings.length) && (
+          {showHistorySkeleton ? (
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="border-b border-gray-100 pb-4">
@@ -497,7 +511,9 @@ function GamePage() {
                 </div>
               ))}
             </div>
-          )}
+          ) : emptyHistory ? (
+            emptyHistoryMessage
+          ) : null}
         </div>
 
         {/* Right Column (5/12) — Tickets */}
