@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LotteryCodex\Games;
 
-require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
-
 /**
  * Megabucks game implementation using Lottery Codex pattern analysis (3-Odd 3-Even / 3-Low 3-High).
  */
@@ -58,8 +56,23 @@ class Megabucks implements GameInterface, \JsonSerializable
                 'highEven' => $this->getHighEven()
             ],
             'description' => 'Pick 6 numbers from 1-49 in this twice-weekly, Wisconsin-only rolling jackpot game where every $1 ticket gives you two separate plays.',
-            'oddsOfWinning' => '1 in 6,991,908'
+            'oddsOfWinning' => '1 in 6,991,908',
+            'jackpot' => $this->scrapeJackpot()
         ];
+    }
+
+    /**
+     * Scrape the current jackpot from wilottery.com.
+     * @return array{annuity: string, cash: string}|null Composed annuity/cash values, or null if the scrape fails
+     */
+    private function scrapeJackpot(): ?array
+    {
+        try {
+            return \LotteryCodex\Scrapers\JackpotScraper::scrape('megabucks');
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -68,6 +81,7 @@ class Megabucks implements GameInterface, \JsonSerializable
      */
     public function getHistory(): array
     {
+        $this->loadPreviousDrawings();
         return $this->getPreviousDrawings();
     }
 
@@ -140,23 +154,7 @@ class Megabucks implements GameInterface, \JsonSerializable
      */
     private function loadPreviousDrawings(): self
     {
-        $html = file_get_html('https://wilottery.com/winners/draw-history?game=megabucks');
-
-        foreach ($html->find('.winning-numbers-line') as $numSet) {
-            $drawing = [];
-
-            foreach ($numSet->find('.date') as $dateContainer) {
-                foreach ($dateContainer->find('strong') as $dateText) {
-                    $dateDrawn = date('l, F jS', strtotime($dateText->plaintext));
-                }
-            }
-
-            foreach ($numSet->find('.winning-number') as $num) {
-                $drawing[] = (int) $num->plaintext;
-            }
-
-            $this->previousDrawings[$dateDrawn]['numbers'] = $drawing;
-        }
+        $this->previousDrawings = \LotteryCodex\Scrapers\HistoryScraper::scrape('megabucks');
 
         foreach ($this->previousDrawings as $dateDrawn => $drawing) {
             $odd = $even = 0;

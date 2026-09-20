@@ -1,5 +1,6 @@
 import { useGames } from '../hooks/useGames';
 import GameCard from '../components/games/GameCard';
+import ErrorBanner from '../components/ErrorBanner';
 
 /**
  * Dashboard page — game selection landing.
@@ -16,12 +17,16 @@ function Dashboard() {
         Select a lottery game below to view analysis, history, and generate optimized panels.
       </p>
 
+      {error && (
+        <ErrorBanner message={error} />
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading && (
           <p className="col-span-full text-center text-gray-500 py-8">Loading games...</p>
         )}
-        {error && (
-          <p className="col-span-full text-center text-red-500 py-8">{error}</p>
+        {!loading && !error && games.length === 0 && (
+          <p className="col-span-full text-center text-sm text-gray-400 py-8">No games available</p>
         )}
         {!loading && !error && games.map((game) => (
           <div key={game.id}>

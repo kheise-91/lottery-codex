@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LotteryCodex\Games;
 
-require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
-
 /**
  * Badger 5 game implementation using Lottery Codex pattern analysis (3-Odd 2-Even / 3-Low 2-High).
  */
@@ -43,7 +41,7 @@ class BadgerFive implements GameInterface, \JsonSerializable
     public function getGameDetails(): array
     {
         return [
-            'id' => 'badger-five',
+            'id' => 'badger-5',
             'name' => 'Badger 5',
             'status' => 'enabled',
             'drawFrequency' => ['Daily'],
@@ -57,8 +55,23 @@ class BadgerFive implements GameInterface, \JsonSerializable
                 'highEven' => $this->getHighEven()
             ],
             'description' => 'Pick 5 numbers from 1-31 in this daily, rolling jackpot game that offers better odds of winning than larger national lotteries.',
-            'oddsOfWinning' => '1 in 169,911'
+            'oddsOfWinning' => '1 in 169,911',
+            'jackpot' => $this->scrapeJackpot()
         ];
+    }
+
+    /**
+     * Scrape the current jackpot from wilottery.com.
+     * @return string|null The verbatim jackpot dollar string, or null if the scrape fails
+     */
+    private function scrapeJackpot(): ?string
+    {
+        try {
+            return \LotteryCodex\Scrapers\JackpotScraper::scrape('badger-5');
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -91,23 +104,7 @@ class BadgerFive implements GameInterface, \JsonSerializable
      */
     private function loadPreviousDrawings(): self
     {
-        $html = file_get_html('https://wilottery.com/winners/draw-history?game=badger-5');
-
-        foreach ($html->find('.winning-numbers-line') as $numSet) {
-            $drawing = [];
-
-            foreach ($numSet->find('.date') as $dateContainer) {
-                foreach ($dateContainer->find('strong') as $dateText) {
-                    $dateDrawn = date('l, F jS', strtotime($dateText->plaintext));
-                }
-            }
-
-            foreach ($numSet->find('.winning-number') as $num) {
-                $drawing[] = (int) $num->plaintext;
-            }
-
-            $this->previousDrawings[$dateDrawn]['numbers'] = $drawing;
-        }
+        $this->previousDrawings = \LotteryCodex\Scrapers\HistoryScraper::scrape('badger-5');
 
         foreach ($this->previousDrawings as $dateDrawn => $drawing) {
             $odd = $even = 0;

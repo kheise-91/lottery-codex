@@ -8,17 +8,28 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
  * dismisses independently. The dismissed state resets when the component unmounts.
  *
  * @param {Object} props
- * @param {string} props.message - User-facing error text.
+ * @param {string} [props.message] - User-facing error text.
+ * @param {string[]} [props.messages] - Array of user-facing error texts, each rendered on its own line.
  * @returns {JSX.Element|null}
  */
-export default function ErrorBanner({ message }) {
+export default function ErrorBanner({ message, messages }) {
   const [dismissed, setDismissed] = useState(false)
 
   if (dismissed) return null
 
+  const isMultiple = Array.isArray(messages) && messages.length > 0
+
   return (
-    <div className="flex items-center justify-between gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-600">
-      <span className="text-sm">{message}</span>
+    <div className={`flex items-center justify-between gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-600${isMultiple ? ' flex-col' : ''}`}>
+      {isMultiple ? (
+        <div className="flex flex-col">
+          {messages.map((msg, i) => (
+            <span key={i} className="text-sm">{msg}</span>
+          ))}
+        </div>
+      ) : (
+        <span className="text-sm">{message}</span>
+      )}
       <button
         type="button"
         aria-label="Dismiss error"

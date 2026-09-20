@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LotteryCodex\Games;
 
-require_once __DIR__ . '/../simplehtmldom/simple_html_dom.php';
-
 /**
  * SuperCash! game implementation using Lottery Codex pattern analysis (3-Odd 3-Even / 3-Low 3-High).
  */
@@ -58,7 +56,8 @@ class SuperCash implements GameInterface, \JsonSerializable
                 'highEven' => $this->getHighEven()
             ],
             'description' => 'Pick 6 numbers from 1-39 for a chance to win a fixed $350,000 top prize in a daily drawing that features a doubler multiplier for lower prize tiers.',
-            'oddsOfWinning' => '1 in 1,631,312'
+            'oddsOfWinning' => '1 in 1,631,312',
+            'jackpot' => '$350,000'
         ];
     }
 
@@ -68,6 +67,7 @@ class SuperCash implements GameInterface, \JsonSerializable
      */
     public function getHistory(): array
     {
+        $this->loadPreviousDrawings();
         return $this->getPreviousDrawings();
     }
 
@@ -140,23 +140,7 @@ class SuperCash implements GameInterface, \JsonSerializable
      */
     private function loadPreviousDrawings(): self
     {
-        $html = file_get_html('https://wilottery.com/winners/draw-history?game=supercash');
-
-        foreach ($html->find('.winning-numbers-line') as $numSet) {
-            $drawing = [];
-
-            foreach ($numSet->find('.date') as $dateContainer) {
-                foreach ($dateContainer->find('strong') as $dateText) {
-                    $dateDrawn = date('l, F jS', strtotime($dateText->plaintext));
-                }
-            }
-
-            foreach ($numSet->find('.winning-number') as $num) {
-                $drawing[] = (int) $num->plaintext;
-            }
-
-            $this->previousDrawings[$dateDrawn]['numbers'] = $drawing;
-        }
+        $this->previousDrawings = \LotteryCodex\Scrapers\HistoryScraper::scrape('supercash');
 
         foreach ($this->previousDrawings as $dateDrawn => $drawing) {
             $odd = $even = 0;

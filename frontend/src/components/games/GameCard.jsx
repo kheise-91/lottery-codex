@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import JackpotValue from './JackpotValue';
 
 /**
  * Game-specific color palette.
  * Keys match gameId values; values correspond to CSS variables defined in index.css @theme.
  */
 const gameColors = {
-  'badger-five': { main: '#ed1c24', light: '#fecdd3' },
+  'badger-5': { main: '#ed1c24', light: '#fecdd3' },
   supercash: { main: '#0081c6', light: '#bae6fd' },
   megabucks: { main: '#ff7200', light: '#fed7aa' },
 };
@@ -16,14 +17,14 @@ const gameColors = {
  * Displays game image, status badge, stats pills, and CTA within a clickable card.
  *
  * @param {Object} props
- * @param {string} props.gameId - Game identifier used for link href and imageSrc fallback (e.g., "badger-five")
+ * @param {string} props.gameId - Game identifier used for link href and imageSrc fallback (e.g., "badger-5")
  * @param {string} props.name - Display name of the game (e.g., "Badger 5")
  * @param {string} props.description - Short game description (e.g., "Pick 5 numbers from 1 to 39")
- * @param {string} props.imageSrc - SVG image path (e.g., "/badger-five.svg")
+ * @param {string} props.imageSrc - SVG image path (e.g., "/badger-5.svg")
  * @param {string} props.status - Backend status: "enabled" or "disabled"
  * @param {string} props.drawFrequency - Draw schedule (e.g., "Wed/Sun", "Daily")
  * @param {string} props.oddsOfWinning - Odds display string (e.g., "1 in 575")
- * @param {string} props.jackpot - Jackpot amount placeholder (e.g., "$50,000")
+ * @param {string|{annuity: string, cash: string}} props.jackpot - Jackpot amount (e.g., "$50,000" or { annuity: "$1,000,000", cash: "$750,000" })
  * @param {boolean} props.enabled - Whether the game is currently playable
  */
 function GameCard({
@@ -75,29 +76,42 @@ function GameCard({
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light }}>
-            <span className="block text-[10px] uppercase tracking-wide text-gray-500 font-medium">
-              Draw
-            </span>
-            <span className="block text-xs font-semibold" style={{ color: colors.main }}>
+          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light, color: `var(--color-${gameId})` }}>
+            <div className="flex items-end justify-center gap-1 mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="text-[11px] uppercase tracking-wide font-medium">
+                Draw
+              </span>
+            </div>
+            <span className="block text-xs font-semibold text-gray-700">
               {Array.isArray(drawFrequency) && drawFrequency.length === 1 && drawFrequency[0] === 'Daily' ? 'Daily' : drawFrequency.map(d => d.slice(0, 3)).join('|')}
             </span>
           </div>
-          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light }}>
-            <span className="block text-[10px] uppercase tracking-wide text-gray-500 font-medium">
-              Odds
-            </span>
-            <span className="block text-xs font-semibold" style={{ color: colors.main }}>
+          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light, color: `var(--color-${gameId})` }}>
+            <div className="flex items-end justify-center gap-1 mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span className="text-[11px] uppercase tracking-wide font-medium">
+                Odds
+              </span>
+            </div>
+            <span className="block text-xs font-semibold text-gray-700">
               {oddsOfWinning}
             </span>
           </div>
-          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light }}>
-            <span className="block text-[10px] uppercase tracking-wide text-gray-500 font-medium">
-              Jackpot
-            </span>
-            <span className="block text-xs font-semibold" style={{ color: colors.main }}>
-              {jackpot}
-            </span>
+          <div className="stat-pill rounded-md px-2 py-1.5 text-center" style={{ backgroundColor: colors.light, color: `var(--color-${gameId})` }}>
+            <div className="flex items-end justify-center gap-1 mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-[11px] uppercase tracking-wide font-medium">
+                Jackpot
+              </span>
+            </div>
+            <JackpotValue jackpot={jackpot} className="block text-xs font-semibold text-gray-700" colorStyle={{ color: `var(--color-${gameId})` }} />
           </div>
         </div>
       </div>

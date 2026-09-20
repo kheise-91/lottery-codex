@@ -12,6 +12,7 @@ import PatternDistribution from '../components/games/PatternDistribution'
 import SkeletonLoader from '../components/SkeletonLoader'
 import ErrorBanner from '../components/ErrorBanner'
 import BottomNavTabs from '../components/layout/BottomNavTabs'
+import JackpotValue from '../components/games/JackpotValue'
 import { abbreviateDrawFrequency } from '../utils/format'
 
 /** Minimum visible duration (ms) for skeleton loaders on this page. */
@@ -31,6 +32,7 @@ function GamePage() {
 
   const [gameDetails, setGameDetails] = useState(null)
   const [gameDetailsLoading, setGameDetailsLoading] = useState(true)
+  const [detailsError, setDetailsError] = useState(null)
   const [ticketCount, setTicketCount] = useState(3)
   const [activeTab, setActiveTab] = useState(0) // 0=Drawings, 1=Tickets
 
@@ -46,12 +48,14 @@ function GamePage() {
   useEffect(() => {
     let cancelled = false
     setGameDetailsLoading(true)
+    setDetailsError(null)
     ;(async () => {
       try {
         const details = await fetchGameDetails(gameId)
         if (!cancelled) setGameDetails(details)
       } catch (err) {
         console.error('Failed to fetch game details:', err)
+        if (!cancelled) setDetailsError(err.message)
       } finally {
         if (!cancelled) setGameDetailsLoading(false)
       }
@@ -93,16 +97,29 @@ function GamePage() {
   const latestDrawing = drawings.length > 0 ? drawings[0] : null
   const olderDrawings = drawings.length > 1 ? drawings.slice(1) : []
 
+  /* ---- Empty state: history resolved with no error and zero drawings ---- */
+  const emptyHistory = !historyLoading && !historyError && drawings.length === 0
+
+  /** Shared "no drawing history" message (matches PatternDistribution's empty-state tone). */
+  const emptyHistoryMessage = (
+    <p className="text-xs text-gray-400">No drawing history available</p>
+  )
+
   /* ---- Stat values from game details (with fallbacks) ---- */
+  const ballCount = gameDetails?.numbersPerDraw ?? 5
   const drawFrequency = gameDetails?.drawFrequency || '- - -'
   const odds = gameDetails?.oddsOfWinning || '- - -'
-  const jackpot = '$10,000' // placeholder per issue spec
+  const jackpot = gameDetails ? gameDetails.jackpot : null
+
+  /* ---- Active error messages in stable order (nulls filtered out) ---- */
+  const errors = useMemo(
+    () => [detailsError, historyError, generateError].filter((e) => e !== null),
+    [detailsError, historyError, generateError]
+  )
 
   /* ---- Mobile tab content: Drawings ---- */
   const drawingsTabContent = (
     <>
-      {historyError && <ErrorBanner message="Failed to load drawing history. Please try again." />}
-
       {/* Section header */}
       <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 py-3.5 flex items-center justify-center rounded-xl text-white mb-4" style={{ height: '48px' }}>
         <div className="flex items-center gap-2">
@@ -115,7 +132,7 @@ function GamePage() {
 
       {/* Pattern Distribution */}
       <section className="mb-8">
-        {showHistorySkeleton || !drawings.length ? (
+        {showHistorySkeleton ? (
           <div>
             <SkeletonLoader width="140px" height="16px" />
             <SkeletonLoader width="90px" height="12px" />
@@ -131,6 +148,8 @@ function GamePage() {
               ))}
             </div>
           </div>
+        ) : emptyHistory ? (
+          emptyHistoryMessage
         ) : (
           <PatternDistribution history={history?.history} gameId={gameId} />
         )}
@@ -148,7 +167,7 @@ function GamePage() {
               <SkeletonLoader width="180px" height="24px" variant="block" />
             </div>
             <div className="flex items-center justify-center gap-2.5">
-              {Array.from({ length: 5 }).map((_, j) => (
+              {Array.from({ length: ballCount }).map((_, j) => (
                 <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
               ))}
             </div>
@@ -185,7 +204,7 @@ function GamePage() {
         <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
       ))}
 
-      {(showHistorySkeleton || !drawings.length) && (
+      {showHistorySkeleton ? (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="border-b border-gray-100 pb-4">
@@ -200,14 +219,16 @@ function GamePage() {
               </div>
               {/* Balls row */}
               <div className="flex items-center justify-center gap-2.5">
-                {Array.from({ length: 5 }).map((_, j) => (
+                {Array.from({ length: ballCount }).map((_, j) => (
                   <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
                 ))}
               </div>
             </div>
           ))}
         </div>
-      )}
+      ) : emptyHistory ? (
+        emptyHistoryMessage
+      ) : null}
     </>
   )
 
@@ -272,7 +293,7 @@ function GamePage() {
               <div key={i} className="flex items-center gap-2 mb-2 rounded-lg bg-gray-50 p-2.5">
                 <SkeletonLoader width="64px" height="16px" />
                 <div className="flex items-center gap-1.5 ml-auto">
-                  {Array.from({ length: 5 }).map((_, j) => (
+                  {Array.from({ length: ballCount }).map((_, j) => (
                     <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
                   ))}
                 </div>
@@ -288,7 +309,6 @@ function GamePage() {
         )
       )}
 
-      {generateError && <ErrorBanner message="Failed to generate tickets. Please try again." />}
     </>
   )
 
@@ -304,6 +324,9 @@ function GamePage() {
           Back to Dashboard
         </Link>
       </div>
+
+      {/* ---- Page-level error banner (all active errors, full width) ---- */}
+      {errors.length > 0 && <ErrorBanner messages={errors} />}
 
       {/* ---- Game Header Section (visible on both desktop and mobile) ---- */}
       <section className="mb-4 md:mb-8">
@@ -382,8 +405,6 @@ function GamePage() {
       <div className="hidden md:grid md:grid-cols-12 gap-6">
         {/* Left Column (7/12) — Drawings */}
         <div className="col-span-7 space-y-4">
-          {historyError && <ErrorBanner message="Failed to load drawing history. Please try again." />}
-
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-5 py-3.5 flex items-center justify-center rounded-xl text-white" style={{ height: '48px' }}>
             <div className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-[22px] h-[22px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -396,7 +417,7 @@ function GamePage() {
           {/* Pattern Distribution + Latest Drawing side-by-side */}
           <div className="grid grid-cols-2 gap-4">
             <section>
-              {showHistorySkeleton || !drawings.length ? (
+              {showHistorySkeleton ? (
                 <div>
                   <SkeletonLoader width="140px" height="16px" />
                   <SkeletonLoader width="90px" height="12px" />
@@ -412,6 +433,8 @@ function GamePage() {
                     ))}
                   </div>
                 </div>
+              ) : emptyHistory ? (
+                emptyHistoryMessage
               ) : (
                 <PatternDistribution history={history?.history} gameId={gameId} />
               )}
@@ -428,7 +451,7 @@ function GamePage() {
                     <SkeletonLoader width="180px" height="24px" variant="block" />
                   </div>
                   <div className="flex items-center justify-center gap-2.5">
-                    {Array.from({ length: 5 }).map((_, j) => (
+                    {Array.from({ length: ballCount }).map((_, j) => (
                       <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
                     ))}
                   </div>
@@ -466,7 +489,7 @@ function GamePage() {
             <DrawingItem key={drawing.date} drawing={drawing} gameId={gameId} isRecent={false} />
           ))}
 
-          {(showHistorySkeleton || !drawings.length) && (
+          {showHistorySkeleton ? (
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="border-b border-gray-100 pb-4">
@@ -481,14 +504,16 @@ function GamePage() {
                   </div>
                   {/* Balls row */}
                   <div className="flex items-center justify-center gap-2.5">
-                    {Array.from({ length: 5 }).map((_, j) => (
+                    {Array.from({ length: ballCount }).map((_, j) => (
                       <SkeletonLoader key={j} variant="circle" height="48px" width="48px" />
                     ))}
                   </div>
                 </div>
               ))}
             </div>
-          )}
+          ) : emptyHistory ? (
+            emptyHistoryMessage
+          ) : null}
         </div>
 
         {/* Right Column (5/12) — Tickets */}
@@ -541,11 +566,11 @@ function GamePage() {
                    {Array.from({ length: 3 }).map((_, i) => (
                      <div key={i} className="flex items-center gap-2 mb-2 rounded-lg bg-gray-50 p-2.5">
                        <SkeletonLoader width="64px" height="16px" />
-                       <div className="flex items-center gap-1.5 ml-auto">
-                         {Array.from({ length: 5 }).map((_, j) => (
-                           <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
-                         ))}
-                       </div>
+                        <div className="flex items-center gap-1.5 ml-auto">
+                          {Array.from({ length: ballCount }).map((_, j) => (
+                            <SkeletonLoader key={j} variant="circle" height="32px" width="32px" />
+                          ))}
+                        </div>
                      </div>
                    ))}
                    {/* Footer */}
@@ -554,11 +579,9 @@ function GamePage() {
                    </div>
                  </div>
                ) : (
-                 <TicketCarousel tickets={carouselTickets} game={gameDetails} />
-               )
-             )}
-
-            {generateError && <ErrorBanner message="Failed to generate tickets. Please try again." />}
+                  <TicketCarousel tickets={carouselTickets} game={gameDetails} />
+                )
+              )}
           </div>
         </div>
       </div>
@@ -574,7 +597,15 @@ function GamePage() {
   )
 }
 
-/** Desktop stat pill with icon, uppercase label, and value. */
+/**
+ * Desktop stat pill with icon, uppercase label, and value.
+ *
+ * @param {Object} props
+ * @param {string} props.gameId - Game identifier for theming
+ * @param {string} props.icon - Icon key ("calendar" | "chart" | "jackpot")
+ * @param {string} props.label - Uppercase stat label
+ * @param {string|{annuity: string, cash: string}} [props.value] - Stat value (jackpot may be an object)
+ */
 function StatPill({ gameId, icon, label, value }) {
   const icons = {
     calendar: (
@@ -598,12 +629,20 @@ function StatPill({ gameId, icon, label, value }) {
     <div className="p-4 text-center flex flex-col items-center justify-center" style={{ color: `var(--color-${gameId})` }}>
       {icons[icon] || icons.chart}
       <span className="block text-[11px] uppercase tracking-wide font-bold">{label}</span>
-      <span className="block text-base font-bold text-gray-700 mt-0.5">{value}</span>
+      <JackpotValue jackpot={value} className="block text-base font-bold text-gray-700 mt-0.5" colorStyle={{ color: `var(--color-${gameId})` }} />
     </div>
   )
 }
 
-/** Mobile stat pill — smaller icons/values, stacked below game description. */
+/**
+ * Mobile stat pill — smaller icons/values, stacked below game description.
+ *
+ * @param {Object} props
+ * @param {string} props.gameId - Game identifier for theming
+ * @param {string} props.icon - Icon key ("calendar" | "chart" | "jackpot")
+ * @param {string} props.label - Uppercase stat label
+ * @param {string|{annuity: string, cash: string}} [props.value] - Stat value (jackpot may be an object)
+ */
 function StatPillMobile({ gameId, icon, label, value }) {
   const icons = {
     calendar: (
@@ -627,7 +666,7 @@ function StatPillMobile({ gameId, icon, label, value }) {
     <div className="p-3 text-center flex flex-col items-center justify-center" style={{ color: `var(--color-${gameId})` }}>
       {icons[icon] || icons.chart}
       <span className="block text-[9px] uppercase tracking-wide font-semibold">{label}</span>
-      <span className="block text-sm font-bold mt-0.5 text-gray-700">{value}</span>
+      <JackpotValue jackpot={value} className="block text-sm font-bold mt-0.5 text-gray-700" colorStyle={{ color: `var(--color-${gameId})` }} />
     </div>
   )
 }

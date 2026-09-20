@@ -23,7 +23,7 @@ Build a web application that scrapes Wisconsin Lottery drawing history, analyzes
 | Area | Current | Target |
 |------|---------|--------|
 | **Backend history** | Mock data hardcoded in `GamesController` | Real scraped drawings from the game classes (Phase 3) |
-| **Jackpot** | Hardcoded `$10,000` / "—" placeholders | Live jackpot/top-prize values scraped from the wilottery.com homepage (Phase 3) |
+| **Jackpot** | Hardcoded `$10,000` / "—" placeholders | Live jackpot/top-prize values scraped from per-game pages at `wilottery.com/games/{gameId}` (Phase 3) |
 | **Pattern health** | Static "It's okay to play." placeholder | Per-pattern `avgInterval`, `daysSince`, and status indicators from real history (Phase 4) |
 | **Scraping** | Works but fragile; no retries or caching | Retry with backoff, cached fallback, verified selectors (Phase 5) |
 | **Deployment** | Local Docker development | Health check, optimized image, HTTPS termination (Phase 6) |
@@ -266,7 +266,7 @@ Build the React component hierarchy.
 
 Replace mock data with live scraped data for all three games (Badger Five, Super Cash, Megabucks). This is where the backend scraping becomes live in the API. Scraping is migrated from the unmaintained `simple_html_dom` library to PHP's built-in DOM extension (`DOMDocument` + `DOMXPath`), with no changes to the API contract.
 
-- [ ] **3.1 — Migrate scraping to the PHP DOM extension**
+- [x] **[3.1 — Migrate scraping to the PHP DOM extension](https://gitea.heise.home/kheise/lottery-codex/milestones/42)**
    - Add a `LotteryCodex\Scrapers\` → `scrapers/` PSR-4 mapping to `backend/composer.json` (the same namespace `JackpotScraper` will use in 3.3)
    - Create `backend/scrapers/HistoryScraper.php`: fetch the draw-history page with cURL (browser-like User-Agent, explicit timeout, status-code check), parse with `DOMDocument::loadHTML()` + `DOMXPath` (`//*[contains(@class, "winning-numbers-line")]`, per-row `.//*[contains(@class, "date")]//strong` and `.//*[contains(@class, "winning-number")]`, `->textContent`), and return raw rows keyed by formatted date with `numbers` as an `int[]` — no pattern logic
    - Migrate all three game classes to delegate to the shared scraper; pattern classification (odd/even, low/high) stays in each class since it needs the per-game group arrays; remove the triplicated `loadPreviousDrawings()` bodies, the three `require_once simple_html_dom` lines, and the simplehtmldom runtime dependency check added in Phase 0.1
@@ -275,28 +275,31 @@ Replace mock data with live scraped data for all three games (Badger Five, Super
 
    **Done when:** No simplehtmldom references remain in the backend; BadgerFive's scraped output matches pre-migration output; SuperCash and Megabucks can scrape via the shared scraper.
 
-- [ ] **3.2 — Serve real drawing history from game classes**
+- [x] **[3.2 — Serve real drawing history from game classes](https://gitea.heise.home/kheise/lottery-codex/milestones/43)**
    - Remove the hardcoded mock `$historyMap` from `GamesController`; `history()` resolves the game and calls `$game->getHistory()`, wrapped in try-catch returning a 503 friendly error if scraping fails
    - Fix `SuperCash::getHistory()` and `Megabucks::getHistory()` to load drawings via the shared scraper before returning (currently they return empty data)
    - Fix `PatternDistribution` to take the most recent 100 drawings (current `slice(-100)` takes the oldest 100 on newest-first data)
 
    **Done when:** `/api/games/{gameId}/history` returns live scraped drawings for all three games; pattern distribution shows the latest 100.
 
-- [ ] **3.3 — Scrape and display current jackpot / top prize**
-   - Add a homepage jackpot scraper (`backend/scrapers/JackpotScraper.php` in the `LotteryCodex\Scrapers\` namespace created in 3.1): one scrape of the wilottery.com homepage, parse each game's `.game-panel` + `.drawing-amount`, normalize values like `"$1.3 MIL"` to `"$1.3M"` (Super Cash returns its fixed $350,000 top prize)
-   - Expose a `jackpot` field in `GET /api/games` and `GET /api/games/{gameId}` responses; return null if the scrape fails (never break the games list)
-   - Replace the hardcoded `'$10,000'` in GamePage with the API value; verify Dashboard cards render `game.jackpot` (binding already exists, currently shows "—")
+- [x] **[3.3 — Scrape and display current jackpot / top prize](https://gitea.heise.home/kheise/lottery-codex/milestones/44)**
+    - Add a per-game jackpot scraper (`backend/scrapers/JackpotScraper.php` in the `LotteryCodex\Scrapers\` namespace created in 3.1): fetch `https://wilottery.com/games/{$gameId}`, parse `.current-jackpot > .jackpot-amount` elements
+    - Badger Five: single `.jackpot-amount` text node (e.g. `$10,000`) — return the dollar amount as-is, no annuity/cash label
+    - Super Cash: static top prize of `$350,000` — hardcode in the game class, do not scrape (the page has no `.jackpot-amount` element)
+    - Megabucks: two `.jackpot-amount` elements (annuity + cash); each has a sibling `<span>` with the unit text (`MIL`, `K`, etc.) — parse both, return as objects: `{ "annuity": "$1.7M", "cash": "$0.9M" }`
+    - Expose a `jackpot` field in `GET /api/games` and `GET /api/games/{gameId}` responses; Badger Five and Super Cash return a string, Megabucks returns an object with `annuity`/`cash` keys; return null if the scrape fails (never break the games list)
+    - Replace the hardcoded `'$10,000'` in GamePage with the API value; verify Dashboard cards render `game.jackpot` (binding already exists, currently shows "—"); for Megabucks, render annuity/cash labels alongside the values
 
-   **Done when:** Dashboard cards and game headers show live jackpot values; a failed scrape degrades gracefully to "—".
+    **Done when:** Dashboard cards and game headers show live jackpot values (Badger Five: cash amount, Super Cash: static $350,000, Megabucks: annuity + cash); a failed scrape degrades gracefully to "—".
 
-- [ ] **3.4 — Frontend cleanup & 6-ball readiness**
+- [x] **[3.4 — Frontend cleanup & 6-ball readiness](https://gitea.heise.home/kheise/lottery-codex/milestones/45)**
    - Remove the dead `GameContext`/`GameProvider` (`src/contexts/GameContext.jsx`, provider mount in `main.jsx`) — no component consumes it and it causes a duplicate games fetch; hooks remain the data layer
    - Drive skeleton ball counts from `gameDetails.numbersPerDraw` instead of hardcoded 5
    - Fix stale color-map keys (`super-cash`/`mega-bucks` → `supercash`/`megabucks`), remove the DrawingItem badge-width special case, remove the dead `BrowserRouter` import in App.jsx
 
    **Done when:** Frontend renders 6-ball games correctly; no dead code or duplicate games fetch remains.
 
-- [ ] **3.5 — End-to-end verification & error handling**
+- [x] **[3.5 — End-to-end verification & error handling](https://gitea.heise.home/kheise/lottery-codex/milestones/46)**
    - Verify all three games end-to-end: historical drawings match the Wisconsin Lottery website, generated tickets follow pattern distributions (odd/even, low/high), and 6-number panels render correctly (Super Cash, Megabucks)
    - Handle API errors gracefully in frontend: network timeout handling (scraping can be slow), empty history results display, clear error messages via ErrorBanner
 
@@ -513,7 +516,7 @@ The project is considered complete (Badger Five MVP) when all of these are true:
 ### Backend — New Files
 ```
 backend/scrapers/HistoryScraper.php  # Shared DOM-based draw-history scraper, cURL + DOMDocument/DOMXPath (Phase 3.1)
-backend/scrapers/JackpotScraper.php  # Single homepage scrape for all games' jackpot/top-prize values (Phase 3.3)
+backend/scrapers/JackpotScraper.php  # Per-game jackpot scraper using https://wilottery.com/games/{$gameId} (Phase 3.3)
 ```
 
 ### Backend — Modified Files
